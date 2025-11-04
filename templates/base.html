@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Decentralized Autonomous Forum - Community-driven discussions with blockchain rewards">
+    <meta name="theme-color" content="#F3BA2F">
+
+    <title>{% block title %}Decentralized Autonomous Forum{% endblock %}</title>
+
+    <!-- Preconnect to external resources -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/main.css') }}">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', path='/images/logo.svg') }}">
+
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+    <!-- Cookie Consent Banner -->
+    <div id="cookie-consent-banner" class="cookie-banner" style="display: none;">
+        <div class="cookie-banner__content">
+            <p class="cookie-banner__text">
+                🍪 We use cookies to provide authentication and improve your experience.
+                <a href="/privacy" class="cookie-banner__link">Learn more</a>
+            </p>
+            <div class="cookie-banner__actions">
+                <button id="cookie-accept-all" class="btn btn--primary btn--sm">Accept All</button>
+                <button id="cookie-reject-non-essential" class="btn btn--secondary btn--sm">Reject Non-Essential</button>
+                <button id="cookie-manage" class="btn btn--ghost btn--sm">Manage Preferences</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header/Navigation -->
+    <header class="header">
+        <nav class="navbar container">
+            <!-- Logo -->
+            <a href="/" class="navbar__logo">
+                <img src="{{ url_for('static', path='/images/logo.svg') }}" alt="Forum Logo" class="navbar__logo-img">
+                <span class="navbar__logo-text">Decentralized Forum</span>
+            </a>
+
+            <!-- Mobile Menu Toggle -->
+            <button class="navbar__toggle" id="mobile-menu-toggle" aria-label="Toggle navigation">
+                <span class="navbar__toggle-icon"></span>
+            </button>
+
+            <!-- Navigation Links -->
+            <div class="navbar__menu" id="mobile-menu">
+                <ul class="navbar__links">
+                    <li><a href="/" class="navbar__link {% if request.url.path == '/' %}navbar__link--active{% endif %}">Home</a></li>
+                    <li><a href="/explore" class="navbar__link {% if request.url.path == '/explore' %}navbar__link--active{% endif %}">Explore</a></li>
+                    <li><a href="/rewards" class="navbar__link {% if request.url.path == '/rewards' %}navbar__link--active{% endif %}">Rewards</a></li>
+                </ul>
+
+                <!-- User Menu -->
+                <div class="navbar__user">
+                    {% if current_user %}
+                    <!-- Authenticated User -->
+                    <div class="user-widget">
+                        <!-- Points Balance -->
+                        <div class="points-badge" title="Current points balance">
+                            <svg class="points-badge__icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="2"/>
+                                <text x="8" y="12" font-size="10" text-anchor="middle" fill="currentColor">P</text>
+                            </svg>
+                            <span class="points-badge__value">{{ current_user.points }}</span>
+                        </div>
+
+                        <!-- User Dropdown -->
+                        <div class="user-dropdown">
+                            <button class="user-dropdown__trigger" aria-haspopup="true" aria-expanded="false">
+                                <img src="{{ current_user.avatar_url or url_for('static', path='/images/default-avatar.svg') }}"
+                                     alt="{{ current_user.username }}'s avatar"
+                                     class="user-dropdown__avatar">
+                                <span class="user-dropdown__username">{{ current_user.username }}</span>
+                                <span class="user-dropdown__level user-level user-level--{{ current_user.level }}">
+                                    {{ current_user.level.value.replace('_', ' ').title() }}
+                                </span>
+                                <svg class="user-dropdown__arrow" width="12" height="12" viewBox="0 0 12 12">
+                                    <path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/>
+                                </svg>
+                            </button>
+
+                            <div class="user-dropdown__menu" role="menu">
+                                <a href="/profile/{{ current_user.username }}" class="user-dropdown__item" role="menuitem">
+                                    <svg class="user-dropdown__icon" width="16" height="16"><use xlink:href="#icon-user"/></svg>
+                                    My Profile
+                                </a>
+                                <a href="/settings" class="user-dropdown__item" role="menuitem">
+                                    <svg class="user-dropdown__icon" width="16" height="16"><use xlink:href="#icon-settings"/></svg>
+                                    Settings
+                                </a>
+                                <a href="/rewards/crypto" class="user-dropdown__item" role="menuitem">
+                                    <svg class="user-dropdown__icon" width="16" height="16"><use xlink:href="#icon-crypto"/></svg>
+                                    Crypto Rewards
+                                </a>
+                                <hr class="user-dropdown__divider">
+                                <form action="/auth/logout" method="POST" class="user-dropdown__form">
+                                    <button type="submit" class="user-dropdown__item user-dropdown__item--logout" role="menuitem">
+                                        <svg class="user-dropdown__icon" width="16" height="16"><use xlink:href="#icon-logout"/></svg>
+                                        Logout
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Create Post Button -->
+                        <a href="/posts/create" class="btn btn--primary btn--sm navbar__cta">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                            New Post
+                        </a>
+                    </div>
+                    {% else %}
+                    <!-- Guest User -->
+                    <div class="navbar__auth">
+                        <a href="/auth/login" class="btn btn--ghost btn--sm">Login</a>
+                        <a href="/auth/register" class="btn btn--primary btn--sm">Sign Up</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="flash-messages container">
+            {% for category, message in messages %}
+            <div class="alert alert--{{ category }}" role="alert">
+                <svg class="alert__icon" width="20" height="20">
+                    {% if category == 'success' %}
+                    <use xlink:href="#icon-check-circle"/>
+                    {% elif category == 'error' %}
+                    <use xlink:href="#icon-x-circle"/>
+                    {% elif category == 'warning' %}
+                    <use xlink:href="#icon-alert-triangle"/>
+                    {% else %}
+                    <use xlink:href="#icon-info"/>
+                    {% endif %}
+                </svg>
+                <span class="alert__message">{{ message }}</span>
+                <button class="alert__close" aria-label="Close alert">&times;</button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Main Content -->
+    <main class="main">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer__grid">
+                <!-- About Section -->
+                <div class="footer__section">
+                    <h3 class="footer__title">About</h3>
+                    <p class="footer__text">
+                        A decentralized autonomous forum with blockchain rewards, community-driven moderation,
+                        and reputation-based governance.
+                    </p>
+                    <div class="footer__social">
+                        <a href="#" class="footer__social-link" aria-label="Twitter">
+                            <svg width="20" height="20"><use xlink:href="#icon-twitter"/></svg>
+                        </a>
+                        <a href="#" class="footer__social-link" aria-label="Discord">
+                            <svg width="20" height="20"><use xlink:href="#icon-discord"/></svg>
+                        </a>
+                        <a href="#" class="footer__social-link" aria-label="Telegram">
+                            <svg width="20" height="20"><use xlink:href="#icon-telegram"/></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="footer__section">
+                    <h3 class="footer__title">Quick Links</h3>
+                    <ul class="footer__links">
+                        <li><a href="/explore" class="footer__link">Explore Posts</a></li>
+                        <li><a href="/rewards" class="footer__link">Crypto Rewards</a></li>
+                        <li><a href="/leaderboard" class="footer__link">Leaderboard</a></li>
+                        <li><a href="/help" class="footer__link">Help Center</a></li>
+                    </ul>
+                </div>
+
+                <!-- Legal -->
+                <div class="footer__section">
+                    <h3 class="footer__title">Legal</h3>
+                    <ul class="footer__links">
+                        <li><a href="/privacy" class="footer__link">Privacy Policy</a></li>
+                        <li><a href="/terms" class="footer__link">Terms of Service</a></li>
+                        <li><a href="/cookies" class="footer__link">Cookie Policy</a></li>
+                        <li><a href="/community-guidelines" class="footer__link">Community Guidelines</a></li>
+                    </ul>
+                </div>
+
+                <!-- Resources -->
+                <div class="footer__section">
+                    <h3 class="footer__title">Resources</h3>
+                    <ul class="footer__links">
+                        <li><a href="/docs" class="footer__link">Documentation</a></li>
+                        <li><a href="/api" class="footer__link">API Reference</a></li>
+                        <li><a href="https://bscscan.com" target="_blank" class="footer__link">BNB Chain Explorer</a></li>
+                        <li><a href="/contact" class="footer__link">Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Copyright -->
+            <div class="footer__bottom">
+                <p class="footer__copyright">
+                    &copy; 2025 Decentralized Autonomous Forum. All rights reserved.
+                </p>
+                <p class="footer__attribution">
+                    Powered by <a href="https://www.bnbchain.org" target="_blank" class="footer__link">BNB Chain</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- SVG Icon Sprite (hidden, for reuse via <use>) -->
+    <svg style="display: none;">
+        <defs>
+            <!-- User Icon -->
+            <symbol id="icon-user" viewBox="0 0 16 16">
+                <circle cx="8" cy="5" r="3" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                <path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="currentColor" stroke-width="1.5" fill="none"/>
+            </symbol>
+
+            <!-- Settings Icon -->
+            <symbol id="icon-settings" viewBox="0 0 16 16">
+                <circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                <path d="M8 1v2m0 10v2M1 8h2m10 0h2m-2.9-5.1l1.4-1.4M3.5 12.5l1.4-1.4m7.6 0l1.4 1.4M3.5 3.5l1.4 1.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </symbol>
+
+            <!-- Crypto Icon -->
+            <symbol id="icon-crypto" viewBox="0 0 16 16">
+                <path d="M8 1l7 4v6l-7 4-7-4V5l7-4z" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+                <path d="M8 8V1m0 7l6-3.5M8 8l-6-3.5M8 8v7" stroke="currentColor" stroke-width="1.5"/>
+            </symbol>
+
+            <!-- Logout Icon -->
+            <symbol id="icon-logout" viewBox="0 0 16 16">
+                <path d="M6 14H3a1 1 0 01-1-1V3a1 1 0 011-1h3m4 4l3 3m0 0l-3 3m3-3H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            </symbol>
+
+            <!-- Check Circle Icon -->
+            <symbol id="icon-check-circle" viewBox="0 0 20 20">
+                <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                <path d="M6 10l3 3 5-6" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </symbol>
+
+            <!-- X Circle Icon -->
+            <symbol id="icon-x-circle" viewBox="0 0 20 20">
+                <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                <path d="M7 7l6 6m0-6l-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </symbol>
+
+            <!-- Alert Triangle Icon -->
+            <symbol id="icon-alert-triangle" viewBox="0 0 20 20">
+                <path d="M10 2l8 14H2L10 2z" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+                <path d="M10 8v3m0 2v1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </symbol>
+
+            <!-- Info Icon -->
+            <symbol id="icon-info" viewBox="0 0 20 20">
+                <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                <path d="M10 10v4m0-8v1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </symbol>
+
+            <!-- Social Icons -->
+            <symbol id="icon-twitter" viewBox="0 0 20 20">
+                <path d="M19 4a10 10 0 01-3.14 1.53 5.49 5.49 0 00-7.86 3v1A13.1 13.1 0 013 5s-4 9 5 13a14.4 14.4 0 01-7 2c9 5 20 0 20-11.5a5 5 0 00-.08-.83A7.72 7.72 0 0019 4z" fill="currentColor"/>
+            </symbol>
+
+            <symbol id="icon-discord" viewBox="0 0 20 20">
+                <path d="M16.9 3.9A16.6 16.6 0 0012.7 3a12 12 0 00-.5 1.1 15.3 15.3 0 00-4.6 0A12 12 0 007.1 3a16.6 16.6 0 00-4.2.9C1 7.5.3 11 .8 14.4a16.8 16.8 0 005.2 2.7c.4-.6.8-1.2 1.1-1.9-.6-.2-1.2-.5-1.7-.9l.4-.3c3.3 1.6 7 1.6 10.4 0l.4.3c-.5.4-1.1.7-1.7.9.3.7.7 1.3 1.1 1.9a16.8 16.8 0 005.2-2.7c.6-3.9-.9-7.3-2.1-10.5zM6.7 12.3c-.7 0-1.3-.7-1.3-1.5s.6-1.5 1.3-1.5c.7 0 1.3.7 1.3 1.5s-.6 1.5-1.3 1.5zm6.6 0c-.7 0-1.3-.7-1.3-1.5s.6-1.5 1.3-1.5c.7 0 1.3.7 1.3 1.5s-.6 1.5-1.3 1.5z" fill="currentColor"/>
+            </symbol>
+
+            <symbol id="icon-telegram" viewBox="0 0 20 20">
+                <path d="M18.4 2.6L1.8 9.2c-1.1.5-1.1 1.2-.2 1.5l4.3 1.3 10-6.3c.5-.3.9-.1.5.2L8 13.5l-.3 4.3c.4 0 .6-.2.8-.4l2-2 4.1 3c.8.4 1.3.2 1.5-.7l2.8-13.2c.3-1-.4-1.5-1.1-1.2z" fill="currentColor"/>
+            </symbol>
+        </defs>
+    </svg>
+
+    <!-- Main JavaScript -->
+    <script src="{{ url_for('static', path='/js/main.js') }}?v=8"></script>
+
+    <!-- Cookie Consent Script -->
+    <script src="{{ url_for('static', path='/js/cookie-consent.js') }}"></script>
+
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

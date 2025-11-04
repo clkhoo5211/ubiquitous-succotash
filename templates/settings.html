@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+
+{% block title %}Settings - Decentralized Autonomous Forum{% endblock %}
+
+{% block body_class %}settings-page{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="settings-layout">
+        <main class="settings-main">
+            <h1 class="settings-title">Settings</h1>
+            
+            {% if request.query_params.get('error') %}
+            <div class="alert alert--danger" style="margin-bottom: 1rem;">
+                <svg class="alert__icon" width="20" height="20"><use xlink:href="#icon-alert-triangle"/></svg>
+                <span class="alert__message">{{ request.query_params.get('error') }}</span>
+            </div>
+            {% endif %}
+            
+            {% if request.query_params.get('success') %}
+            <div class="alert alert--success" style="margin-bottom: 1rem;">
+                <svg class="alert__icon" width="20" height="20"><use xlink:href="#icon-check"/></svg>
+                <span class="alert__message">{{ request.query_params.get('success') }}</span>
+            </div>
+            {% endif %}
+
+            <!-- General Settings -->
+            <section class="settings-section">
+                <h2 class="settings-section__title">General Settings</h2>
+                <form method="POST" action="/settings/profile" class="settings-form">
+                    <div class="form-group">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" 
+                               id="username" 
+                               name="username" 
+                               value="{{ current_user.username if current_user else '' }}"
+                               class="form-input"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="display_name" class="form-label">Display Name</label>
+                        <input type="text" 
+                               id="display_name" 
+                               name="display_name" 
+                               value="{{ current_user.display_name if current_user and current_user.display_name else '' }}"
+                               class="form-input">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email Address</label>
+                        <input type="email" 
+                               id="email" 
+                               name="email" 
+                               value="{{ current_user.email if current_user else '' }}"
+                               class="form-input"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bio" class="form-label">Bio</label>
+                        <textarea id="bio" 
+                                  name="bio" 
+                                  class="form-textarea"
+                                  rows="4"
+                                  placeholder="Tell us about yourself...">{{ current_user.bio if current_user and current_user.bio else '' }}</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="website" class="form-label">Website</label>
+                        <input type="url" 
+                               id="website" 
+                               name="website" 
+                               value="{{ current_user.website if current_user and current_user.website else '' }}"
+                               class="form-input"
+                               placeholder="https://example.com">
+                    </div>
+
+                    <button type="submit" class="btn btn--primary">Update Profile</button>
+                </form>
+            </section>
+
+            <!-- Password Settings -->
+            <section class="settings-section">
+                <h2 class="settings-section__title">Password Settings</h2>
+                <form method="POST" action="/settings/password" class="settings-form">
+                    <div class="form-group">
+                        <label for="current_password" class="form-label">Current Password</label>
+                        <input type="password" 
+                               id="current_password" 
+                               name="current_password" 
+                               class="form-input"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="new_password" class="form-label">New Password</label>
+                        <input type="password" 
+                               id="new_password" 
+                               name="new_password" 
+                               class="form-input"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirm_password" class="form-label">Confirm New Password</label>
+                        <input type="password" 
+                               id="confirm_password" 
+                               name="confirm_password" 
+                               class="form-input"
+                               required>
+                    </div>
+
+                    <button type="submit" class="btn btn--primary">Change Password</button>
+                </form>
+            </section>
+
+            <!-- Wallet Settings -->
+            <section class="settings-section">
+                <h2 class="settings-section__title">Wallet Settings</h2>
+                <form method="POST" action="/settings/wallet" class="settings-form">
+                    <div class="form-group">
+                        <label for="bnb_wallet" class="form-label">BNB Wallet Address</label>
+                        <input type="text" 
+                               id="bnb_wallet" 
+                               name="bnb_wallet" 
+                               value="{{ current_user.bnb_wallet_address if current_user and current_user.bnb_wallet_address else '' }}"
+                               class="form-input"
+                               placeholder="0x...">
+                        <small class="form-help">Your wallet address for receiving BNB rewards</small>
+                    </div>
+
+                    <button type="submit" class="btn btn--primary">Update Wallet</button>
+                </form>
+            </section>
+
+            <!-- Notification Settings -->
+            <section class="settings-section">
+                <h2 class="settings-section__title">Notification Settings</h2>
+                <form method="POST" action="/settings/notifications" class="settings-form">
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" 
+                                   name="email_notifications" 
+                                   value="true"
+                                   {% if current_user and current_user.email_notifications %}checked{% endif %}>
+                            <span>Email Notifications</span>
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" 
+                                   name="push_notifications" 
+                                   value="true"
+                                   {% if current_user and current_user.push_notifications %}checked{% endif %}>
+                            <span>Push Notifications</span>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn--primary">Save Notification Settings</button>
+                </form>
+            </section>
+
+            <!-- Account Management -->
+            <section class="settings-section">
+                <h2 class="settings-section__title settings-section__title--danger">Account Management</h2>
+                <form method="POST" action="/settings/delete-account" class="settings-form" onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone!');">
+                    <p class="form-help">Deleting your account will remove all your posts, comments, and data. This action cannot be undone.</p>
+                    <button type="submit" class="btn btn--danger">Delete Account</button>
+                </form>
+            </section>
+        </main>
+    </div>
+</div>
+{% endblock %}
+

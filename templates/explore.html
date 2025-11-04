@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+
+{% block title %}Explore - Decentralized Autonomous Forum{% endblock %}
+
+{% block content %}
+<div class="explore-page">
+    <div class="container">
+        <div class="feed-layout">
+            <!-- Sidebar (Left) -->
+            <aside class="sidebar sidebar--left">
+                <!-- Search Box -->
+                <div class="card">
+                    <div class="search-box">
+                        <input type="search" 
+                               class="search-box__input" 
+                               placeholder="Search posts, users, channels..." 
+                               id="search-input">
+                        <button class="search-box__button" aria-label="Search">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <circle cx="9" cy="9" r="5" stroke="currentColor" stroke-width="2"/>
+                                <path d="M13 13l4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Categories/Channels -->
+                <div class="card">
+                    <h2 class="card__title">All Channels</h2>
+                    <nav class="channel-list">
+                    {% for channel in channels %}
+                    <a href="/channel/{{ channel.slug }}" class="channel-item">
+                        <span class="channel-item__icon">#</span>
+                        <span class="channel-item__name">{{ channel.name }}</span>
+                        <span class="channel-item__count">{{ channel.member_count }}</span>
+                    </a>
+                    {% else %}
+                    <p class="text-muted">No channels yet</p>
+                    {% endfor %}
+                    </nav>
+                    <a href="/channels" class="card__link">View all channels →</a>
+                </div>
+            </aside>
+
+            <!-- Main Feed -->
+            <main class="feed">
+                <!-- Page Header -->
+                <div class="feed-header">
+                    <h1 class="feed-header__title">{% if channel %}#{{ channel.name }}{% else %}Explore All Posts{% endif %}</h1>
+                    <div class="feed-header__actions">
+                        <div class="filter-tabs">
+                            <button class="filter-tab {% if current_filter == 'hot' %}filter-tab--active{% endif %}" data-filter="hot">🔥 Hot</button>
+                            <button class="filter-tab {% if current_filter == 'new' or current_filter == 'all' %}filter-tab--active{% endif %}" data-filter="new">✨ New</button>
+                            <button class="filter-tab {% if current_filter == 'top' %}filter-tab--active{% endif %}" data-filter="top">🏆 Top</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Search Results Container -->
+                <div id="search-results" class="search-results"></div>
+
+                <!-- Posts List -->
+                <div class="posts-list">
+                    {% for post in posts %}
+                    <article class="post-card">
+                        <div class="post-card__header">
+                            <div class="post-card__author">
+                                <img src="{{ post.author.avatar_url if post.author and post.author.avatar_url else url_for('static', path='/images/default-avatar.svg') }}" 
+                                     alt="{{ post.author.username if post.author else 'Anonymous' }}"
+                                     class="post-card__avatar">
+                                <div class="post-card__author-info">
+                                    <a href="/profile/{{ post.author.id if post.author else 0 }}" class="post-card__author-name">
+                                        {{ post.author.username if post.author else 'Anonymous' }}
+                                    </a>
+                                    <time class="post-card__time">{{ post.created_at|time_ago }}</time>
+                                </div>
+                            </div>
+                            <a href="/channel/{{ post.channel.slug if post.channel else 'general' }}" class="post-card__channel">
+                                #{{ post.channel.name if post.channel else 'general' }}
+                            </a>
+                        </div>
+
+                        <h2 class="post-card__title">
+                            <a href="/posts/{{ post.id }}">{{ post.title }}</a>
+                        </h2>
+
+                        {% if post.content %}
+                        <p class="post-card__excerpt">{{ post.content|truncate(200) }}</p>
+                        {% endif %}
+
+                        {% if post.media_url %}
+                        <div class="post-card__media">
+                            <img src="{{ post.media_url }}" alt="{{ post.title }}" loading="lazy">
+                        </div>
+                        {% endif %}
+
+                        <div class="post-card__footer">
+                            <div class="post-card__stats">
+                                <button class="post-card__action post-card__action--likes">
+                                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                        <path d="M9 16.5l-1.5-1.5c-3-3-5.25-5.25-5.25-8.25A3.75 3.75 0 017.5 3.75a3.75 3.75 0 013 1.5 3.75 3.75 0 013-1.5 3.75 3.75 0 013.75 3.75c0 3-2.25 5.25-5.25 8.25L9 16.5z" stroke="currentColor" stroke-width="1.5" fill="currentColor"/>
+                                    </svg>
+                                    <span>{{ post.like_count if post.like_count else 0 }}</span>
+                                </button>
+                                <button class="post-card__action post-card__action--comments">
+                                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                        <path d="M3 1.5h12a1.5 1.5 0 011.5 1.5v9a1.5 1.5 0 01-1.5 1.5H6l-3 3v-3H1.5A1.5 1.5 0 010 12V3a1.5 1.5 0 011.5-1.5z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                                    </svg>
+                                    <span>{{ post.comment_count if post.comment_count else 0 }}</span>
+                                </button>
+                                <button class="post-card__action post-card__action--points">
+                                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                        <circle cx="9" cy="9" r="7.5" stroke="currentColor" stroke-width="1.5"/>
+                                        <path d="M9 4.5v9M4.5 9h9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                    </svg>
+                                    <span>{{ post.points if post.points else 0 }}</span>
+                                </button>
+                            </div>
+                            <div class="post-card__actions">
+                                <button class="btn btn--ghost btn--sm">Share</button>
+                                <a href="/posts/{{ post.id }}" class="btn btn--ghost btn--sm">View</a>
+                            </div>
+                        </div>
+                    </article>
+                    {% else %}
+                    <div class="empty-state">
+                        <svg class="empty-state__icon" width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="40" cy="40" r="38" stroke="#FFB800" stroke-width="3"/>
+                            <path d="M30 30L50 50M50 30L30 50" stroke="#FFB800" stroke-width="3" stroke-linecap="round"/>
+                            <path d="M20 20L60 20" stroke="#FFB800" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M20 40L45 40" stroke="#FFB800" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M20 60L50 60" stroke="#FFB800" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        <h2>No posts found</h2>
+                        <p>Be the first to start a discussion!</p>
+                        <a href="/auth/register" class="btn btn--primary">Sign Up to Post</a>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination">
+                    <button class="pagination__btn" disabled>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M10 12l-4-4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Previous
+                    </button>
+                    <span class="pagination__info">Page 1 of 1</span>
+                    <button class="pagination__btn" disabled>
+                        Next
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M6 12l4-4-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
+            </main>
+
+            <!-- Sidebar (Right) -->
+            <aside class="sidebar sidebar--right">
+                <!-- Top Contributors -->
+                <div class="card">
+                    <h2 class="card__title">🏆 Top Contributors</h2>
+                    {% if top_users %}
+                    <ul class="user-list">
+                        {% for user in top_users %}
+                        <li class="user-list__item">
+                            <a href="/profile/{{ user.username }}" class="user-item">
+                                <img src="{{ user.avatar_url if user.avatar_url else '/static/images/default-avatar.svg' }}" 
+                                     alt="{{ user.username }}"
+                                     class="user-item__avatar">
+                                <div class="user-item__info">
+                                    <span class="user-item__name">{{ user.username }}</span>
+                                    <span class="user-item__stat">{% if user.contribution_score %}{{ user.contribution_score }} contributions{% elif user.post_count and user.comment_count %}{{ user.post_count }} posts, {{ user.comment_count }} comments{% else %}No contributions{% endif %}</span>
+                                </div>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p class="text-muted">No contributors yet</p>
+                    {% endif %}
+                    <a href="/leaderboard" class="card__link">View full leaderboard →</a>
+                </div>
+
+                <!-- Community Stats -->
+                <div class="card">
+                    <h2 class="card__title">📊 Community Stats</h2>
+                    <dl class="stats-list">
+                        <div class="stats-item">
+                            <dt class="stats-item__label">Total Members</dt>
+                            <dd class="stats-item__value">{{ stats.total_users|number_format }}</dd>
+                        </div>
+                        <div class="stats-item">
+                            <dt class="stats-item__label">Total Posts</dt>
+                            <dd class="stats-item__value">{{ stats.total_posts|number_format }}</dd>
+                        </div>
+                        <div class="stats-item">
+                            <dt class="stats-item__label">BNB Distributed</dt>
+                            <dd class="stats-item__value">{{ stats.bnb_distributed if stats.bnb_distributed else 0 }} BNB</dd>
+                        </div>
+                        <div class="stats-item">
+                            <dt class="stats-item__label">Active Today</dt>
+                            <dd class="stats-item__value">{{ stats.active_today|number_format }}</dd>
+                        </div>
+                    </dl>
+                </div>
+            </aside>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

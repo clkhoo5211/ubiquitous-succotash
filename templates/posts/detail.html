@@ -1,0 +1,496 @@
+{% extends "base.html" %}
+
+{% block title %}{{ post.title }} - Decentralized Autonomous Forum{% endblock %}
+
+{% block body_class %}post-detail-page{% endblock %}
+
+{% block extra_head %}
+<meta property="og:title" content="{{ post.title }}">
+<meta property="og:description" content="{{ post.body[:200] }}...">
+<meta property="og:type" content="article">
+<meta name="twitter:card" content="summary_large_image">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="post-detail-layout">
+        <!-- Main Content -->
+        <main class="post-detail-main">
+            <!-- Post Card -->
+            <article class="post-card post-card--detail" data-post-id="{{ post.id }}">
+                <!-- Post Header -->
+                <header class="post-card__header">
+                    <!-- Channel Badge -->
+                    {% if post.channel %}
+                    <a href="/channels/{{ post.channel.slug }}" class="channel-badge">
+                        <span class="channel-badge__hash">#</span>
+                        <span class="channel-badge__name">{{ post.channel.name }}</span>
+                    </a>
+                    {% endif %}
+
+                    <!-- Moderation Badges -->
+                    {% if post.is_pinned %}
+                    <span class="badge badge--pinned">
+                        <svg width="14" height="14"><path d="M7 2v5m-3 1l3-2 3 2M7 7v5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+                        Pinned
+                    </span>
+                    {% endif %}
+                    {% if post.is_locked %}
+                    <span class="badge badge--locked">
+                        <svg width="14" height="14"><rect x="3" y="6" width="8" height="6" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M5 6V4a2 2 0 114 0v2" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+                        Locked
+                    </span>
+                    {% endif %}
+                </header>
+
+                <!-- Post Title -->
+                <h1 class="post-card__title post-card__title--large">{{ post.title }}</h1>
+
+                <!-- Post Meta -->
+                <div class="post-card__meta">
+                    <!-- Author -->
+                    <a href="/profile/{{ post.author.username }}" class="user-link">
+                        <img src="{{ post.author.avatar_url or url_for('static', path='/images/default-avatar.svg') }}"
+                             alt="{{ post.author.username }}'s avatar"
+                             class="user-link__avatar">
+                        <span class="user-link__username">{{ post.author.username }}</span>
+                        <span class="user-level user-level--{{ post.author.level }}">
+                            {{ post.author.level.value.replace('_', ' ').title() }}
+                        </span>
+                    </a>
+
+                    <!-- Timestamp -->
+                    <time class="post-card__time" datetime="{{ post.created_at.isoformat() }}">
+                        {{ post.created_at.strftime('%B %d, %Y at %I:%M %p') }}
+                    </time>
+
+                    <!-- View Count -->
+                    <span class="post-card__views">
+                        <svg width="16" height="16"><path d="M1 8s3-6 9-6 9 6 9 6-3 6-9 6-9-6-9-6z" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="10" cy="8" r="2" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+                        {{ post.view_count }} views
+                    </span>
+                </div>
+
+                <!-- Post Body -->
+                <div class="post-card__body prose">
+                    {{ post.body_html|safe }}
+                </div>
+
+                <!-- Media Attachments -->
+                {% if media_attachments %}
+                <div class="post-card__media">
+                    {% for media in media_attachments %}
+                    <div class="media-item">
+                        {% if media.file_type.value == 'image' %}
+                        <img src="{{ media.ipfs_url }}" alt="{{ media.file_name }}" class="media-item__image">
+                        {% elif media.file_type.value == 'video' %}
+                        <video src="{{ media.ipfs_url }}" controls class="media-item__video"></video>
+                        {% elif media.file_type.value == 'gif' %}
+                        <img src="{{ media.ipfs_url }}" alt="{{ media.file_name }}" class="media-item__gif">
+                        {% endif %}
+                        <p class="media-item__caption">
+                            <svg width="14" height="14"><path d="M2 7l5-5 5 5M7 2v10" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+                            Attached: {{ media.file_name }}
+                        </p>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <!-- Tags -->
+                {% if post.tags %}
+                <div class="post-card__tags">
+                    {% for post_tag in post.tags %}
+                    <a href="/tags/{{ post_tag.tag.name }}" class="tag">{{ post_tag.tag.name }}</a>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <!-- Post Actions -->
+                <div class="post-card__actions">
+                    <!-- Like Button -->
+                    <button class="action-btn {% if user_has_liked %}action-btn--active{% endif %}"
+                            data-action="like-post"
+                            data-post-id="{{ post.id }}"
+                            {% if user_has_liked %}disabled title="You have already liked this post"{% endif %}>
+                        <svg class="action-btn__icon" width="20" height="20">
+                            <path d="M10 17.5l-6-6a4 4 0 116-6l0 0a4 4 0 116 6z" stroke="currentColor" stroke-width="1.5" fill="{% if user_has_liked %}currentColor{% else %}none{% endif %}" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="action-btn__text">{{ post.like_count }}</span>
+                    </button>
+
+                    <!-- Comment Count -->
+                    <div class="action-btn action-btn--static">
+                        <svg class="action-btn__icon" width="20" height="20">
+                            <path d="M3 5a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2H8l-4 3v-3a2 2 0 01-1-1V5z" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="action-btn__text">{{ post.comment_count }}</span>
+                    </div>
+
+                    <!-- Share Button -->
+                    <button class="action-btn" data-action="share">
+                        <svg class="action-btn__icon" width="20" height="20">
+                            <path d="M4 12v4a2 2 0 002 2h8a2 2 0 002-2v-4M12 2v10m0-10l-3 3m3-3l3 3" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="action-btn__text">Share</span>
+                    </button>
+
+                    <!-- Report (if logged in) -->
+                    {% if current_user and current_user.id != post.user_id %}
+                    <button class="action-btn action-btn--danger" data-action="report" data-post-id="{{ post.id }}">
+                        <svg class="action-btn__icon" width="20" height="20">
+                            <path d="M3 3l3 14 3-7 7-3-13-4z" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="action-btn__text">Report</span>
+                    </button>
+                    {% endif %}
+
+                    <!-- Edit/Delete (if author) -->
+                    {% if current_user and current_user.id == post.user_id %}
+                    <div class="action-btn-group">
+                        <a href="/posts/{{ post.id }}/edit" class="action-btn">
+                            <svg class="action-btn__icon" width="20" height="20">
+                                <path d="M3 14l8-8 3 3-8 8H3v-3z" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+                                <path d="M11 6l3 3" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                            </svg>
+                            <span class="action-btn__text">Edit</span>
+                        </a>
+                        <button class="action-btn action-btn--danger" data-action="delete-post" data-post-id="{{ post.id }}">
+                            <svg class="action-btn__icon" width="20" height="20">
+                                <path d="M4 6h12M8 6V4h4v2m1 0v10a2 2 0 01-2 2H7a2 2 0 01-2-2V6h8z" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span class="action-btn__text">Delete</span>
+                        </button>
+                    </div>
+                    {% endif %}
+                </div>
+            </article>
+
+            <!-- Comments Section -->
+            <section class="comments-section" id="comments">
+                <header class="comments-section__header">
+                    <h2 class="comments-section__title">
+                        <svg width="24" height="24">
+                            <path d="M3 5a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2H8l-4 3v-3a2 2 0 01-1-1V5z" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+                        </svg>
+                        {{ post.comment_count }} Comments
+                    </h2>
+                    <div class="comments-section__sort">
+                        <label for="comment-sort">Sort by:</label>
+                        <select id="comment-sort" class="form-select form-select--sm">
+                            <option value="newest">Newest First</option>
+                            <option value="oldest">Oldest First</option>
+                            <option value="popular">Most Popular</option>
+                        </select>
+                    </div>
+                </header>
+
+                <!-- Comment Form (if logged in and post not locked) -->
+                {% if current_user and not post.is_locked %}
+                <form class="comment-form" id="comment-form" method="POST" action="/posts/{{ post.id }}/comments" data-post-id="{{ post.id }}">
+                    <div class="comment-form__header">
+                        <img src="{{ current_user.avatar_url or url_for('static', path='/images/default-avatar.svg') }}"
+                             alt="{{ current_user.username }}'s avatar"
+                             class="comment-form__avatar">
+                        <label for="comment-body" class="sr-only">Write a comment</label>
+                    </div>
+                    <textarea id="comment-body"
+                              name="body"
+                              class="comment-form__textarea"
+                              placeholder="Share your thoughts..."
+                              rows="3"
+                              required></textarea>
+                    <div class="comment-form__footer">
+                        <span class="comment-form__help">Markdown supported</span>
+                        <button type="submit" class="btn btn--primary btn--sm">
+                            <svg width="16" height="16"><path d="M2 8h12M8 2l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            Post Comment
+                        </button>
+                    </div>
+                </form>
+                {% elif not current_user %}
+                <div class="alert alert--info">
+                    <svg class="alert__icon" width="20" height="20"><use xlink:href="#icon-info"/></svg>
+                    <span class="alert__message">
+                        <a href="/auth/login">Login</a> or <a href="/auth/register">register</a> to join the discussion
+                    </span>
+                </div>
+                {% elif post.is_locked %}
+                <div class="alert alert--warning">
+                    <svg class="alert__icon" width="20" height="20"><use xlink:href="#icon-alert-triangle"/></svg>
+                    <span class="alert__message">This post is locked. New comments are disabled.</span>
+                </div>
+                {% endif %}
+
+                <!-- Comments List -->
+                <div class="comments-list" id="comments-list">
+                    {% if comments %}
+                        {% for comment in comments %}
+                        {% include 'components/comment.html' %}
+                        {% endfor %}
+                    {% else %}
+                    <div class="comments-empty">
+                        <svg width="64" height="64" class="comments-empty__icon">
+                            <path d="M8 12a4 4 0 014-4h40a4 4 0 014 4v28a4 4 0 01-4 4H24l-12 8v-8a4 4 0 01-4-4V12z" stroke="currentColor" stroke-width="2" fill="none" stroke-linejoin="round"/>
+                        </svg>
+                        <p class="comments-empty__text">No comments yet. Be the first to share your thoughts!</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </section>
+        </main>
+
+        <!-- Sidebar -->
+        <aside class="post-detail-sidebar">
+            <!-- Author Info Card -->
+            <div class="card">
+                <h3 class="card__title">About the Author</h3>
+                <div class="author-card">
+                    <a href="/profile/{{ post.author.username }}" class="author-card__avatar-link">
+                        <img src="{{ post.author.avatar_url or url_for('static', path='/images/default-avatar.svg') }}"
+                             alt="{{ post.author.username }}'s avatar"
+                             class="author-card__avatar">
+                    </a>
+                    <div class="author-card__info">
+                        <a href="/profile/{{ post.author.username }}" class="author-card__name">
+                            {{ post.author.display_name or post.author.username }}
+                        </a>
+                        <span class="user-level user-level--{{ post.author.level }}">
+                            {{ post.author.level.value.replace('_', ' ').title() }}
+                        </span>
+                        <p class="author-card__stats">
+                            <strong>{{ post.author.points }}</strong> points
+                        </p>
+                        {% if post.author.bio %}
+                        <p class="author-card__bio">{{ post.author.bio }}</p>
+                        {% endif %}
+                    </div>
+                    <a href="/profile/{{ post.author.username }}" class="btn btn--ghost btn--sm btn--block">
+                        View Profile
+                    </a>
+                </div>
+            </div>
+
+            <!-- Related Posts -->
+            {% if related_posts %}
+            <div class="card">
+                <h3 class="card__title">Related Posts</h3>
+                <ul class="related-posts">
+                    {% for related in related_posts %}
+                    <li class="related-post">
+                        <a href="/posts/{{ related.id }}" class="related-post__link">
+                            <h4 class="related-post__title">{{ related.title }}</h4>
+                            <div class="related-post__meta">
+                                <span class="related-post__author">{{ related.author.username }}</span>
+                                <span class="related-post__likes">{{ related.like_count }} likes</span>
+                            </div>
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            <!-- Channel Info (if post has channel) -->
+            {% if post.channel %}
+            <div class="card">
+                <h3 class="card__title">Channel</h3>
+                <div class="channel-info">
+                    <a href="/channels/{{ post.channel.slug }}" class="channel-info__link">
+                        <span class="channel-badge channel-badge--large">
+                            <span class="channel-badge__hash">#</span>
+                            <span class="channel-badge__name">{{ post.channel.name }}</span>
+                        </span>
+                    </a>
+                    <p class="channel-info__description">{{ post.channel.description }}</p>
+                    <a href="/channels/{{ post.channel.slug }}" class="btn btn--ghost btn--sm btn--block">
+                        View Channel
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Community Guidelines -->
+            <div class="card card--info">
+                <h3 class="card__title">Community Guidelines</h3>
+                <ul class="guideline-list guideline-list--compact">
+                    <li>Be respectful and constructive</li>
+                    <li>Stay on topic</li>
+                    <li>No spam or harassment</li>
+                    <li>Report inappropriate content</li>
+                </ul>
+                <a href="/help/community-guidelines" class="card__link">Full guidelines →</a>
+            </div>
+        </aside>
+    </div>
+</div>
+
+<!-- Share Modal -->
+<div class="modal" id="share-modal" style="display: none;">
+    <div class="modal__overlay" data-modal-close></div>
+    <div class="modal__container modal__container--sm">
+        <div class="modal__header">
+            <h3 class="modal__title">Share Post</h3>
+            <button class="modal__close" data-modal-close aria-label="Close">
+                <svg width="24" height="24"><path d="M6 6l12 12M6 18L18 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </button>
+        </div>
+        <div class="modal__body">
+            <div class="share-options">
+                <button class="share-option" data-share="twitter">
+                    <svg width="24" height="24"><use xlink:href="#icon-twitter"/></svg>
+                    Twitter
+                </button>
+                <button class="share-option" data-share="telegram">
+                    <svg width="24" height="24"><use xlink:href="#icon-telegram"/></svg>
+                    Telegram
+                </button>
+                <button class="share-option" data-share="copy">
+                    <svg width="24" height="24"><path d="M8 4v12a2 2 0 002 2h6" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="8" y="2" width="10" height="14" rx="2" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+                    Copy Link
+                </button>
+            </div>
+            <div class="share-url">
+                <input type="text" readonly value="{{ request.url }}" class="form-input" id="share-url-input">
+                <button class="btn btn--primary btn--sm" id="copy-url-btn">Copy</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Report Modal -->
+<div class="modal" id="report-modal" style="display: none;">
+    <div class="modal__overlay" data-modal-close></div>
+    <div class="modal__container modal__container--sm">
+        <div class="modal__header">
+            <h3 class="modal__title">Report Post</h3>
+            <button class="modal__close" data-modal-close aria-label="Close">
+                <svg width="24" height="24"><path d="M6 6l12 12M6 18L18 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </button>
+        </div>
+        <form id="report-form" class="modal__body">
+            <div class="form-group">
+                <label for="report-reason" class="form-label">Reason for reporting</label>
+                <select id="report-reason" name="reason" class="form-select" required>
+                    <option value="">Select a reason...</option>
+                    <option value="spam">Spam</option>
+                    <option value="harassment">Harassment</option>
+                    <option value="inappropriate">Inappropriate Content</option>
+                    <option value="misinformation">Misinformation</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="report-details" class="form-label">Additional details (optional)</label>
+                <textarea id="report-details" name="details" class="form-textarea" rows="4"></textarea>
+            </div>
+            <div class="modal__footer">
+                <button type="button" class="btn btn--ghost" data-modal-close">Cancel</button>
+                <button type="submit" class="btn btn--danger">Submit Report</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+// Like button handler
+document.querySelectorAll('[data-action="like-post"]').forEach(btn => {
+    btn.addEventListener('click', async function() {
+        const postId = this.dataset.postId;
+        const response = await fetch(`/posts/${postId}/like`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (response.ok || response.status === 303) {
+            location.reload();
+        }
+    });
+});
+
+// Share button handler
+document.querySelectorAll('[data-action="share"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.getElementById('share-modal').style.display = 'flex';
+    });
+});
+
+// Copy URL handler
+document.getElementById('copy-url-btn').addEventListener('click', () => {
+    const input = document.getElementById('share-url-input');
+    input.select();
+    document.execCommand('copy');
+    alert('Link copied to clipboard!');
+});
+
+// Report button handler
+document.querySelectorAll('[data-action="report"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.getElementById('report-modal').style.display = 'flex';
+    });
+});
+
+// Report form submission
+document.getElementById('report-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    const postId = {{ post.id }};
+
+    const response = await fetch(`/api/v1/moderation/reports`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            post_id: postId,
+            reason: formData.get('reason'),
+            details: formData.get('details')
+        })
+    });
+
+    if (response.ok) {
+        alert('Report submitted successfully');
+        document.getElementById('report-modal').style.display = 'none';
+        this.reset();
+    }
+});
+
+// Comment form submission
+const commentForm = document.getElementById('comment-form');
+if (commentForm) {
+    commentForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        const postId = this.dataset.postId;
+
+        // Use form action URL (which should be /posts/{post_id}/comments)
+        const response = await fetch(this.action, {
+            method: 'POST',
+            body: formData
+        });
+
+        if (response.ok || response.status === 303) {
+            location.reload();
+        } else {
+            const errorText = await response.text();
+            alert('Failed to post comment: ' + errorText);
+        }
+    });
+}
+
+// Modal close handlers
+document.querySelectorAll('[data-modal-close]').forEach(btn => {
+    btn.addEventListener('click', function() {
+        this.closest('.modal').style.display = 'none';
+    });
+});
+
+// Comment sorting
+document.getElementById('comment-sort')?.addEventListener('change', function() {
+    // Reload page with sort parameter
+    const url = new URL(window.location);
+    url.searchParams.set('sort', this.value);
+    window.location = url;
+});
+</script>
+{% endblock %}

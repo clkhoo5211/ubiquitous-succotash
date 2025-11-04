@@ -1,0 +1,1451 @@
+openapi: 3.1.0
+
+info:
+  title: Decentralized Autonomous Forum API
+  version: 1.0.0
+  description: |
+    RESTful API for the Decentralized Autonomous Forum platform. Features:
+    - Point economy with crypto rewards
+    - User authentication (email + OAuth2)
+    - Post/comment creation with IPFS storage
+    - Reputation-based moderation
+    - BNB Chain integration
+
+    **Base URL**: `https://api.forum.example.com/v1`
+
+    **Authentication**: Session-based (HttpOnly cookies) + JWT for API clients
+
+    **Rate Limiting**:
+    - Anonymous: 100 req/hour
+    - Authenticated: 1000 req/hour
+    - Authenticated (Level 3+): 5000 req/hour
+
+  contact:
+    name: API Support
+    email: support@forum.example.com
+
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: https://api.forum.example.com/v1
+    description: Production server
+  - url: https://staging-api.forum.example.com/v1
+    description: Staging server
+  - url: http://localhost:8000/v1
+    description: Local development server
+
+tags:
+  - name: Authentication
+    description: User registration, login, OAuth2
+  - name: Users
+    description: User profiles, reputation, settings
+  - name: Posts
+    description: Create, read, update, delete posts
+  - name: Comments
+    description: Comment on posts, nested replies
+  - name: Likes
+    description: Like posts and comments
+  - name: Points
+    description: Point transactions, balance, rewards
+  - name: Blockchain
+    description: BNB Chain rewards, wallet integration
+  - name: Media
+    description: IPFS image/video uploads
+  - name: Moderation
+    description: Reports, bans, content moderation
+  - name: Search
+    description: Full-text search for posts and users
+  - name: Channels
+    description: Forum channels/categories
+  - name: Tags
+    description: Post tags
+
+# ============================================================================
+# SECURITY SCHEMES
+# ============================================================================
+
+components:
+  securitySchemes:
+    SessionAuth:
+      type: apiKey
+      in: cookie
+      name: session_id
+      description: Session cookie (HttpOnly, Secure, SameSite=Lax)
+
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token for API clients
+
+# ============================================================================
+# REUSABLE SCHEMAS
+# ============================================================================
+
+  schemas:
+    # ========== User Schemas ==========
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 12345
+        email:
+          type: string
+          format: email
+          example: user@example.com
+        username:
+          type: string
+          minLength: 3
+          maxLength: 50
+          pattern: '^[A-Za-z0-9_-]+$'
+          example: crypto_enthusiast
+        display_name:
+          type: string
+          maxLength: 100
+          example: Crypto Enthusiast
+        bio:
+          type: string
+          maxLength: 500
+          example: "Passionate about DeFi and BNB Chain"
+        avatar_url:
+          type: string
+          format: uri
+          example: "https://ipfs.io/ipfs/Qm..."
+        points:
+          type: integer
+          minimum: 0
+          example: 1250
+        level:
+          type: string
+          enum: [new_user, active_user, trusted_user, moderator, senior_moderator, admin]
+          example: active_user
+        total_posts_created:
+          type: integer
+          example: 42
+        total_comments_created:
+          type: integer
+          example: 128
+        total_likes_received:
+          type: integer
+          example: 456
+        is_verified:
+          type: boolean
+          example: false
+        bnb_wallet_address:
+          type: string
+          pattern: '^0x[a-fA-F0-9]{40}$'
+          example: "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb"
+        created_at:
+          type: string
+          format: date-time
+          example: "2025-10-21T09:25:00Z"
+      required:
+        - id
+        - username
+        - points
+        - level
+
+    UserProfile:
+      allOf:
+        - $ref: '#/components/schemas/User'
+        - type: object
+          properties:
+            recent_posts:
+              type: array
+              items:
+                $ref: '#/components/schemas/PostSummary'
+            recent_comments:
+              type: array
+              items:
+                $ref: '#/components/schemas/CommentSummary'
+
+    # ========== Post Schemas ==========
+    Post:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 789
+        user_id:
+          type: integer
+          format: int64
+          example: 12345
+        author:
+          $ref: '#/components/schemas/UserSummary'
+        title:
+          type: string
+          minLength: 10
+          maxLength: 300
+          example: "How to Stake BNB on PancakeSwap: Complete Guide"
+        body:
+          type: string
+          minLength: 10
+          maxLength: 10000
+          example: "In this guide, I'll walk you through..."
+        body_html:
+          type: string
+          example: "<p>In this guide, I'll walk you through...</p>"
+        slug:
+          type: string
+          example: "how-to-stake-bnb-on-pancakeswap-complete-guide"
+        channel:
+          $ref: '#/components/schemas/ChannelSummary'
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+        like_count:
+          type: integer
+          minimum: 0
+          example: 234
+        comment_count:
+          type: integer
+          minimum: 0
+          example: 56
+        view_count:
+          type: integer
+          minimum: 0
+          example: 1432
+        media:
+          type: array
+          items:
+            $ref: '#/components/schemas/Media'
+        is_pinned:
+          type: boolean
+          example: false
+        is_locked:
+          type: boolean
+          example: false
+        created_at:
+          type: string
+          format: date-time
+          example: "2025-10-21T14:30:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2025-10-21T14:35:00Z"
+        edited_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: null
+      required:
+        - id
+        - user_id
+        - author
+        - title
+        - body
+        - slug
+        - like_count
+        - comment_count
+        - created_at
+
+    PostSummary:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        title:
+          type: string
+        slug:
+          type: string
+        author:
+          $ref: '#/components/schemas/UserSummary'
+        like_count:
+          type: integer
+        comment_count:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+
+    CreatePostRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 10
+          maxLength: 300
+        body:
+          type: string
+          minLength: 10
+          maxLength: 10000
+        channel_id:
+          type: integer
+          format: int64
+          nullable: true
+        tags:
+          type: array
+          maxItems: 5
+          items:
+            type: string
+            maxLength: 50
+      required:
+        - title
+        - body
+
+    UpdatePostRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 10
+          maxLength: 300
+        body:
+          type: string
+          minLength: 10
+          maxLength: 10000
+        tags:
+          type: array
+          maxItems: 5
+          items:
+            type: string
+
+    # ========== Comment Schemas ==========
+    Comment:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        post_id:
+          type: integer
+          format: int64
+        user_id:
+          type: integer
+          format: int64
+        author:
+          $ref: '#/components/schemas/UserSummary'
+        parent_id:
+          type: integer
+          format: int64
+          nullable: true
+        body:
+          type: string
+          minLength: 1
+          maxLength: 2000
+        body_html:
+          type: string
+        like_count:
+          type: integer
+          minimum: 0
+        depth:
+          type: integer
+          minimum: 0
+          maximum: 2
+        replies:
+          type: array
+          items:
+            $ref: '#/components/schemas/Comment'
+        created_at:
+          type: string
+          format: date-time
+        edited_at:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - id
+        - post_id
+        - user_id
+        - author
+        - body
+        - like_count
+        - depth
+        - created_at
+
+    CommentSummary:
+      type: object
+      properties:
+        id:
+          type: integer
+        post_id:
+          type: integer
+        body:
+          type: string
+        author:
+          $ref: '#/components/schemas/UserSummary'
+        like_count:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+
+    CreateCommentRequest:
+      type: object
+      properties:
+        body:
+          type: string
+          minLength: 1
+          maxLength: 2000
+        parent_id:
+          type: integer
+          format: int64
+          nullable: true
+      required:
+        - body
+
+    # ========== Other Schemas ==========
+    UserSummary:
+      type: object
+      properties:
+        id:
+          type: integer
+        username:
+          type: string
+        display_name:
+          type: string
+        avatar_url:
+          type: string
+          format: uri
+        level:
+          type: string
+        is_verified:
+          type: boolean
+
+    ChannelSummary:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        slug:
+          type: string
+        icon:
+          type: string
+        color:
+          type: string
+
+    Tag:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        slug:
+          type: string
+        post_count:
+          type: integer
+
+    Media:
+      type: object
+      properties:
+        id:
+          type: integer
+        file_name:
+          type: string
+        file_size:
+          type: integer
+        mime_type:
+          type: string
+        ipfs_hash:
+          type: string
+        ipfs_url:
+          type: string
+          format: uri
+        width:
+          type: integer
+        height:
+          type: integer
+        alt_text:
+          type: string
+
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        amount:
+          type: integer
+          description: "Positive for earn, negative for spend"
+        type:
+          type: string
+          enum:
+            - registration_bonus
+            - create_post
+            - create_comment
+            - like_content
+            - receive_like
+            - crypto_reward
+            - admin_adjustment
+            - refund
+        description:
+          type: string
+        reference_type:
+          type: string
+          enum: [post, comment]
+          nullable: true
+        reference_id:
+          type: integer
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+
+    BlockchainTransaction:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        transaction_hash:
+          type: string
+          pattern: '^0x[a-fA-F0-9]{64}$'
+        amount_bnb:
+          type: number
+          format: decimal
+        points_spent:
+          type: integer
+        status:
+          type: string
+          enum: [pending, confirmed, failed]
+        block_number:
+          type: integer
+          nullable: true
+        confirmations:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        confirmed_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    Report:
+      type: object
+      properties:
+        id:
+          type: integer
+        reporter:
+          $ref: '#/components/schemas/UserSummary'
+        content_type:
+          type: string
+          enum: [post, comment]
+        content_id:
+          type: integer
+        reported_user:
+          $ref: '#/components/schemas/UserSummary'
+        reason:
+          type: string
+          enum:
+            - spam
+            - harassment
+            - hate_speech
+            - misinformation
+            - nsfw_content
+            - self_promotion
+            - copyright
+            - other
+        description:
+          type: string
+        status:
+          type: string
+          enum: [pending, reviewing, resolved, dismissed, appealed]
+        created_at:
+          type: string
+          format: date-time
+
+    # ========== Error Schemas ==========
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "ValidationError"
+        message:
+          type: string
+          example: "Invalid input data"
+        details:
+          type: object
+          additionalProperties: true
+        timestamp:
+          type: string
+          format: date-time
+      required:
+        - error
+        - message
+
+    # ========== Pagination Schemas ==========
+    PaginationMeta:
+      type: object
+      properties:
+        total:
+          type: integer
+          example: 250
+        page:
+          type: integer
+          example: 1
+        per_page:
+          type: integer
+          example: 20
+        total_pages:
+          type: integer
+          example: 13
+        has_next:
+          type: boolean
+          example: true
+        has_prev:
+          type: boolean
+          example: false
+
+    PostListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PostSummary'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+
+# ============================================================================
+# API ENDPOINTS
+# ============================================================================
+
+paths:
+  # ========== Authentication Endpoints ==========
+  /auth/register:
+    post:
+      tags:
+        - Authentication
+      summary: Register new user with email
+      description: |
+        Create a new user account with email and password.
+        - Password must be at least 8 characters
+        - Username must be 3-50 alphanumeric characters
+        - Receives 100 bonus points upon email verification
+      operationId: registerUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                username:
+                  type: string
+                  minLength: 3
+                  maxLength: 50
+                  pattern: '^[A-Za-z0-9_-]+$'
+                password:
+                  type: string
+                  minLength: 8
+                  format: password
+              required:
+                - email
+                - username
+                - password
+            example:
+              email: "newuser@example.com"
+              username: "crypto_newbie"
+              password: "SecurePass123!"
+      responses:
+        '201':
+          description: User created successfully, verification email sent
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Registration successful. Please check your email to verify your account."
+                  user_id:
+                    type: integer
+                    example: 12345
+        '400':
+          description: Invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Email or username already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Rate limit exceeded (max 5 registrations per hour per IP)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: Login with email and password
+      description: |
+        Authenticate user and create session.
+        - Returns HttpOnly session cookie
+        - Session expires after 7 days of inactivity
+      operationId: loginUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+              required:
+                - email
+                - password
+            example:
+              email: "user@example.com"
+              password: "SecurePass123!"
+      responses:
+        '200':
+          description: Login successful
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: "session_id=abc123; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=604800"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Login successful"
+                  user:
+                    $ref: '#/components/schemas/User'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Rate limit exceeded (max 5 login attempts per 15 minutes per IP)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/logout:
+    post:
+      tags:
+        - Authentication
+      summary: Logout current user
+      description: Invalidate session and clear session cookie
+      operationId: logoutUser
+      security:
+        - SessionAuth: []
+      responses:
+        '200':
+          description: Logout successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Logout successful"
+
+  /auth/oauth/{provider}:
+    get:
+      tags:
+        - Authentication
+      summary: OAuth2 login redirect
+      description: |
+        Redirect to OAuth2 provider for authentication.
+        Supported providers: discord, twitter, telegram, reddit, facebook
+      operationId: oauthLogin
+      parameters:
+        - name: provider
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [discord, twitter, telegram, reddit, facebook]
+      responses:
+        '302':
+          description: Redirect to OAuth2 provider
+
+  /auth/oauth/{provider}/callback:
+    get:
+      tags:
+        - Authentication
+      summary: OAuth2 callback
+      description: Handle OAuth2 provider callback and create session
+      operationId: oauthCallback
+      parameters:
+        - name: provider
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [discord, twitter, telegram, reddit, facebook]
+        - name: code
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: state
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '302':
+          description: Redirect to home page with session cookie
+
+  # ========== User Endpoints ==========
+  /users/me:
+    get:
+      tags:
+        - Users
+      summary: Get current user profile
+      description: Get authenticated user's profile with full details
+      operationId: getCurrentUser
+      security:
+        - SessionAuth: []
+      responses:
+        '200':
+          description: User profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /users/{user_id}:
+    get:
+      tags:
+        - Users
+      summary: Get user profile by ID
+      description: Get public profile of any user
+      operationId: getUserById
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: User profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /users/{username}:
+    get:
+      tags:
+        - Users
+      summary: Get user profile by username
+      description: Get public profile by username
+      operationId: getUserByUsername
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+        '404':
+          description: User not found
+
+  /users/me/update:
+    patch:
+      tags:
+        - Users
+      summary: Update current user profile
+      description: Update display name, bio, avatar
+      operationId: updateCurrentUser
+      security:
+        - SessionAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                display_name:
+                  type: string
+                  maxLength: 100
+                bio:
+                  type: string
+                  maxLength: 500
+                avatar_url:
+                  type: string
+                  format: uri
+      responses:
+        '200':
+          description: Profile updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+
+  # ========== Post Endpoints ==========
+  /posts:
+    get:
+      tags:
+        - Posts
+      summary: List posts
+      description: |
+        Get paginated list of posts with filters
+        - Sort by: created_at (default), trending, top, new
+        - Filter by: channel, tag, author
+      operationId: listPosts
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+            minimum: 1
+        - name: per_page
+          in: query
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+        - name: sort
+          in: query
+          schema:
+            type: string
+            enum: [created_at, trending, top, new]
+            default: created_at
+        - name: channel_id
+          in: query
+          schema:
+            type: integer
+        - name: tag
+          in: query
+          schema:
+            type: string
+        - name: user_id
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: List of posts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostListResponse'
+
+    post:
+      tags:
+        - Posts
+      summary: Create new post
+      description: |
+        Create a new post (costs 5 points)
+        - Title: 10-300 characters
+        - Body: 10-10,000 characters (markdown supported)
+        - Tags: max 5 tags
+      operationId: createPost
+      security:
+        - SessionAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePostRequest'
+            example:
+              title: "How to Stake BNB on PancakeSwap: Complete Guide"
+              body: "In this comprehensive guide, I'll walk you through the step-by-step process..."
+              channel_id: 2
+              tags: ["bnb", "defi", "tutorial", "pancakeswap"]
+      responses:
+        '201':
+          description: Post created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '400':
+          description: Invalid input
+        '401':
+          description: Unauthorized
+        '403':
+          description: Insufficient points or rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /posts/{post_id}:
+    get:
+      tags:
+        - Posts
+      summary: Get post by ID
+      description: Get full post with comments and author details
+      operationId: getPostById
+      parameters:
+        - name: post_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Post details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '404':
+          description: Post not found
+
+    patch:
+      tags:
+        - Posts
+      summary: Update post
+      description: Update post title and/or body (only within 15 minutes of creation)
+      operationId: updatePost
+      security:
+        - SessionAuth: []
+      parameters:
+        - name: post_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePostRequest'
+      responses:
+        '200':
+          description: Post updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '403':
+          description: Cannot edit post (not owner or edit window expired)
+        '404':
+          description: Post not found
+
+    delete:
+      tags:
+        - Posts
+      summary: Delete post
+      description: Delete own post (points not refunded)
+      operationId: deletePost
+      security:
+        - SessionAuth: []
+      parameters:
+        - name: post_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Post deleted
+        '403':
+          description: Cannot delete post (not owner)
+        '404':
+          description: Post not found
+
+  # ========== Comment Endpoints ==========
+  /posts/{post_id}/comments:
+    get:
+      tags:
+        - Comments
+      summary: Get post comments
+      description: Get all comments for a post (nested structure)
+      operationId: getPostComments
+      parameters:
+        - name: post_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: List of comments
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Comment'
+
+    post:
+      tags:
+        - Comments
+      summary: Create comment
+      description: Add a comment to a post (costs 2 points)
+      operationId: createComment
+      security:
+        - SessionAuth: []
+      parameters:
+        - name: post_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCommentRequest'
+      responses:
+        '201':
+          description: Comment created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        '403':
+          description: Insufficient points or rate limit exceeded
+
+  /comments/{comment_id}:
+    delete:
+      tags:
+        - Comments
+      summary: Delete comment
+      description: Delete own comment (points not refunded)
+      operationId: deleteComment
+      security:
+        - SessionAuth: []
+      parameters:
+        - name: comment_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Comment deleted
+        '403':
+          description: Cannot delete comment
+        '404':
+          description: Comment not found
+
+  # ========== Like Endpoints ==========
+  /posts/{post_id}/like:
+    post:
+      tags:
+        - Likes
+      summary: Like a post
+      description: Like a post (costs 1 point)
+      operationId: likePost
+      security:
+        - SessionAuth: []
+      parameters:
+        - name: post_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '201':
+          description: Post liked
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Post liked"
+                  like_count:
+                    type: integer
+                    example: 235
+        '403':
+          description: Insufficient points, already liked, or cannot self-like
+        '404':
+          description: Post not found
+
+    delete:
+      tags:
+        - Likes
+      summary: Unlike a post
+      description: Remove like from post (point refunded)
+      operationId: unlikePost
+      security:
+        - SessionAuth: []
+      parameters:
+        - name: post_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Post unliked
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Post unliked"
+                  like_count:
+                    type: integer
+                    example: 234
+
+  # ========== Point/Transaction Endpoints ==========
+  /users/me/balance:
+    get:
+      tags:
+        - Points
+      summary: Get current point balance
+      description: Get authenticated user's current point balance
+      operationId: getBalance
+      security:
+        - SessionAuth: []
+      responses:
+        '200':
+          description: Current balance
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user_id:
+                    type: integer
+                  balance:
+                    type: integer
+                    example: 1250
+                  level:
+                    type: string
+                    example: "active_user"
+
+  /users/me/transactions:
+    get:
+      tags:
+        - Points
+      summary: Get transaction history
+      description: Get paginated transaction history for authenticated user
+      operationId: getTransactionHistory
+      security:
+        - SessionAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: per_page
+          in: query
+          schema:
+            type: integer
+            default: 20
+            maximum: 100
+      responses:
+        '200':
+          description: Transaction history
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Transaction'
+                  meta:
+                    $ref: '#/components/schemas/PaginationMeta'
+
+  # ========== Blockchain Endpoints ==========
+  /blockchain/wallet/link:
+    post:
+      tags:
+        - Blockchain
+      summary: Link BNB wallet address
+      description: Link BNB Chain wallet address for crypto rewards
+      operationId: linkWallet
+      security:
+        - SessionAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                wallet_address:
+                  type: string
+                  pattern: '^0x[a-fA-F0-9]{40}$'
+                signature:
+                  type: string
+                  description: "Signature proving wallet ownership"
+              required:
+                - wallet_address
+                - signature
+      responses:
+        '200':
+          description: Wallet linked successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Wallet linked successfully"
+                  wallet_address:
+                    type: string
+                    example: "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb"
+        '400':
+          description: Invalid wallet address or signature
+
+  /blockchain/rewards/claim:
+    post:
+      tags:
+        - Blockchain
+      summary: Claim BNB reward
+      description: |
+        Convert 10,000 points to 0.01 BNB reward
+        - Requires linked wallet address
+        - Minimum 10,000 points
+      operationId: claimReward
+      security:
+        - SessionAuth: []
+      responses:
+        '201':
+          description: Reward claimed, transaction initiated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlockchainTransaction'
+        '400':
+          description: Insufficient points or no linked wallet
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /blockchain/transactions:
+    get:
+      tags:
+        - Blockchain
+      summary: Get blockchain transactions
+      description: Get all BNB reward transactions for authenticated user
+      operationId: getBlockchainTransactions
+      security:
+        - SessionAuth: []
+      responses:
+        '200':
+          description: Blockchain transaction history
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/BlockchainTransaction'
+
+  # ========== Search Endpoints ==========
+  /search:
+    get:
+      tags:
+        - Search
+      summary: Full-text search
+      description: Search posts and users using PostgreSQL full-text search
+      operationId: search
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+            minLength: 2
+          description: Search query
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [posts, users, all]
+            default: all
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: per_page
+          in: query
+          schema:
+            type: integer
+            default: 20
+            maximum: 100
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  posts:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PostSummary'
+                  users:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/UserSummary'
+                  meta:
+                    $ref: '#/components/schemas/PaginationMeta'
+
+# ============================================================================
+# END OF OPENAPI SPECIFICATION
+# ============================================================================

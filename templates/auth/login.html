@@ -1,0 +1,239 @@
+{% extends "base.html" %}
+
+{% block title %}Login - Decentralized Autonomous Forum{% endblock %}
+
+{% block body_class %}auth-page{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <!-- Logo/Branding -->
+        <div class="auth-card__header">
+            <img src="{{ url_for('static', path='/images/logo.svg') }}" alt="Forum Logo" class="auth-card__logo">
+            <h1 class="auth-card__title">Welcome Back!</h1>
+            <p class="auth-card__subtitle">Login to continue earning points and engaging with the community</p>
+        </div>
+
+        <!-- Error Message (from server) -->
+        {% if request.query_params.get('error') %}
+        <div class="alert alert--error">
+            <p>{{ request.query_params.get('error') }}</p>
+        </div>
+        {% endif %}
+
+        <!-- Login Form -->
+        <form action="/auth/login" method="POST" class="auth-form" id="login-form">
+            <!-- Email Field -->
+            <div class="form-group">
+                <label for="email" class="form-label">Email Address</label>
+                <input type="email"
+                       id="email"
+                       name="email"
+                       class="form-input"
+                       placeholder="your@email.com"
+                       required
+                       autocomplete="email"
+                       autofocus>
+                <span class="form-error" id="email-error"></span>
+            </div>
+
+            <!-- Password Field -->
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <div class="input-group">
+                    <input type="password"
+                           id="password"
+                           name="password"
+                           class="form-input"
+                           placeholder="Enter your password"
+                           required
+                           autocomplete="current-password"
+                           minlength="8">
+                    <button type="button" class="input-group__btn" id="toggle-password" aria-label="Toggle password visibility">
+                        <svg width="20" height="20" class="eye-icon">
+                            <path d="M1 10s3-6 9-6 9 6 9 6-3 6-9 6-9-6-9-6z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                            <circle cx="10" cy="10" r="3" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                        </svg>
+                    </button>
+                </div>
+                <span class="form-error" id="password-error"></span>
+            </div>
+
+            <!-- Remember Me & Forgot Password -->
+            <div class="form-row">
+                <label class="checkbox">
+                    <input type="checkbox" name="remember_me" id="remember_me">
+                    <span class="checkbox__label">Remember me</span>
+                </label>
+                <a href="/auth/forgot-password" class="form-link">Forgot password?</a>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn--primary btn--lg btn--block" id="login-btn">
+                <span class="btn__text">Login</span>
+                <span class="btn__loader" style="display: none;">
+                    <svg width="20" height="20" viewBox="0 0 20 20" class="spinner">
+                        <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="40" stroke-linecap="round"/>
+                    </svg>
+                </span>
+            </button>
+        </form>
+
+        <!-- Divider -->
+        <div class="auth-divider">
+            <span class="auth-divider__text">Or continue with</span>
+        </div>
+
+        <!-- OAuth2 Social Login -->
+        <div class="oauth-buttons">
+            <a href="/auth/oauth/meta" class="oauth-btn oauth-btn--meta">
+                <svg class="oauth-btn__icon" width="20" height="20" viewBox="0 0 20 20">
+                    <path d="M20 10c0-5.5-4.5-10-10-10S0 4.5 0 10c0 5 3.7 9.1 8.4 9.9v-7H5.9v-2.9h2.5V7.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6v1.9h2.8l-.4 2.9h-2.3v7c4.7-.8 8.3-4.9 8.3-9.9z" fill="currentColor"/>
+                </svg>
+                Meta
+            </a>
+            <a href="/auth/oauth/reddit" class="oauth-btn oauth-btn--reddit">
+                <svg class="oauth-btn__icon" width="20" height="20" viewBox="0 0 20 20">
+                    <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="2" fill="none"/>
+                    <circle cx="7" cy="9" r="1.5" fill="currentColor"/>
+                    <circle cx="13" cy="9" r="1.5" fill="currentColor"/>
+                    <path d="M6 12c0 2.2 1.8 4 4 4s4-1.8 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                </svg>
+                Reddit
+            </a>
+            <a href="/auth/oauth/twitter" class="oauth-btn oauth-btn--twitter">
+                <svg class="oauth-btn__icon" width="20" height="20" viewBox="0 0 20 20">
+                    <use xlink:href="#icon-twitter"/>
+                </svg>
+                X (Twitter)
+            </a>
+        </div>
+
+        <div class="oauth-buttons">
+            <a href="/auth/oauth/discord" class="oauth-btn oauth-btn--discord">
+                <svg class="oauth-btn__icon" width="20" height="20" viewBox="0 0 20 20">
+                    <use xlink:href="#icon-discord"/>
+                </svg>
+                Discord
+            </a>
+            <a href="/auth/oauth/telegram" class="oauth-btn oauth-btn--telegram">
+                <svg class="oauth-btn__icon" width="20" height="20" viewBox="0 0 20 20">
+                    <use xlink:href="#icon-telegram"/>
+                </svg>
+                Telegram
+            </a>
+        </div>
+
+        <!-- Sign Up Link -->
+        <div class="auth-card__footer">
+            <p class="auth-card__footer-text">
+                Don't have an account?
+                <a href="/auth/register" class="auth-card__link">Sign up for free</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Info Panel (Side) -->
+    <div class="auth-info">
+        <h2 class="auth-info__title">Why join our community?</h2>
+        <ul class="auth-info__list">
+            <li class="auth-info__item">
+                <svg class="auth-info__icon" width="24" height="24">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
+                    <path d="M8 12l3 3 5-5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <div>
+                    <strong>Earn Crypto Rewards</strong>
+                    <p>Convert your points to real BNB cryptocurrency</p>
+                </div>
+            </li>
+            <li class="auth-info__item">
+                <svg class="auth-info__icon" width="24" height="24">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
+                    <path d="M8 12l3 3 5-5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <div>
+                    <strong>Level Up Your Influence</strong>
+                    <p>Gain moderation powers through reputation</p>
+                </div>
+            </li>
+            <li class="auth-info__item">
+                <svg class="auth-info__icon" width="24" height="24">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
+                    <path d="M8 12l3 3 5-5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <div>
+                    <strong>Community-Driven</strong>
+                    <p>No admins, governance by reputation</p>
+                </div>
+            </li>
+            <li class="auth-info__item">
+                <svg class="auth-info__icon" width="24" height="24">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
+                    <path d="M8 12l3 3 5-5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <div>
+                    <strong>Privacy First</strong>
+                    <p>Your data, your control - GDPR compliant</p>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+// Toggle password visibility
+document.getElementById('toggle-password').addEventListener('click', function() {
+    const passwordInput = document.getElementById('password');
+    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordInput.setAttribute('type', type);
+
+    // Update icon (optional - could toggle between eye and eye-slash icons)
+    this.querySelector('.eye-icon').style.opacity = type === 'text' ? '0.6' : '1';
+});
+
+// Form submission with loading state
+document.getElementById('login-form').addEventListener('submit', function(e) {
+    const btn = document.getElementById('login-btn');
+    const btnText = btn.querySelector('.btn__text');
+    const btnLoader = btn.querySelector('.btn__loader');
+
+    // Show loading state
+    btn.disabled = true;
+    btnText.style.display = 'none';
+    btnLoader.style.display = 'inline-block';
+
+    // Form will submit naturally
+    // Loading state will be visible during server processing
+});
+
+// Client-side validation (optional enhancement)
+document.getElementById('email').addEventListener('blur', function() {
+    const email = this.value;
+    const errorSpan = document.getElementById('email-error');
+
+    if (email && !email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+        errorSpan.textContent = 'Please enter a valid email address';
+        this.classList.add('form-input--error');
+    } else {
+        errorSpan.textContent = '';
+        this.classList.remove('form-input--error');
+    }
+});
+
+document.getElementById('password').addEventListener('blur', function() {
+    const password = this.value;
+    const errorSpan = document.getElementById('password-error');
+
+    if (password && password.length < 8) {
+        errorSpan.textContent = 'Password must be at least 8 characters';
+        this.classList.add('form-input--error');
+    } else {
+        errorSpan.textContent = '';
+        this.classList.remove('form-input--error');
+    }
+});
+</script>
+{% endblock %}

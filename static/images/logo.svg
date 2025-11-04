@@ -1,0 +1,17 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Hexagon shape representing blockchain/decentralization -->
+  <path d="M24 4L42 14V34L24 44L6 34V14L24 4Z" fill="#F3BA2F" stroke="#D4A029" stroke-width="2" stroke-linejoin="round"/>
+
+  <!-- Inner connection lines representing network -->
+  <path d="M24 12V24M24 24L36 18M24 24L12 18M24 24V36" stroke="#1F2937" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- Nodes at connection points -->
+  <circle cx="24" cy="12" r="2.5" fill="#1F2937"/>
+  <circle cx="36" cy="18" r="2.5" fill="#1F2937"/>
+  <circle cx="12" cy="18" r="2.5" fill="#1F2937"/>
+  <circle cx="24" cy="36" r="2.5" fill="#1F2937"/>
+  <circle cx="24" cy="24" r="3" fill="#1F2937"/>
+
+  <!-- Highlight effect -->
+  <path d="M18 8L24 4L42 14V16L24 6L18 10V8Z" fill="rgba(255, 255, 255, 0.3)"/>
+</svg>

@@ -1,0 +1,44 @@
+{# Comment component #}
+<div class="comment-item" id="comment-{{ comment.id }}">
+    <div class="comment-item__header">
+        <img src="{{ comment.author.avatar_url or url_for('static', path='/images/default-avatar.svg') }}"
+             alt="{{ comment.author.username }}'s avatar"
+             class="comment-item__avatar">
+        <div class="comment-item__info">
+            <div class="comment-item__author">
+                <a href="/profile/{{ comment.author.username }}" class="comment-item__link">
+                    {{ comment.author.username }}
+                </a>
+                <span class="comment-item__badge">{{ comment.author.level.value }}</span>
+            </div>
+            <time class="comment-item__time">{{ comment.created_at.strftime('%b %d, %Y at %I:%M %p') }}</time>
+        </div>
+    </div>
+    
+    <div class="comment-item__body">
+        {{ comment.body_html|safe }}
+    </div>
+    
+    <div class="comment-item__actions">
+        <button class="action-btn">
+            <svg class="action-btn__icon" width="16" height="16">
+                <path d="M10 13.5l-4-4a3 3 0 118-4.5l0 0a3 3 0 118 4.5z" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+            </svg>
+            <span class="action-btn__text">{{ comment.like_count }}</span>
+        </button>
+        {% if current_user and current_user.id == comment.author.id %}
+        <button class="action-btn action-btn--danger">Delete</button>
+        {% endif %}
+    </div>
+    
+    {% if comment.replies_list %}
+    <div class="comment-item__replies">
+        {% for reply in comment.replies_list %}
+        {% with comment=reply %}
+            {% include 'components/comment.html' %}
+        {% endwith %}
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+

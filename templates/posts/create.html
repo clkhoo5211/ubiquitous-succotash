@@ -1,0 +1,436 @@
+{% extends "base.html" %}
+
+{% block title %}Create Post - Decentralized Autonomous Forum{% endblock %}
+
+{% block body_class %}create-post-page{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="create-post-layout">
+        <!-- Main Form -->
+        <main class="create-post-main">
+            <div class="card">
+                <div class="card__header">
+                    <h1 class="card__title">Create New Post</h1>
+                    <p class="card__subtitle">Share your thoughts with the community</p>
+                </div>
+
+                <form action="/posts/create" method="POST" enctype="multipart/form-data" class="post-form" id="create-post-form">
+                    <!-- Channel Selection -->
+                    <div class="form-group">
+                        <label for="channel" class="form-label">
+                            Channel
+                            <span class="form-label__required">*</span>
+                        </label>
+                        <select id="channel" name="channel_id" class="form-select" required>
+                            <option value="">Select a channel...</option>
+                            <option value="1">#general</option>
+                            <option value="2">#crypto</option>
+                            <option value="3">#technology</option>
+                            <option value="4">#offtopic</option>
+                        </select>
+                        <span class="form-help">Choose the most relevant channel for your post</span>
+                    </div>
+
+                    <!-- Title -->
+                    <div class="form-group">
+                        <label for="title" class="form-label">
+                            Title
+                            <span class="form-label__required">*</span>
+                        </label>
+                        <input type="text"
+                               id="title"
+                               name="title"
+                               class="form-input form-input--lg"
+                               placeholder="Enter a descriptive title..."
+                               required
+                               minlength="10"
+                               maxlength="200"
+                               autocomplete="off">
+                        <div class="form-counter">
+                            <span id="title-count">0</span>/200
+                        </div>
+                        <span class="form-error" id="title-error"></span>
+                    </div>
+
+                    <!-- Body/Content -->
+                    <div class="form-group">
+                        <label for="body" class="form-label">
+                            Content
+                            <span class="form-label__required">*</span>
+                        </label>
+                        <div class="editor-toolbar">
+                            <button type="button" class="editor-btn" data-action="bold" title="Bold (Ctrl+B)">
+                                <strong>B</strong>
+                            </button>
+                            <button type="button" class="editor-btn" data-action="italic" title="Italic (Ctrl+I)">
+                                <em>I</em>
+                            </button>
+                            <button type="button" class="editor-btn" data-action="link" title="Insert Link">
+                                <svg width="16" height="16"><path d="M8 5h4a3 3 0 010 6H8m0-6H4a3 3 0 000 6h4m-4-3h8" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+                            </button>
+                            <button type="button" class="editor-btn" data-action="code" title="Code Block">
+                                <svg width="16" height="16"><path d="M5 4l-3 4 3 4m6-8l3 4-3 4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </button>
+                            <button type="button" class="editor-btn" data-action="list" title="Bullet List">
+                                <svg width="16" height="16"><path d="M2 4h12M2 8h12M2 12h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="2" cy="4" r="1" fill="currentColor"/><circle cx="2" cy="8" r="1" fill="currentColor"/><circle cx="2" cy="12" r="1" fill="currentColor"/></svg>
+                            </button>
+                        </div>
+                        <textarea id="body"
+                                  name="body"
+                                  class="form-textarea form-textarea--editor"
+                                  placeholder="Write your post content here... Markdown supported!"
+                                  required
+                                  minlength="20"
+                                  rows="12"></textarea>
+                        <div class="editor-footer">
+                            <span class="editor-footer__help">
+                                <svg width="14" height="14"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/><text x="7" y="10" font-size="8" text-anchor="middle" fill="currentColor">?</text></svg>
+                                Markdown formatting supported
+                            </span>
+                            <span class="form-counter" id="body-count">0 characters</span>
+                        </div>
+                        <span class="form-error" id="body-error"></span>
+                    </div>
+
+                    <!-- Media Upload (Optional) -->
+                    <div class="form-group">
+                        <label for="media" class="form-label">
+                            Attachments (Optional)
+                        </label>
+                        <div class="file-upload" id="file-upload-area">
+                            <input type="file"
+                                   id="media"
+                                   name="media"
+                                   class="file-upload__input"
+                                   accept="image/jpeg,image/png,image/gif,image/webp,video/mp4"
+                                   multiple>
+                            <div class="file-upload__placeholder">
+                                <svg class="file-upload__icon" width="48" height="48">
+                                    <rect x="8" y="12" width="32" height="28" rx="2" stroke="currentColor" stroke-width="2" fill="none"/>
+                                    <path d="M8 28l8-8 6 6 4-4 6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <circle cx="18" cy="20" r="2" fill="currentColor"/>
+                                </svg>
+                                <p class="file-upload__text">
+                                    <strong>Click to upload</strong> or drag and drop
+                                </p>
+                                <p class="file-upload__hint">
+                                    PNG, JPG, GIF, WebP, MP4 (max 10MB per file)
+                                </p>
+                            </div>
+                            <div class="file-upload__preview" id="file-preview" style="display: none;"></div>
+                        </div>
+                        <span class="form-help">Files will be stored on IPFS (decentralized storage)</span>
+                    </div>
+
+                    <!-- Tags -->
+                    <div class="form-group">
+                        <label for="tags" class="form-label">
+                            Tags (Optional)
+                        </label>
+                        <div class="tag-input" id="tag-input">
+                            <div class="tag-input__tags" id="tag-list"></div>
+                            <input type="text"
+                                   id="tags"
+                                   class="tag-input__field"
+                                   placeholder="Add tags (press Enter)..."
+                                   autocomplete="off">
+                        </div>
+                        <input type="hidden" name="tags" id="tags-hidden">
+                        <span class="form-help">Add up to 5 tags to help others discover your post</span>
+                    </div>
+
+                    <!-- Cost Notice -->
+                    <div class="alert alert--info">
+                        <svg class="alert__icon" width="20" height="20">
+                            <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                            <path d="M10 10v4m0-8v1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                        <div class="alert__content">
+                            <strong>Posting Cost: 5 points</strong>
+                            <p>Your current balance: <strong>{{ current_user.points }} points</strong></p>
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="form-actions">
+                        <a href="/" class="btn btn--ghost">Cancel</a>
+                        <button type="button" class="btn btn--secondary" id="preview-btn">
+                            <svg width="16" height="16"><path d="M1 8s3-6 9-6 9 6 9 6-3 6-9 6-9-6-9-6z" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="10" cy="8" r="3" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+                            Preview
+                        </button>
+                        <button type="submit" class="btn btn--primary" id="submit-btn">
+                            <span class="btn__text">
+                                <svg width="16" height="16"><path d="M2 8h12M8 2l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                Publish Post
+                            </span>
+                            <span class="btn__loader" style="display: none;">
+                                <svg width="20" height="20" viewBox="0 0 20 20" class="spinner">
+                                    <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="40" stroke-linecap="round"/>
+                                </svg>
+                            </span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+
+        <!-- Sidebar (Guidelines) -->
+        <aside class="create-post-sidebar">
+            <!-- Posting Guidelines -->
+            <div class="card card--info">
+                <h2 class="card__title">📝 Posting Guidelines</h2>
+                <ul class="guideline-list">
+                    <li class="guideline-item">
+                        <svg class="guideline-item__icon" width="16" height="16"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        Be respectful and constructive
+                    </li>
+                    <li class="guideline-item">
+                        <svg class="guideline-item__icon" width="16" height="16"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        Choose the right channel
+                    </li>
+                    <li class="guideline-item">
+                        <svg class="guideline-item__icon" width="16" height="16"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        Use descriptive titles
+                    </li>
+                    <li class="guideline-item">
+                        <svg class="guideline-item__icon" width="16" height="16"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        Provide context and details
+                    </li>
+                    <li class="guideline-item">
+                        <svg class="guideline-item__icon" width="16" height="16"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        Check for duplicates first
+                    </li>
+                    <li class="guideline-item">
+                        <svg class="guideline-item__icon" width="16" height="16"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        No spam or self-promotion
+                    </li>
+                </ul>
+                <a href="/help/community-guidelines" class="card__link">Full guidelines →</a>
+            </div>
+
+            <!-- Point Economy Info -->
+            <div class="card">
+                <h2 class="card__title">💰 Point Economy</h2>
+                <dl class="info-list">
+                    <div class="info-item">
+                        <dt class="info-item__label">Creating Post</dt>
+                        <dd class="info-item__value points-cost">-5 points</dd>
+                    </div>
+                    <div class="info-item">
+                        <dt class="info-item__label">Receive Upvote</dt>
+                        <dd class="info-item__value points-earn">+3 points</dd>
+                    </div>
+                    <div class="info-item">
+                        <dt class="info-item__label">Milestone (10 likes)</dt>
+                        <dd class="info-item__value points-earn">+30 points</dd>
+                    </div>
+                    <div class="info-item">
+                        <dt class="info-item__label">Milestone (100 likes)</dt>
+                        <dd class="info-item__value points-earn">+350 points</dd>
+                    </div>
+                </dl>
+                <p class="card__text">Quality content earns you rewards!</p>
+            </div>
+
+            <!-- Markdown Help -->
+            <div class="card">
+                <h2 class="card__title">✍️ Formatting Help</h2>
+                <div class="markdown-help">
+                    <code>**bold**</code> → <strong>bold</strong><br>
+                    <code>*italic*</code> → <em>italic</em><br>
+                    <code>[link](url)</code> → <a href="#">link</a><br>
+                    <code>`code`</code> → <code>code</code><br>
+                    <code>- list item</code> → • list item
+                </div>
+                <a href="/help/markdown" class="card__link">Markdown guide →</a>
+            </div>
+        </aside>
+    </div>
+</div>
+
+<!-- Preview Modal -->
+<div class="modal" id="preview-modal" style="display: none;">
+    <div class="modal__overlay" id="preview-modal-overlay"></div>
+    <div class="modal__container">
+        <div class="modal__header">
+            <h2 class="modal__title">Post Preview</h2>
+            <button class="modal__close" id="preview-modal-close" aria-label="Close preview">
+                <svg width="24" height="24"><path d="M6 6l12 12M6 18L18 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </button>
+        </div>
+        <div class="modal__body">
+            <article class="post-preview" id="preview-content">
+                <h1 class="post-preview__title"></h1>
+                <div class="post-preview__body"></div>
+                <div class="post-preview__tags"></div>
+            </article>
+        </div>
+        <div class="modal__footer">
+            <button class="btn btn--ghost" id="preview-modal-back">Back to Editing</button>
+            <button class="btn btn--primary" id="preview-modal-publish">Looks Good, Publish!</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+// Character counters
+document.getElementById('title').addEventListener('input', function() {
+    document.getElementById('title-count').textContent = this.value.length;
+});
+
+document.getElementById('body').addEventListener('input', function() {
+    document.getElementById('body-count').textContent = this.value.length + ' characters';
+});
+
+// File upload handling
+const fileInput = document.getElementById('media');
+const fileUploadArea = document.getElementById('file-upload-area');
+const filePreview = document.getElementById('file-preview');
+
+fileUploadArea.addEventListener('click', () => fileInput.click());
+
+fileUploadArea.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    fileUploadArea.classList.add('file-upload--dragover');
+});
+
+fileUploadArea.addEventListener('dragleave', () => {
+    fileUploadArea.classList.remove('file-upload--dragover');
+});
+
+fileUploadArea.addEventListener('drop', (e) => {
+    e.preventDefault();
+    fileUploadArea.classList.remove('file-upload--dragover');
+    fileInput.files = e.dataTransfer.files;
+    handleFiles(e.dataTransfer.files);
+});
+
+fileInput.addEventListener('change', () => handleFiles(fileInput.files));
+
+function handleFiles(files) {
+    if (files.length > 0) {
+        filePreview.style.display = 'grid';
+        filePreview.innerHTML = '';
+
+        Array.from(files).forEach(file => {
+            const preview = document.createElement('div');
+            preview.className = 'file-preview-item';
+
+            if (file.type.startsWith('image/')) {
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                preview.appendChild(img);
+            } else if (file.type.startsWith('video/')) {
+                const video = document.createElement('video');
+                video.src = URL.createObjectURL(file);
+                video.controls = true;
+                preview.appendChild(video);
+            }
+
+            const fileName = document.createElement('span');
+            fileName.textContent = file.name;
+            fileName.className = 'file-preview-item__name';
+            preview.appendChild(fileName);
+
+            filePreview.appendChild(preview);
+        });
+    }
+}
+
+// Tag input handling
+const tagInput = document.getElementById('tags');
+const tagList = document.getElementById('tag-list');
+const tagsHidden = document.getElementById('tags-hidden');
+let tags = [];
+
+tagInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        const tag = this.value.trim().toLowerCase();
+
+        if (tag && tags.length < 5 && !tags.includes(tag)) {
+            tags.push(tag);
+            addTagElement(tag);
+            this.value = '';
+            updateHiddenTags();
+        }
+    }
+});
+
+function addTagElement(tag) {
+    const tagEl = document.createElement('span');
+    tagEl.className = 'tag tag--removable';
+    tagEl.innerHTML = `
+        ${tag}
+        <button type="button" class="tag__remove" data-tag="${tag}">×</button>
+    `;
+    tagList.appendChild(tagEl);
+
+    tagEl.querySelector('.tag__remove').addEventListener('click', function() {
+        const tagToRemove = this.dataset.tag;
+        tags = tags.filter(t => t !== tagToRemove);
+        tagEl.remove();
+        updateHiddenTags();
+    });
+}
+
+function updateHiddenTags() {
+    tagsHidden.value = tags.join(',');
+}
+
+// Preview modal
+document.getElementById('preview-btn').addEventListener('click', function() {
+    const title = document.getElementById('title').value;
+    const body = document.getElementById('body').value;
+
+    if (!title || !body) {
+        alert('Please fill in title and content first');
+        return;
+    }
+
+    document.querySelector('.post-preview__title').textContent = title;
+    document.querySelector('.post-preview__body').innerHTML = body.replace(/\n/g, '<br>');
+
+    const tagsContainer = document.querySelector('.post-preview__tags');
+    tagsContainer.innerHTML = tags.map(tag => `<span class="tag">${tag}</span>`).join('');
+
+    document.getElementById('preview-modal').style.display = 'flex';
+});
+
+document.getElementById('preview-modal-close').addEventListener('click', closePreview);
+document.getElementById('preview-modal-overlay').addEventListener('click', closePreview);
+document.getElementById('preview-modal-back').addEventListener('click', closePreview);
+
+function closePreview() {
+    document.getElementById('preview-modal').style.display = 'none';
+}
+
+document.getElementById('preview-modal-publish').addEventListener('click', function() {
+    closePreview();
+    document.getElementById('create-post-form').requestSubmit();
+});
+
+// Form submission
+document.getElementById('create-post-form').addEventListener('submit', function(e) {
+    const btn = document.getElementById('submit-btn');
+    const btnText = btn.querySelector('.btn__text');
+    const btnLoader = btn.querySelector('.btn__loader');
+
+    btn.disabled = true;
+    btnText.style.display = 'none';
+    btnLoader.style.display = 'inline-block';
+});
+
+// Check point balance
+const userPoints = {{ current_user.points }};
+if (userPoints < 5) {
+    document.getElementById('submit-btn').disabled = true;
+    const alert = document.querySelector('.alert--info');
+    alert.className = 'alert alert--warning';
+    alert.querySelector('p').innerHTML = '<strong>Insufficient points!</strong> You need at least 5 points to create a post. <a href="/rewards">Get more points</a>';
+}
+</script>
+{% endblock %}

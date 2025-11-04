@@ -1,0 +1,401 @@
+{% extends "base.html" %}
+
+{% block title %}{{ profile_user.display_name or profile_user.username }} - Decentralized Autonomous Forum{% endblock %}
+
+{% block body_class %}profile-page{% endblock %}
+
+{% block extra_head %}
+<meta property="og:title" content="{{ profile_user.display_name or profile_user.username }}'s Profile">
+<meta property="og:description" content="{{ profile_user.bio or 'View this user\'s profile on Decentralized Autonomous Forum' }}">
+<meta property="og:type" content="profile">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Profile Header -->
+    <header class="profile-header">
+        <div class="profile-header__bg"></div>
+        <div class="profile-header__content">
+            <!-- Avatar -->
+            <div class="profile-avatar">
+                <img src="{{ profile_user.avatar_url if profile_user and profile_user.avatar_url else url_for('static', path='/images/default-avatar.svg') }}"
+                     alt="{{ profile_user.username if profile_user else 'Anonymous' }}'s avatar"
+                     class="profile-avatar__img">
+                {% if profile_user and profile_user.level %}
+                <span class="user-level user-level--{{ profile_user.level }} user-level--badge">
+                    {{ profile_user.level.value.replace('_', ' ').title() }}
+                </span>
+                {% else %}
+                <span class="user-level user-level--new_user user-level--badge">New User</span>
+                {% endif %}
+            </div>
+
+            <!-- User Info -->
+            <div class="profile-info">
+                <h1 class="profile-info__name">
+                    {{ profile_user.display_name if profile_user and profile_user.display_name else (profile_user.username if profile_user else 'User Not Found') }}
+                </h1>
+                <p class="profile-info__username">@{{ profile_user.username if profile_user else 'anonymous' }}</p>
+
+                {% if profile_user and profile_user.bio %}
+                <p class="profile-info__bio">{{ profile_user.bio }}</p>
+                {% endif %}
+
+                <!-- Website Link -->
+                {% if profile_user and profile_user.website %}
+                <a href="{{ profile_user.website }}" target="_blank" rel="noopener noreferrer" class="profile-info__website">
+                    <svg width="16" height="16">
+                        <path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 0v14M1 8h14M3 3.5a7 7 0 0110 0M3 12.5a7 7 0 0010 0" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                    </svg>
+                    {{ profile_user.website.replace('https://', '').replace('http://', '') }}
+                </a>
+                {% endif %}
+
+                <!-- Join Date -->
+                {% if profile_user and profile_user.created_at %}
+                <p class="profile-info__joined">
+                    <svg width="16" height="16">
+                        <rect x="2" y="4" width="12" height="11" rx="2" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                        <path d="M2 7h12M5 2v3m6-3v3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                    Joined {{ profile_user.created_at.strftime('%B %Y') }}
+                </p>
+                {% endif %}
+            </div>
+
+            <!-- Profile Actions -->
+            <div class="profile-actions">
+                {% if profile_user and current_user and current_user.id == profile_user.id %}
+                <!-- Own Profile -->
+                <a href="/settings" class="btn btn--secondary">
+                    <svg width="16" height="16"><use xlink:href="#icon-settings"/></svg>
+                    Edit Profile
+                </a>
+                <a href="/rewards/crypto" class="btn btn--primary">
+                    <svg width="16" height="16"><use xlink:href="#icon-crypto"/></svg>
+                    Crypto Rewards
+                </a>
+                {% else %}
+                <!-- Other User's Profile -->
+                <button class="btn btn--ghost" data-action="message-user">
+                    <svg width="16" height="16">
+                        <path d="M3 5a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2H8l-4 3v-3a2 2 0 01-1-1V5z" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+                    </svg>
+                    Message
+                </button>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <!-- Stats Cards -->
+    <div class="profile-stats">
+        <div class="stat-card">
+            <div class="stat-card__icon stat-card__icon--primary">
+                <svg width="24" height="24">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
+                    <text x="12" y="16" font-size="12" text-anchor="middle" fill="currentColor">P</text>
+                </svg>
+            </div>
+            <div class="stat-card__info">
+                <p class="stat-card__label">Points</p>
+                <p class="stat-card__value">{{ profile_user.points if profile_user.points else 0 }}</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-card__icon stat-card__icon--success">
+                <svg width="24" height="24">
+                    <path d="M4 6h16M4 6v10a2 2 0 002 2h12a2 2 0 002-2V6M8 6V4h8v2" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M8 11h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </div>
+            <div class="stat-card__info">
+                <p class="stat-card__label">Posts</p>
+                <p class="stat-card__value">{{ post_count }}</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-card__icon stat-card__icon--info">
+                <svg width="24" height="24">
+                    <path d="M3 5a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2H8l-4 3v-3a2 2 0 01-1-1V5z" stroke="currentColor" stroke-width="2" fill="none" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="stat-card__info">
+                <p class="stat-card__label">Comments</p>
+                <p class="stat-card__value">{{ comment_count }}</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-card__icon stat-card__icon--danger">
+                <svg width="24" height="24">
+                    <path d="M12 3l-8 8a4 4 0 008 8l0 0a4 4 0 008-8z" stroke="currentColor" stroke-width="2" fill="none" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="stat-card__info">
+                <p class="stat-card__label">Likes Received</p>
+                <p class="stat-card__value">{{ total_likes }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Content Tabs -->
+    <div class="profile-content">
+        <!-- Tab Navigation -->
+        <nav class="tabs">
+            <button class="tabs__tab tabs__tab--active" data-tab="posts">
+                <svg width="18" height="18">
+                    <path d="M4 6h16M4 6v10a2 2 0 002 2h12a2 2 0 002-2V6M8 6V4h8v2" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Posts
+                <span class="tabs__badge">{{ post_count }}</span>
+            </button>
+            <button class="tabs__tab" data-tab="comments">
+                <svg width="18" height="18">
+                    <path d="M3 5a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2H8l-4 3v-3a2 2 0 01-1-1V5z" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+                </svg>
+                Comments
+                <span class="tabs__badge">{{ comment_count }}</span>
+            </button>
+            <button class="tabs__tab" data-tab="activity">
+                <svg width="18" height="18">
+                    <path d="M2 10h4l3-6 3 12 3-6h3" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Activity
+            </button>
+            {% if profile_user.bnb_wallet_address %}
+            <button class="tabs__tab" data-tab="crypto">
+                <svg width="18" height="18"><use xlink:href="#icon-crypto"/></svg>
+                Crypto
+            </button>
+            {% endif %}
+        </nav>
+
+        <!-- Tab Content: Posts -->
+        <div class="tabs__content tabs__content--active" data-content="posts">
+            {% if user_posts %}
+            <div class="posts-grid">
+                {% for post in user_posts %}
+                <article class="post-preview-card">
+                    <!-- Post Header -->
+                    <div class="post-preview-card__header">
+                        {% if post.channel %}
+                        <a href="/channels/{{ post.channel.slug }}" class="channel-badge channel-badge--sm">
+                            #{{ post.channel.name }}
+                        </a>
+                        {% endif %}
+                        <time class="post-preview-card__time" datetime="{{ post.created_at.isoformat() }}">
+                            {{ post.created_at.strftime('%b %d, %Y') }}
+                        </time>
+                    </div>
+
+                    <!-- Post Content -->
+                    <a href="/posts/{{ post.id }}" class="post-preview-card__link">
+                        <h3 class="post-preview-card__title">{{ post.title }}</h3>
+                        <p class="post-preview-card__excerpt">
+                            {{ post.body[:150] }}{% if post.body|length > 150 %}...{% endif %}
+                        </p>
+                    </a>
+
+                    <!-- Post Stats -->
+                    <div class="post-preview-card__stats">
+                        <span class="post-stat">
+                            <svg width="14" height="14">
+                                <path d="M7 10.5l-4-4a3 3 0 114-4l0 0a3 3 0 114 4z" stroke="currentColor" stroke-width="1.2" fill="none" stroke-linejoin="round"/>
+                            </svg>
+                            {{ post.like_count }}
+                        </span>
+                        <span class="post-stat">
+                            <svg width="14" height="14">
+                                <path d="M2 4a1.5 1.5 0 011.5-1.5h7a1.5 1.5 0 011.5 1.5v6a1.5 1.5 0 01-1.5 1.5H6l-3 2.5v-2.5a1.5 1.5 0 01-1-1V4z" stroke="currentColor" stroke-width="1.2" fill="none" stroke-linejoin="round"/>
+                            </svg>
+                            {{ post.comment_count }}
+                        </span>
+                        <span class="post-stat">
+                            <svg width="14" height="14">
+                                <path d="M1 6s2-4 6-4 6 4 6 4-2 4-6 4-6-4-6-4z" stroke="currentColor" stroke-width="1.2" fill="none"/>
+                                <circle cx="7" cy="6" r="1.5" stroke="currentColor" stroke-width="1.2" fill="none"/>
+                            </svg>
+                            {{ post.view_count }}
+                        </span>
+                    </div>
+
+                    <!-- Tags -->
+                    {% if post.tags %}
+                    <div class="post-preview-card__tags">
+                        {% for post_tag in post.tags[:3] %}
+                        <span class="tag tag--sm">{{ post_tag.tag.name }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </article>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            {% if total_posts > 12 %}
+            <div class="pagination">
+                <button class="btn btn--ghost btn--sm" {% if page == 1 %}disabled{% endif %}>Previous</button>
+                <span class="pagination__info">Page {{ page }} of {{ (total_posts / 12)|round(0, 'ceil')|int }}</span>
+                <button class="btn btn--ghost btn--sm" {% if page >= (total_posts / 12)|round(0, 'ceil')|int %}disabled{% endif %}>Next</button>
+            </div>
+            {% endif %}
+            {% else %}
+            <div class="empty-state">
+                <svg width="64" height="64" class="empty-state__icon">
+                    <path d="M8 12h48M8 12v32a4 4 0 004 4h40a4 4 0 004-4V12M16 12V8h32v4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <p class="empty-state__text">No posts yet</p>
+                {% if current_user and current_user.id == profile_user.id %}
+                <a href="/posts/create" class="btn btn--primary">Create Your First Post</a>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Tab Content: Comments -->
+        <div class="tabs__content" data-content="comments">
+            {% if user_comments %}
+            <div class="comments-timeline">
+                {% for comment in user_comments %}
+                <div class="comment-timeline-item">
+                    <div class="comment-timeline-item__header">
+                        <span class="comment-timeline-item__action">Commented on</span>
+                        <a href="/posts/{{ comment.post.id }}#comment-{{ comment.id }}" class="comment-timeline-item__post-link">
+                            {{ comment.post.title }}
+                        </a>
+                        <time class="comment-timeline-item__time" datetime="{{ comment.created_at.isoformat() }}">
+                            {{ comment.created_at.strftime('%b %d, %Y at %I:%M %p') }}
+                        </time>
+                    </div>
+                    <div class="comment-timeline-item__body prose">
+                        {{ comment.body_html|safe }}
+                    </div>
+                    <div class="comment-timeline-item__stats">
+                        <span class="post-stat">
+                            <svg width="14" height="14">
+                                <path d="M7 10.5l-4-4a3 3 0 114-4l0 0a3 3 0 114 4z" stroke="currentColor" stroke-width="1.2" fill="none" stroke-linejoin="round"/>
+                            </svg>
+                            {{ comment.like_count }} likes
+                        </span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <svg width="64" height="64" class="empty-state__icon">
+                    <path d="M8 12a4 4 0 014-4h40a4 4 0 014 4v28a4 4 0 01-4 4H24l-12 8v-8a4 4 0 01-4-4V12z" stroke="currentColor" stroke-width="2" fill="none" stroke-linejoin="round"/>
+                </svg>
+                <p class="empty-state__text">No comments yet</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Tab Content: Activity -->
+        <div class="tabs__content" data-content="activity">
+            <div class="activity-feed">
+                {% if activity_feed %}
+                    {% for activity in activity_feed %}
+                    <div class="activity-item activity-item--{{ activity.type }}">
+                        <div class="activity-item__icon">
+                            {% if activity.type == 'post_created' %}
+                            <svg width="20" height="20"><path d="M4 6h12M4 6v8a2 2 0 002 2h8a2 2 0 002-2V6" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+                            {% elif activity.type == 'comment_created' %}
+                            <svg width="20" height="20"><use xlink:href="#icon-info"/></svg>
+                            {% elif activity.type == 'like_given' %}
+                            <svg width="20" height="20"><path d="M10 15l-5-5a3 3 0 115-5l0 0a3 3 0 115 5z" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+                            {% elif activity.type == 'level_up' %}
+                            <svg width="20" height="20"><path d="M10 2l2 6h6l-5 4 2 6-5-4-5 4 2-6-5-4h6z" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linejoin="round"/></svg>
+                            {% endif %}
+                        </div>
+                        <div class="activity-item__content">
+                            <p class="activity-item__text">{{ activity.description }}</p>
+                            <time class="activity-item__time" datetime="{{ activity.created_at.isoformat() }}">
+                                {{ activity.created_at.strftime('%b %d, %Y at %I:%M %p') }}
+                            </time>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                <div class="empty-state">
+                    <svg width="64" height="64" class="empty-state__icon">
+                        <path d="M8 32h16M8 20h24M8 44h20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <p class="empty-state__text">No recent activity</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Tab Content: Crypto (if wallet connected) -->
+        {% if profile_user.bnb_wallet_address %}
+        <div class="tabs__content" data-content="crypto">
+            <div class="crypto-info">
+                <div class="card">
+                    <h3 class="card__title">BNB Chain Wallet</h3>
+                    <div class="wallet-address">
+                        <code class="wallet-address__code">{{ profile_user.bnb_wallet_address }}</code>
+                        <button class="btn btn--ghost btn--sm" data-action="copy-wallet">
+                            Copy
+                        </button>
+                    </div>
+                    <a href="https://bscscan.com/address/{{ profile_user.bnb_wallet_address }}"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       class="btn btn--ghost btn--sm btn--block">
+                        View on BscScan
+                        <svg width="14" height="14">
+                            <path d="M10 2h4v4M14 2L6 10" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                        </svg>
+                    </a>
+                </div>
+
+                {% if current_user and current_user.id == profile_user.id %}
+                <div class="card card--success">
+                    <h3 class="card__title">Rewards Available</h3>
+                    <p class="card__text">You have <strong>{{ profile_user.points }}</strong> points available for crypto rewards.</p>
+                    <a href="/rewards/crypto" class="btn btn--primary btn--block">
+                        <svg width="16" height="16"><use xlink:href="#icon-crypto"/></svg>
+                        Claim Crypto Rewards
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+// Tab switching
+document.querySelectorAll('.tabs__tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+        const targetTab = this.dataset.tab;
+
+        // Update active tab
+        document.querySelectorAll('.tabs__tab').forEach(t => t.classList.remove('tabs__tab--active'));
+        this.classList.add('tabs__tab--active');
+
+        // Update active content
+        document.querySelectorAll('.tabs__content').forEach(c => c.classList.remove('tabs__content--active'));
+        document.querySelector(`[data-content="${targetTab}"]`).classList.add('tabs__content--active');
+    });
+});
+
+// Copy wallet address
+document.querySelectorAll('[data-action="copy-wallet"]').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const wallet = '{{ profile_user.bnb_wallet_address }}';
+        navigator.clipboard.writeText(wallet).then(() => {
+            this.textContent = 'Copied!';
+            setTimeout(() => this.textContent = 'Copy', 2000);
+        });
+    });
+});
+</script>
+{% endblock %}

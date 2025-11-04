@@ -1,0 +1,416 @@
+# Decentralized Forum Configuration
+# Copy this file to config.local.yaml and fill in your actual values
+
+application:
+  name: "Decentralized Forum"
+  environment: "development"  # development, staging, production
+  debug: true
+  secret_key: "your-secret-key-here-generate-a-secure-one"
+
+database:
+  # Supabase PostgreSQL or Neon serverless
+  url: "postgresql+asyncpg://user:password@host:port/dbname"
+  pool_size: 10
+  max_overflow: 20
+  echo: false  # Set to true for SQL query logging
+
+redis:
+  url: "redis://localhost:6379/0"
+  max_connections: 50
+  decode_responses: true
+
+oauth:
+  # Meta/Facebook Login
+  meta:
+    client_id: "your-meta-client-id"
+    client_secret: "your-meta-client-secret"
+    redirect_uri: "http://localhost:8000/auth/meta/callback"
+    scope: "email,public_profile"
+
+  # Reddit OAuth2
+  reddit:
+    client_id: "your-reddit-client-id"
+    client_secret: "your-reddit-client-secret"
+    redirect_uri: "http://localhost:8000/auth/reddit/callback"
+    scope: "identity,read"
+
+  # X/Twitter OAuth2
+  twitter:
+    client_id: "your-twitter-client-id"
+    client_secret: "your-twitter-client-secret"
+    redirect_uri: "http://localhost:8000/auth/twitter/callback"
+    scope: "tweet.read,users.read"
+
+  # Discord OAuth2
+  discord:
+    client_id: "your-discord-client-id"
+    client_secret: "your-discord-client-secret"
+    redirect_uri: "http://localhost:8000/auth/discord/callback"
+    scope: "identify,email"
+
+  # Telegram Bot Login
+  telegram:
+    bot_token: "your-telegram-bot-token"
+    bot_username: "your_bot_username"
+
+payments:
+  # Crypto Payment Configuration (BNB Chain)
+  method: "crypto"  # crypto only (no PayPal)
+
+  # Recipient Address (USDT BEP-20 on BNB Chain)
+  recipient_address: "0x0000000000000000000000000000000000000000"  # Your BNB Chain address for receiving USDT
+
+  # Supported Cryptocurrencies on BNB Chain
+  supported_tokens:
+    # USDT (BEP-20) - Direct transfer, no swap needed
+    usdt:
+      contract_address: "0x55d398326f99059fF775485246999027B3197955"  # USDT BEP-20
+      decimals: 18
+      symbol: "USDT"
+      direct_transfer: true  # Send directly to recipient_address
+      swap_required: false
+
+    # BNB (Native token) - Swap to USDT via PancakeSwap
+    bnb:
+      contract_address: "0x0000000000000000000000000000000000000000"  # Native BNB (no contract)
+      decimals: 18
+      symbol: "BNB"
+      direct_transfer: false
+      swap_required: true
+      swap_protocol: "pancakeswap_v2"
+
+    # BUSD (BEP-20) - Swap to USDT via PancakeSwap
+    busd:
+      contract_address: "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56"  # BUSD BEP-20
+      decimals: 18
+      symbol: "BUSD"
+      direct_transfer: false
+      swap_required: true
+      swap_protocol: "pancakeswap_v2"
+
+    # USDC (BEP-20) - Swap to USDT via PancakeSwap
+    usdc:
+      contract_address: "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d"  # USDC BEP-20
+      decimals: 18
+      symbol: "USDC"
+      direct_transfer: false
+      swap_required: true
+      swap_protocol: "pancakeswap_v2"
+
+    # WBNB (Wrapped BNB) - Swap to USDT via PancakeSwap
+    wbnb:
+      contract_address: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"  # WBNB BEP-20
+      decimals: 18
+      symbol: "WBNB"
+      direct_transfer: false
+      swap_required: true
+      swap_protocol: "pancakeswap_v2"
+
+  # PancakeSwap V2 Router Configuration
+  pancakeswap:
+    router_address: "0x10ED43C718714eb63d5aA57B78B54704E256024E"  # PancakeSwap V2 Router
+    factory_address: "0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73"  # PancakeSwap V2 Factory
+    slippage_tolerance_percent: 1.0  # 1% slippage tolerance for swaps
+    deadline_minutes: 20  # Transaction deadline (20 minutes)
+    min_output_percent: 98.0  # Minimum 98% of expected output (2% max slippage)
+
+  # Point Packages (USDT to Points conversion)
+  packages:
+    - amount_usdt: 5.00
+      points: 500
+      bonus_percent: 0
+      description: "Starter Package"
+
+    - amount_usdt: 10.00
+      points: 1100
+      bonus_percent: 10
+      description: "Basic Package"
+
+    - amount_usdt: 25.00
+      points: 2750
+      bonus_percent: 10
+      description: "Popular Package"
+
+    - amount_usdt: 50.00
+      points: 5750
+      bonus_percent: 15
+      description: "Premium Package"
+
+  # Transaction Settings
+  transaction:
+    confirmation_blocks: 3  # Wait for 3 block confirmations
+    timeout_minutes: 30  # Payment timeout
+    gas_limit_swap: 300000  # Gas limit for swap transactions
+    gas_limit_transfer: 100000  # Gas limit for direct transfers
+    max_gas_price_gwei: 20  # Maximum gas price willing to pay
+
+  # Webhook/Notification for payment received
+  webhook:
+    enabled: true
+    url: "https://your-domain.com/api/payments/webhook"
+    secret: "your-webhook-secret"
+
+blockchain:
+  # BNB Chain Configuration
+  bnb_chain:
+    provider_url: "https://bsc-dataseed.binance.org/"
+    chain_id: 56  # 56 for mainnet, 97 for testnet
+    testnet_url: "https://data-seed-prebsc-1-s1.binance.org:8545/"
+    smart_contract_address: "your-contract-address"
+    private_key: "your-private-key-for-contract-owner"  # Keep secure!
+    gas_limit: 200000
+    gas_price_gwei: 5
+
+file_storage:
+  # IPFS via Lighthouse SDK
+  lighthouse:
+    api_key: "your-lighthouse-api-key"
+    gateway_url: "https://gateway.lighthouse.storage"
+    max_file_size_mb: 10
+    allowed_extensions:
+      - jpg
+      - jpeg
+      - png
+      - gif
+      - webp
+      - svg
+      - heic
+
+  # Cloudinary (Backup/Alternative)
+  cloudinary:
+    cloud_name: "your-cloud-name"
+    api_key: "your-api-key"
+    api_secret: "your-api-secret"
+    secure: true
+
+email:
+  # SMTP Configuration for Email Verification
+  smtp:
+    host: "smtp.gmail.com"
+    port: 587
+    use_tls: true
+    username: "your-email@gmail.com"
+    password: "your-app-password"
+
+  from_address: "noreply@decentralizedforum.com"
+  from_name: "Decentralized Forum"
+
+  verification:
+    expiry_hours: 24
+    resend_cooldown_minutes: 5
+
+security:
+  # GDPR Compliance
+  gdpr:
+    enabled: true
+    data_retention_days: 365
+    cookie_consent_required: true
+
+  # Rate Limiting
+  rate_limiting:
+    enabled: true
+    per_minute: 60
+    per_hour: 1000
+    per_day: 10000
+
+  # Password Requirements
+  password:
+    min_length: 8
+    require_uppercase: true
+    require_lowercase: true
+    require_digit: true
+    require_special_char: false
+
+  # Session Configuration
+  session:
+    secret_key: "your-session-secret-key"
+    expiry_days: 30
+    http_only: true
+    secure: false  # Set to true in production with HTTPS
+    same_site: "lax"
+
+points_economy:
+  # Initial User Points
+  registration_bonus: 100
+  referral_bonus: 25
+
+  # Point Costs (Spending)
+  costs:
+    create_post: 5
+    create_comment: 2
+    like_post: 1
+    like_comment: 1
+    share_external: 1
+    create_channel: 50
+    post_advertisement: 10
+    create_poll: 3
+    host_voice_session: 20
+
+  # Point Rewards (Earning)
+  rewards:
+    receive_10_likes: 3
+    receive_100_likes: 30
+    receive_1000_likes: 350
+    quality_post_badge: 10
+    successful_referral: 25
+    wiki_contribution: 5
+    helpful_comment_badge: 3
+    daily_login_streak_7: 10
+    monthly_top_contributor: 100
+
+  # Anti-Spam & Inflation Control
+  burn_rate_percent: 30  # % of spent points removed from circulation
+  transfer_fee_percent: 10
+  max_daily_transfer: 100
+  point_decay_percent_monthly: 10  # After 90 days inactivity
+
+  # Rate Limits
+  max_posts_per_day: 50
+  max_comments_per_day: 200
+  new_user_max_posts_per_day: 5  # First 7 days
+
+user_progression:
+  # Level Tiers
+  levels:
+    - id: 0
+      name: "New User"
+      min_points: 0
+      min_days: 0
+      min_quality_posts: 0
+      permissions:
+        - "limited_posting"
+        - "basic_features"
+      max_posts_per_day: 5
+
+    - id: 1
+      name: "User"
+      min_points: 100
+      min_days: 0
+      min_quality_posts: 0
+      permissions:
+        - "full_posting"
+        - "like"
+        - "comment"
+
+    - id: 2
+      name: "Contributor"
+      min_points: 500
+      min_days: 30
+      min_quality_posts: 10
+      permissions:
+        - "flag_content"
+        - "edit_wiki"
+
+    - id: 3
+      name: "Trusted"
+      min_points: 1500
+      min_days: 60
+      min_quality_posts: 0
+      permissions:
+        - "vote_disputes"
+        - "review_flags"
+
+    - id: 4
+      name: "Moderator"
+      min_points: 2500
+      min_days: 90
+      min_quality_posts: 50
+      permissions:
+        - "remove_content"
+        - "resolve_disputes"
+        - "temporary_bans"
+
+    - id: 5
+      name: "Senior Moderator"
+      min_points: 10000
+      min_days: 180
+      min_quality_posts: 0
+      requires_community_vote: true
+      permissions:
+        - "permanent_bans"
+        - "manage_channels"
+
+    - id: 6
+      name: "Channel Owner"
+      min_points: 5000
+      min_days: 0
+      min_quality_posts: 0
+      permissions:
+        - "manage_own_channel"
+        - "host_voice_sessions"
+
+    - id: 7
+      name: "Admin"
+      min_points: 25000
+      min_days: 365
+      min_quality_posts: 0
+      requires_community_vote: true
+      community_vote_threshold_percent: 75
+      permissions:
+        - "platform_governance"
+        - "policy_decisions"
+
+  # Demotion Settings
+  demotion:
+    inactivity_days: 180
+    enable_appeals: true
+
+voice_sessions:
+  # WebRTC Configuration (Agora/Daily.co/Jitsi)
+  provider: "agora"  # agora, daily, jitsi
+
+  agora:
+    app_id: "your-agora-app-id"
+    app_certificate: "your-agora-app-certificate"
+
+  settings:
+    max_listeners: 100
+    max_speakers: 10
+    recording_enabled: true
+    recording_storage: "ipfs"  # ipfs or local
+    host_min_level: 6  # Channel Owner or Moderator
+
+features:
+  # Feature Flags
+  wiki_enabled: false  # Enable in Phase 2
+  voice_sessions_enabled: false  # Enable in Phase 2
+  blockchain_rewards_enabled: false  # Enable in Phase 2
+  referral_system_enabled: true
+  anonymous_posting_enabled: true
+  custom_channels_enabled: true
+
+  # Content Moderation
+  moderation:
+    auto_filter_enabled: true
+    ml_detection_enabled: false  # Enable after training
+    community_flagging_enabled: true
+    flag_threshold_for_review: 5
+
+  # Verified Badges
+  verified_badges:
+    creator_price_monthly_usd: 5.00
+    creator_points_lifetime: 10000
+    business_price_monthly_usd: 10.00
+    influencer_min_points: 50000
+
+monitoring:
+  # Error Tracking (Sentry)
+  sentry:
+    enabled: false
+    dsn: "your-sentry-dsn"
+    environment: "development"
+    traces_sample_rate: 1.0
+
+  # Analytics (PostHog)
+  analytics:
+    enabled: false
+    api_key: "your-posthog-api-key"
+    host: "https://app.posthog.com"
+
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file_enabled: true
+  file_path: "logs/app.log"
+  max_bytes: 10485760  # 10MB
+  backup_count: 5

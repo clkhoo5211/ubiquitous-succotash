@@ -1,0 +1,516 @@
+{% extends "base.html" %}
+
+{% block title %}Crypto Rewards - Decentralized Autonomous Forum{% endblock %}
+
+{% block body_class %}rewards-page{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="rewards-layout">
+        <!-- Page Header -->
+        <header class="page-header">
+            <div class="page-header__icon">
+                <svg width="48" height="48" viewBox="0 0 48 48">
+                    <path d="M24 4l20 12v16l-20 12-20-12V16l20-12z" stroke="currentColor" stroke-width="3" fill="none" stroke-linejoin="round"/>
+                    <path d="M24 24V4m0 20l17-10M24 24l-17-10M24 24v20" stroke="currentColor" stroke-width="3"/>
+                </svg>
+            </div>
+            <div class="page-header__content">
+                <h1 class="page-header__title">Crypto Rewards</h1>
+                <p class="page-header__subtitle">Convert your points to BNB Chain tokens</p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="rewards-main">
+            <!-- Wallet Connection Status -->
+            {% if current_user.bnb_wallet_address %}
+            <div class="card card--success">
+                <div class="card__header">
+                    <h2 class="card__title">
+                        <svg width="20" height="20">
+                            <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                            <path d="M6 10l3 3 5-6" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Wallet Connected
+                    </h2>
+                </div>
+                <div class="wallet-display">
+                    <div class="wallet-display__info">
+                        <label class="wallet-display__label">BNB Chain Address</label>
+                        <code class="wallet-display__address">{{ current_user.bnb_wallet_address }}</code>
+                    </div>
+                    <div class="wallet-display__actions">
+                        <button class="btn btn--ghost btn--sm" id="copy-wallet-btn">
+                            <svg width="16" height="16">
+                                <path d="M6 4v10a2 2 0 002 2h6" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                                <rect x="6" y="2" width="8" height="12" rx="2" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                            </svg>
+                            Copy
+                        </button>
+                        <a href="https://bscscan.com/address/{{ current_user.bnb_wallet_address }}"
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           class="btn btn--ghost btn--sm">
+                            View on BscScan
+                            <svg width="14" height="14">
+                                <path d="M10 2h4v4M14 2L6 10" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                            </svg>
+                        </a>
+                        <button class="btn btn--ghost btn--sm" id="disconnect-wallet-btn">
+                            Disconnect
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="card card--warning">
+                <div class="card__header">
+                    <h2 class="card__title">
+                        <svg width="20" height="20"><use xlink:href="#icon-alert-triangle"/></svg>
+                        Wallet Not Connected
+                    </h2>
+                </div>
+                <p class="card__text">Connect your BNB Chain wallet to claim crypto rewards.</p>
+                <button class="btn btn--primary" id="connect-wallet-btn">
+                    <svg width="16" height="16">
+                        <rect x="3" y="6" width="10" height="8" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                        <path d="M5 6V4a2 2 0 114 0v2" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                    </svg>
+                    Connect Wallet
+                </button>
+                <p class="card__help">Supports MetaMask, Trust Wallet, and WalletConnect</p>
+            </div>
+            {% endif %}
+
+            <!-- Points Balance -->
+            <div class="card">
+                <div class="card__header">
+                    <h2 class="card__title">Your Points Balance</h2>
+                </div>
+                <div class="balance-display">
+                    <div class="balance-display__main">
+                        <span class="balance-display__value">{{ "{:,}".format(current_user.points if current_user and current_user.points else 0) }}</span>
+                        <span class="balance-display__label">Points</span>
+                    </div>
+                    <div class="balance-display__conversion">
+                        <svg width="20" height="20">
+                            <path d="M2 10h16M10 2l8 8-8 8" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="balance-display__crypto">
+                            ≈ {{ ((current_user.points if current_user else 0) / conversion_rate)|round(6) }} BNB
+                        </span>
+                    </div>
+                </div>
+                <p class="card__help">
+                    Current conversion rate: <strong>{{ "{:,}".format(conversion_rate if conversion_rate else 10000) }} points = 1 BNB</strong>
+                </p>
+            </div>
+
+            <!-- Conversion Form -->
+            {% if current_user.bnb_wallet_address %}
+            <div class="card">
+                <div class="card__header">
+                    <h2 class="card__title">Convert Points to BNB</h2>
+                </div>
+                <form id="conversion-form" class="conversion-form">
+                    <!-- Points Input -->
+                    <div class="form-group">
+                        <label for="points-amount" class="form-label">
+                            Points to Convert
+                            <span class="form-label__required">*</span>
+                        </label>
+                        <div class="input-with-addon">
+                            <input type="number"
+                                   id="points-amount"
+                                   name="points"
+                                   class="form-input"
+                                   min="{{ min_conversion }}"
+                                   max="{{ current_user.points if current_user else 0 }}"
+                                   step="100"
+                                   required
+                                   placeholder="Enter amount...">
+                            <span class="input-addon">Points</span>
+                        </div>
+                        <div class="form-help-row">
+                            <span class="form-help">Minimum: {{ "{:,}".format(min_conversion if min_conversion else 10000) }} points</span>
+                            <button type="button" class="btn-link" id="use-max-btn">Use Maximum</button>
+                        </div>
+                    </div>
+
+                    <!-- BNB Output (calculated) -->
+                    <div class="conversion-arrow">
+                        <svg width="24" height="24">
+                            <path d="M12 4v16m0 0l-6-6m6 6l6-6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">You Will Receive</label>
+                        <div class="output-display">
+                            <span class="output-display__value" id="bnb-output">0.000000</span>
+                            <span class="output-display__currency">BNB</span>
+                        </div>
+                        <p class="form-help" id="usd-estimate">≈ $0.00 USD</p>
+                    </div>
+
+                    <!-- Transaction Fee Notice -->
+                    <div class="alert alert--info">
+                        <svg class="alert__icon" width="20" height="20"><use xlink:href="#icon-info"/></svg>
+                        <div class="alert__content">
+                            <strong>Transaction Fee</strong>
+                            <p>A small gas fee (≈ $0.20) will be deducted from your BNB amount for blockchain transaction costs.</p>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit"
+                            class="btn btn--primary btn--lg btn--block"
+                            id="convert-btn"
+                            {% if current_user and current_user.points and current_user.points < min_conversion %}disabled{% endif %}>
+                        <svg width="20" height="20"><use xlink:href="#icon-crypto"/></svg>
+                        <span class="btn__text">Convert to BNB</span>
+                        <span class="btn__loader" style="display: none;">
+                            <svg width="20" height="20" viewBox="0 0 20 20" class="spinner">
+                                <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="40" stroke-linecap="round"/>
+                            </svg>
+                        </span>
+                    </button>
+
+                    {% if current_user and current_user.points and current_user.points < min_conversion %}
+                    <p class="form-error">
+                        You need at least {{ "{:,}".format(min_conversion if min_conversion else 10000) }} points to convert. Keep earning!
+                    </p>
+                    {% endif %}
+                </form>
+            </div>
+            {% endif %}
+
+            <!-- Transaction History -->
+            <div class="card">
+                <div class="card__header">
+                    <h2 class="card__title">Transaction History</h2>
+                </div>
+                {% if transactions %}
+                <div class="transactions-list">
+                    {% for tx in transactions %}
+                    <div class="transaction-item transaction-item--{{ tx.status }}">
+                        <div class="transaction-item__icon">
+                            {% if tx.status == 'completed' %}
+                            <svg width="20" height="20" class="text-success">
+                                <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                                <path d="M6 10l3 3 5-6" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            {% elif tx.status == 'pending' %}
+                            <svg width="20" height="20" class="text-warning spinner">
+                                <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="40" stroke-linecap="round"/>
+                            </svg>
+                            {% else %}
+                            <svg width="20" height="20" class="text-danger">
+                                <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                                <path d="M7 7l6 6m0-6l-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                            </svg>
+                            {% endif %}
+                        </div>
+                        <div class="transaction-item__info">
+                            <p class="transaction-item__description">
+                                <strong>{{ "{:,}".format(tx.points_amount if tx.points_amount else 0) }} points</strong> → <strong>{{ tx.bnb_amount if tx.bnb_amount else 0 }} BNB</strong>
+                            </p>
+                            <time class="transaction-item__time" datetime="{{ tx.created_at.isoformat() }}">
+                                {{ tx.created_at.strftime('%B %d, %Y at %I:%M %p') }}
+                            </time>
+                        </div>
+                        <div class="transaction-item__status">
+                            <span class="badge badge--{{ tx.status }}">{{ tx.status.title() }}</span>
+                            {% if tx.tx_hash %}
+                            <a href="https://bscscan.com/tx/{{ tx.tx_hash }}"
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               class="transaction-item__link">
+                                View on BscScan
+                                <svg width="12" height="12">
+                                    <path d="M8 2h3v3M11 2L5 8" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                                </svg>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="empty-state">
+                    <svg width="64" height="64" class="empty-state__icon">
+                        <path d="M8 16h48M8 32h48M8 48h48" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <circle cx="4" cy="16" r="2" fill="currentColor"/>
+                        <circle cx="4" cy="32" r="2" fill="currentColor"/>
+                        <circle cx="4" cy="48" r="2" fill="currentColor"/>
+                    </svg>
+                    <p class="empty-state__text">No transactions yet</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="rewards-sidebar">
+            <!-- How It Works -->
+            <div class="card card--info">
+                <h3 class="card__title">How It Works</h3>
+                <ol class="numbered-list">
+                    <li class="numbered-list__item">
+                        <strong>Earn Points</strong>
+                        <p>Create quality posts, engage with the community, and earn points through likes and comments.</p>
+                    </li>
+                    <li class="numbered-list__item">
+                        <strong>Connect Wallet</strong>
+                        <p>Link your BNB Chain-compatible wallet (MetaMask, Trust Wallet, etc.) to your account.</p>
+                    </li>
+                    <li class="numbered-list__item">
+                        <strong>Convert</strong>
+                        <p>Exchange your points for BNB tokens at the current conversion rate.</p>
+                    </li>
+                    <li class="numbered-list__item">
+                        <strong>Receive Crypto</strong>
+                        <p>BNB tokens are sent directly to your wallet on the BNB Smart Chain.</p>
+                    </li>
+                </ol>
+            </div>
+
+            <!-- Point Earning Guide -->
+            <div class="card">
+                <h3 class="card__title">Earn More Points</h3>
+                <dl class="info-list">
+                    <div class="info-item">
+                        <dt class="info-item__label">Create Post</dt>
+                        <dd class="info-item__value points-cost">-5 points</dd>
+                    </div>
+                    <div class="info-item">
+                        <dt class="info-item__label">Receive Like</dt>
+                        <dd class="info-item__value points-earn">+3 points</dd>
+                    </div>
+                    <div class="info-item">
+                        <dt class="info-item__label">10 Likes Milestone</dt>
+                        <dd class="info-item__value points-earn">+30 points</dd>
+                    </div>
+                    <div class="info-item">
+                        <dt class="info-item__label">100 Likes Milestone</dt>
+                        <dd class="info-item__value points-earn">+350 points</dd>
+                    </div>
+                    <div class="info-item">
+                        <dt class="info-item__label">Daily Login</dt>
+                        <dd class="info-item__value points-earn">+10 points</dd>
+                    </div>
+                    <div class="info-item">
+                        <dt class="info-item__label">Comment</dt>
+                        <dd class="info-item__value points-earn">+1 point</dd>
+                    </div>
+                </dl>
+            </div>
+
+            <!-- FAQ -->
+            <div class="card">
+                <h3 class="card__title">FAQ</h3>
+                <details class="faq-item">
+                    <summary class="faq-item__question">What is BNB Chain?</summary>
+                    <p class="faq-item__answer">
+                        BNB Chain (formerly Binance Smart Chain) is a blockchain network that runs parallel to Binance Chain, offering smart contract functionality and low transaction fees.
+                    </p>
+                </details>
+                <details class="faq-item">
+                    <summary class="faq-item__question">What is the minimum conversion?</summary>
+                    <p class="faq-item__answer">
+                        The minimum conversion is {{ "{:,}".format(min_conversion if min_conversion else 10000) }} points to ensure transaction fees don't exceed the reward value.
+                    </p>
+                </details>
+                <details class="faq-item">
+                    <summary class="faq-item__question">How long does conversion take?</summary>
+                    <p class="faq-item__answer">
+                        Most conversions are processed within 5-10 minutes. Blockchain confirmation may take up to 30 minutes during high network activity.
+                    </p>
+                </details>
+                <details class="faq-item">
+                    <summary class="faq-item__question">Can I convert BNB back to points?</summary>
+                    <p class="faq-item__answer">
+                        No, conversions are one-way only. Points converted to BNB cannot be converted back.
+                    </p>
+                </details>
+            </div>
+
+            <!-- Support -->
+            <div class="card">
+                <h3 class="card__title">Need Help?</h3>
+                <p class="card__text">Having trouble with crypto rewards?</p>
+                <a href="/help/crypto-rewards" class="btn btn--ghost btn--sm btn--block">
+                    View Documentation
+                </a>
+                <a href="/contact" class="btn btn--ghost btn--sm btn--block">
+                    Contact Support
+                </a>
+            </div>
+        </aside>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+const conversionRate = {{ conversion_rate | default(1000) }};
+const bnbPriceUSD = {{ bnb_price_usd | default(300) }};
+
+// Update BNB output when points input changes
+document.getElementById('points-amount')?.addEventListener('input', function() {
+    const points = parseFloat(this.value) || 0;
+    const bnb = points / conversionRate;
+    const usd = bnb * bnbPriceUSD;
+
+    document.getElementById('bnb-output').textContent = bnb.toFixed(6);
+    document.getElementById('usd-estimate').textContent = `≈ $${usd.toFixed(2)} USD`;
+});
+
+// Use maximum points
+document.getElementById('use-max-btn')?.addEventListener('click', function() {
+    const maxPoints = {{ current_user.points | default(0) if current_user else 0 }};
+    document.getElementById('points-amount').value = maxPoints;
+    document.getElementById('points-amount').dispatchEvent(new Event('input'));
+});
+
+// Copy wallet address
+document.getElementById('copy-wallet-btn')?.addEventListener('click', function() {
+    const wallet = '{{ current_user.bnb_wallet_address | default("") if current_user else "" }}';
+    navigator.clipboard.writeText(wallet).then(() => {
+        this.textContent = 'Copied!';
+        setTimeout(() => {
+            this.innerHTML = '<svg width="16" height="16"><path d="M6 4v10a2 2 0 002 2h6" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="6" y="2" width="8" height="12" rx="2" stroke="currentColor" stroke-width="1.5" fill="none"/></svg> Copy';
+        }, 2000);
+    });
+});
+
+// Connect wallet (Web3/MetaMask integration)
+document.getElementById('connect-wallet-btn')?.addEventListener('click', async function() {
+    if (typeof window.ethereum === 'undefined') {
+        alert('Please install MetaMask or another Web3 wallet to continue');
+        return;
+    }
+
+    try {
+        // Request wallet connection
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        const walletAddress = accounts[0];
+
+        // Create message for signature verification
+        const timestamp = Date.now();
+        const message = `Connect wallet to Decentralized Forum - Timestamp: ${timestamp}`;
+
+        // Request signature from wallet
+        const signature = await window.ethereum.request({
+            method: 'personal_sign',
+            params: [message, walletAddress]
+        });
+
+        // Send wallet address, signature, and message to backend
+        const response = await fetch('/api/v1/blockchain/wallet/connect', {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',  // Include cookies for authentication
+            body: JSON.stringify({ 
+                wallet_address: walletAddress,
+                signature: signature,
+                message: message
+            })
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+            alert('Wallet connected successfully!');
+            location.reload();
+        } else if (response.status === 401) {
+            alert('Authentication required. Please login first, then try connecting your wallet again.');
+            window.location.href = '/auth/login';
+        } else {
+            alert('Failed to connect wallet: ' + (data.detail || data.message || 'Unknown error'));
+        }
+    } catch (error) {
+        console.error('Wallet connection error:', error);
+        if (error.message.includes('401') || error.message.includes('Unauthorized')) {
+            alert('Authentication required. Please login first, then try connecting your wallet again.');
+            window.location.href = '/auth/login';
+        } else {
+            alert('Failed to connect wallet: ' + error.message);
+        }
+    }
+});
+
+// Disconnect wallet
+document.getElementById('disconnect-wallet-btn')?.addEventListener('click', async function() {
+    if (!confirm('Are you sure you want to disconnect your wallet?')) return;
+
+    try {
+        // Call disconnect endpoint
+        const response = await fetch('/api/v1/blockchain/wallet/disconnect', {
+            method: 'DELETE',
+            credentials: 'include',  // Include cookies for authentication
+        });
+
+        if (response.ok) {
+            alert('Wallet disconnected successfully');
+            location.reload();
+        } else if (response.status === 401) {
+            alert('Authentication required. Please login first.');
+            window.location.href = '/auth/login';
+        } else {
+            const errorText = await response.text();
+            alert('Failed to disconnect wallet: ' + errorText);
+        }
+    } catch (error) {
+        console.error('Wallet disconnection error:', error);
+        alert('Failed to disconnect wallet: ' + error.message);
+    }
+});
+
+// Conversion form submission
+document.getElementById('conversion-form')?.addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const btn = document.getElementById('convert-btn');
+    const btnText = btn.querySelector('.btn__text');
+    const btnLoader = btn.querySelector('.btn__loader');
+
+    const points = parseInt(document.getElementById('points-amount').value);
+
+    if (!confirm(`Convert ${points.toLocaleString()} points to BNB?`)) return;
+
+    btn.disabled = true;
+    btnText.style.display = 'none';
+    btnLoader.style.display = 'inline-block';
+
+    try {
+        const response = await fetch('/api/v1/blockchain/convert-points', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ points_amount: points })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            alert(`Conversion successful! Transaction hash: ${data.tx_hash}`);
+            location.reload();
+        } else {
+            alert('Conversion failed: ' + (data.detail || 'Unknown error'));
+            btn.disabled = false;
+            btnText.style.display = 'inline-block';
+            btnLoader.style.display = 'none';
+        }
+    } catch (error) {
+        console.error('Conversion error:', error);
+        alert('Conversion failed: ' + error.message);
+        btn.disabled = false;
+        btnText.style.display = 'inline-block';
+        btnLoader.style.display = 'none';
+    }
+});
+</script>
+{% endblock %}

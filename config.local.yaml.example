@@ -1,0 +1,16 @@
+# Local Development Configuration
+# Copy this file to config.local.yaml and customize for your environment
+# config.local.yaml is gitignored and will override config.yaml values
+
+application:
+  environment: "development"
+  debug: true
+
+database:
+  url: "postgresql+asyncpg://postgres:password@localhost:5432/decentralized_forum"
+
+redis:
+  url: "redis://localhost:6379/0"
+
+# Add only the settings you want to override from config.yaml
+# All other values will be inherited from config.yaml
