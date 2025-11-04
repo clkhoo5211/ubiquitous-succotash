@@ -34,7 +34,9 @@ class DatabaseSettings(BaseSettings):
 
     model_config = {"env_prefix": "DATABASE_"}
 
-    url: PostgresDsn
+    url: str = Field(
+        description="PostgreSQL database URL (supports postgresql:// and postgresql+asyncpg://)"
+    )
     pool_size: int = Field(default=10)
     max_overflow: int = Field(default=20)
     echo: bool = Field(default=False)
