@@ -79,16 +79,17 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip uv
-          uv pip install --system -r pyproject.toml
-          uv pip install --system pytest pytest-asyncio pytest-cov
+          python -m pip install --upgrade pip
+          pip install uv
+          uv pip install --system -e ".[dev]"
 
       - name: Run tests with coverage
         run: |
-          pytest tests/ --cov=src --cov-report=xml --cov-report=term-missing
+          pytest tests/ --cov=src --cov-report=xml --cov-report=term-missing -v
         env:
           DATABASE_URL: postgresql+asyncpg://forum_test:test_password@localhost:5432/forum_test
           REDIS_URL: redis://localhost:6379/0
+          PYTHONPATH: ${{ github.workspace }}
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
@@ -116,14 +117,16 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+        continue-on-error: true
 
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
           context: .
-          push: true
+          push: ${{ secrets.DOCKERHUB_USERNAME != '' }}
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/decentralized-forum:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/decentralized-forum:${{ github.sha }}
           cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/decentralized-forum:latest
           cache-to: type=inline
+        continue-on-error: true

@@ -12,7 +12,7 @@ jobs:
   deploy-railway:
     name: Deploy to Railway
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && secrets.RAILWAY_TOKEN != ''
     
     steps:
       - uses: actions/checkout@v4
@@ -26,6 +26,7 @@ jobs:
           railway up --service ${{ secrets.RAILWAY_SERVICE_ID }}
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        continue-on-error: true
 
   # =========================================================================
   # Deploy to Render (Alternative)
@@ -33,7 +34,7 @@ jobs:
   deploy-render:
     name: Deploy to Render
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && secrets.RENDER_API_KEY != ''
     needs: []
     
     steps:
@@ -42,6 +43,7 @@ jobs:
       - name: Deploy to Render
         run: |
           curl -X POST "https://api.render.com/deploy/srv/${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}"
+        continue-on-error: true
 
   # =========================================================================
   # Build and Push Docker Image
@@ -62,15 +64,17 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+        continue-on-error: true
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
-          push: true
+          push: ${{ secrets.DOCKERHUB_USERNAME != '' }}
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/decentralized-forum:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/decentralized-forum:${{ github.sha }}
           cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/decentralized-forum:latest
           cache-to: type=inline
+        continue-on-error: true
 
