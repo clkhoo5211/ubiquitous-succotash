@@ -18,9 +18,10 @@ def strip_html(text):
     if not text:
         return text
     # Remove HTML tags
-    text = re.sub(r'<[^>]+>', '', text)
+    text = re.sub(r"<[^>]+>", "", text)
     # Decode HTML entities
     import html
+
     text = html.unescape(text)
     return text
 
@@ -30,7 +31,7 @@ async def search_posts(
     q: str = Query(..., min_length=2, description="Search query"),
     page: int = Query(1, ge=1, description="Page number"),
     page_size: int = Query(20, ge=1, le=100, description="Results per page"),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """
     Search posts by title and body content.
@@ -48,11 +49,7 @@ async def search_posts(
     total_pages = (total + page_size - 1) // page_size
 
     return PostListResponse(
-        posts=posts,
-        total=total,
-        page=page,
-        page_size=page_size,
-        total_pages=total_pages
+        posts=posts, total=total, page=page, page_size=page_size, total_pages=total_pages
     )
 
 
@@ -61,7 +58,7 @@ async def search_users(
     q: str = Query(..., min_length=2, description="Search query"),
     page: int = Query(1, ge=1, description="Page number"),
     page_size: int = Query(20, ge=1, le=100, description="Results per page"),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """
     Search users by username and display name.
@@ -79,11 +76,7 @@ async def search_users(
     total_pages = (total + page_size - 1) // page_size
 
     return UserListResponse(
-        users=users,
-        total=total,
-        page=page,
-        page_size=page_size,
-        total_pages=total_pages
+        users=users, total=total, page=page, page_size=page_size, total_pages=total_pages
     )
 
 
@@ -92,7 +85,7 @@ async def search_comments(
     q: str = Query(..., min_length=2, description="Search query"),
     page: int = Query(1, ge=1, description="Page number"),
     page_size: int = Query(20, ge=1, le=100, description="Results per page"),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """
     Search comments by body content.
@@ -110,11 +103,7 @@ async def search_comments(
     total_pages = (total + page_size - 1) // page_size
 
     return CommentListResponse(
-        comments=comments,
-        total=total,
-        page=page,
-        page_size=page_size,
-        total_pages=total_pages
+        comments=comments, total=total, page=page, page_size=page_size, total_pages=total_pages
     )
 
 
@@ -123,39 +112,35 @@ async def unified_search(
     q: str = Query(..., min_length=2, description="Search query"),
     page: int = Query(1, ge=1, description="Page number"),
     page_size: int = Query(20, ge=1, le=100, description="Results per page"),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """
     Unified search across posts, users, and comments.
-    
+
     **Query parameter:**
     - `q`: Search term (minimum 2 characters)
-    
+
     **Returns:**
     - Mixed results from posts, users, and comments
     """
     search_service = SearchService(db)
-    
+
     # Search all types
     posts, _ = await search_service.search_posts(q, 1, 5)
     users, _ = await search_service.search_users(q, 1, 5)
     comments, _ = await search_service.search_comments(q, 1, 5)
-    
+
     # Format results for frontend
     results = []
-    
+
     for post in posts[:3]:
         body_text = strip_html(post.body) if post.body else ""
         excerpt = body_text[:150] + "..." if len(body_text) > 150 else body_text
-        results.append({
-            "title": post.title,
-            "excerpt": excerpt,
-            "url": f"/posts/{post.id}",
-            "type": "post"
-        })
-    
+        results.append(
+            {"title": post.title, "excerpt": excerpt, "url": f"/posts/{post.id}", "type": "post"}
+        )
+
     # Don't include users in search results for privacy/security
     # Users can search for users by username on profile pages instead
-    
-    return results
 
+    return results

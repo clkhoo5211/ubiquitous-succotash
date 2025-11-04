@@ -5,7 +5,7 @@ Uses in-memory SQLite for fast test execution.
 """
 
 import asyncio
-from typing import AsyncGenerator, Generator
+from typing import AsyncGenerator
 from datetime import datetime, timedelta
 
 import pytest
@@ -34,6 +34,7 @@ fake = Faker()
 # Event Loop Configuration
 # ============================================================================
 
+
 @pytest.fixture(scope="session")
 def event_loop():
     """Create event loop for async tests"""
@@ -45,6 +46,7 @@ def event_loop():
 # ============================================================================
 # Database Fixtures
 # ============================================================================
+
 
 @pytest_asyncio.fixture
 async def test_engine():
@@ -65,11 +67,7 @@ async def test_engine():
 @pytest_asyncio.fixture
 async def test_db(test_engine) -> AsyncGenerator[AsyncSession, None]:
     """Create test database session"""
-    async_session = async_sessionmaker(
-        test_engine,
-        class_=AsyncSession,
-        expire_on_commit=False
-    )
+    async_session = async_sessionmaker(test_engine, class_=AsyncSession, expire_on_commit=False)
 
     async with async_session() as session:
         yield session
@@ -101,6 +99,7 @@ async def test_db_with_data(test_db: AsyncSession) -> AsyncSession:
 # HTTP Client Fixtures
 # ============================================================================
 
+
 @pytest_asyncio.fixture
 async def async_client(test_db: AsyncSession) -> AsyncGenerator[AsyncClient, None]:
     """Create async HTTP client for API testing"""
@@ -122,12 +121,14 @@ async def async_client(test_db: AsyncSession) -> AsyncGenerator[AsyncClient, Non
 def client():
     """FastAPI synchronous test client (for simple tests)"""
     from fastapi.testclient import TestClient
+
     return TestClient(app)
 
 
 # ============================================================================
 # User Fixtures
 # ============================================================================
+
 
 @pytest_asyncio.fixture
 async def test_user(test_db: AsyncSession) -> User:
@@ -219,6 +220,7 @@ async def multiple_users(test_db: AsyncSession) -> list[User]:
 # Authentication Fixtures
 # ============================================================================
 
+
 @pytest.fixture
 def test_user_token(test_user: User) -> str:
     """Create access token for test user"""
@@ -258,6 +260,7 @@ def moderator_auth_headers(test_moderator_token: str) -> dict:
 # ============================================================================
 # Content Fixtures
 # ============================================================================
+
 
 @pytest_asyncio.fixture
 async def test_channel(test_db: AsyncSession) -> Channel:
@@ -359,6 +362,7 @@ async def multiple_posts(
 # Points & Economy Fixtures
 # ============================================================================
 
+
 @pytest_asyncio.fixture
 async def test_economy(test_db: AsyncSession) -> PointEconomy:
     """Create test point economy configuration"""
@@ -401,6 +405,7 @@ async def test_transaction(test_db: AsyncSession, test_user: User) -> Transactio
 # Faker Data Generators
 # ============================================================================
 
+
 @pytest.fixture
 def fake_user_data() -> dict:
     """Generate fake user data"""
@@ -432,6 +437,7 @@ def fake_comment_data() -> dict:
 # ============================================================================
 # Pytest Configuration
 # ============================================================================
+
 
 def pytest_configure(config):
     """Configure pytest with custom markers"""

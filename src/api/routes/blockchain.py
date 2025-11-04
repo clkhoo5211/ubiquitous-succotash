@@ -64,23 +64,24 @@ async def disconnect_wallet(
     """Disconnect the user's BNB Chain wallet"""
     from datetime import datetime
     from sqlalchemy import select
-    
+
     try:
         # Get fresh user object in current session
         result = await db.execute(select(User).where(User.id == current_user.id))
         user = result.scalar_one()
-        
+
         user.bnb_wallet_address = None
         user.updated_at = datetime.utcnow()
         await db.commit()
-        
+
         from fastapi.responses import Response
+
         return Response(status_code=status.HTTP_204_NO_CONTENT)
     except Exception as e:
         await db.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to disconnect wallet: {str(e)}"
+            detail=f"Failed to disconnect wallet: {str(e)}",
         )
 
 

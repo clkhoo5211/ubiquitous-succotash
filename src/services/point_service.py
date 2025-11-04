@@ -11,7 +11,7 @@ from src.schemas.points import AdminAdjustment, LeaderboardEntry
 from src.core.exceptions import (
     UserNotFoundError,
     InsufficientBalanceError,
-    InvalidWalletAddressError
+    InvalidWalletAddressError,
 )
 
 
@@ -23,9 +23,7 @@ class PointService:
 
     async def get_economy_config(self) -> PointEconomy:
         """Get point economy configuration"""
-        result = await self.db.execute(
-            select(PointEconomy).where(PointEconomy.id == 1)
-        )
+        result = await self.db.execute(select(PointEconomy).where(PointEconomy.id == 1))
         config = result.scalar_one_or_none()
 
         # Create default config if doesn't exist
@@ -41,7 +39,7 @@ class PointService:
                 receive_like_tier3=350,
                 crypto_reward_cost=10000,
                 crypto_reward_bnb_amount="0.01",
-                updated_at=datetime.utcnow()
+                updated_at=datetime.utcnow(),
             )
             self.db.add(config)
             await self.db.commit()
@@ -58,13 +56,11 @@ class PointService:
         reference_type: Optional[str] = None,
         reference_id: Optional[int] = None,
         blockchain_tx_hash: Optional[str] = None,
-        bnb_amount: Optional[str] = None
+        bnb_amount: Optional[str] = None,
     ) -> Transaction:
         """Create a point transaction and update user balance"""
         # Get user
-        user_result = await self.db.execute(
-            select(User).where(User.id == user_id)
-        )
+        user_result = await self.db.execute(select(User).where(User.id == user_id))
         user = user_result.scalar_one_or_none()
         if not user:
             raise UserNotFoundError(f"User with ID {user_id} not found")
@@ -90,7 +86,7 @@ class PointService:
             balance_after=balance_after,
             blockchain_tx_hash=blockchain_tx_hash,
             bnb_amount=bnb_amount,
-            created_at=datetime.utcnow()
+            created_at=datetime.utcnow(),
         )
 
         self.db.add(transaction)
@@ -104,7 +100,7 @@ class PointService:
         user_id: int,
         page: int = 1,
         page_size: int = 50,
-        transaction_type: Optional[TransactionType] = None
+        transaction_type: Optional[TransactionType] = None,
     ) -> Tuple[List[Transaction], int]:
         """Get user's transaction history"""
         query = select(Transaction).where(Transaction.user_id == user_id)
@@ -114,7 +110,9 @@ class PointService:
             query = query.where(Transaction.transaction_type == transaction_type)
 
         # Get total count
-        count_query = select(func.count()).select_from(Transaction).where(Transaction.user_id == user_id)
+        count_query = (
+            select(func.count()).select_from(Transaction).where(Transaction.user_id == user_id)
+        )
         if transaction_type:
             count_query = count_query.where(Transaction.transaction_type == transaction_type)
 
@@ -137,9 +135,7 @@ class PointService:
     async def get_user_points_summary(self, user_id: int) -> dict:
         """Get user's points summary with statistics"""
         # Get user
-        user_result = await self.db.execute(
-            select(User).where(User.id == user_id)
-        )
+        user_result = await self.db.execute(select(User).where(User.id == user_id))
         user = user_result.scalar_one_or_none()
         if not user:
             raise UserNotFoundError(f"User with ID {user_id} not found")
@@ -178,7 +174,7 @@ class PointService:
             "total_spent": total_spent,
             "transactions_count": transactions_count,
             "can_claim_crypto": can_claim_crypto,
-            "crypto_reward_cost": config.crypto_reward_cost
+            "crypto_reward_cost": config.crypto_reward_cost,
         }
 
     async def admin_adjust_points(self, adjustment: AdminAdjustment, admin_id: int) -> Transaction:
@@ -187,24 +183,22 @@ class PointService:
             user_id=adjustment.user_id,
             amount=adjustment.amount,
             transaction_type=TransactionType.ADMIN_ADJUSTMENT,
-            description=f"Admin adjustment by user {admin_id}: {adjustment.description}"
+            description=f"Admin adjustment by user {admin_id}: {adjustment.description}",
         )
         return transaction
 
     async def get_leaderboard(
-        self,
-        page: int = 1,
-        page_size: int = 50
+        self, page: int = 1, page_size: int = 50
     ) -> Tuple[List[LeaderboardEntry], int]:
         """Get points leaderboard"""
         # Get total user count
         count_result = await self.db.execute(
-            select(func.count()).select_from(User).where(User.is_active == True)
+            select(func.count()).select_from(User).where(User.is_active)
         )
         total = count_result.scalar()
 
         # Get top users by points
-        query = select(User).where(User.is_active == True)
+        query = select(User).where(User.is_active)
         query = query.order_by(desc(User.points))
 
         # Apply pagination
@@ -224,7 +218,7 @@ class PointService:
                 display_name=user.display_name,
                 avatar_url=user.avatar_url,
                 points=user.points,
-                level=user.level.value
+                level=user.level.value,
             )
             leaderboard.append(entry)
 
@@ -237,9 +231,7 @@ class PointService:
             raise InvalidWalletAddressError("Invalid BNB wallet address format")
 
         # Get user
-        user_result = await self.db.execute(
-            select(User).where(User.id == user_id)
-        )
+        user_result = await self.db.execute(select(User).where(User.id == user_id))
         user = user_result.scalar_one_or_none()
         if not user:
             raise UserNotFoundError(f"User with ID {user_id} not found")
@@ -265,7 +257,7 @@ class PointService:
             transaction_type=TransactionType.CRYPTO_REWARD,
             description=f"Crypto reward claim: {bnb_amount} BNB sent to {wallet_address}",
             blockchain_tx_hash=blockchain_tx_hash,
-            bnb_amount=bnb_amount
+            bnb_amount=bnb_amount,
         )
 
         # Update user wallet address if not set
@@ -283,7 +275,7 @@ class PointService:
             user_id=user_id,
             amount=config.registration_bonus,
             transaction_type=TransactionType.REGISTRATION_BONUS,
-            description=f"Registration bonus: {config.registration_bonus} points"
+            description=f"Registration bonus: {config.registration_bonus} points",
         )
 
         return transaction

@@ -11,7 +11,7 @@ from src.schemas.moderation import (
     ReportListResponse,
     BanCreate,
     ReportStatus,
-    ReportReason
+    ReportReason,
 )
 from src.core.dependencies import get_db, get_current_user, require_moderator
 from src.models.user import User
@@ -20,11 +20,16 @@ from src.services.moderation_service import ModerationService
 router = APIRouter()
 
 
-@router.post("/reports", response_model=ReportResponse, status_code=status.HTTP_201_CREATED, summary="Create a report")
+@router.post(
+    "/reports",
+    response_model=ReportResponse,
+    status_code=status.HTTP_201_CREATED,
+    summary="Create a report",
+)
 async def create_report(
     report_data: ReportCreate,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """
     Report content (post or comment) for moderation.
@@ -48,7 +53,7 @@ async def list_reports(
     status: Optional[ReportStatus] = Query(None),
     reason: Optional[ReportReason] = Query(None),
     current_user: User = Depends(require_moderator),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """
     List all reports (moderator only).
@@ -59,20 +64,13 @@ async def list_reports(
     """
     moderation_service = ModerationService(db)
     reports, total = await moderation_service.list_reports(
-        page=page,
-        page_size=page_size,
-        status=status,
-        reason=reason
+        page=page, page_size=page_size, status=status, reason=reason
     )
 
     total_pages = (total + page_size - 1) // page_size
 
     return ReportListResponse(
-        reports=reports,
-        total=total,
-        page=page,
-        page_size=page_size,
-        total_pages=total_pages
+        reports=reports, total=total, page=page, page_size=page_size, total_pages=total_pages
     )
 
 
@@ -80,7 +78,7 @@ async def list_reports(
 async def get_report(
     report_id: int = Path(...),
     current_user: User = Depends(require_moderator),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """Get report details (moderator only)."""
     moderation_service = ModerationService(db)
@@ -93,7 +91,7 @@ async def resolve_report(
     report_id: int = Path(...),
     resolve_data: ReportResolve = ...,
     current_user: User = Depends(require_moderator),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """
     Resolve a report (moderator only).
@@ -105,9 +103,7 @@ async def resolve_report(
     """
     moderation_service = ModerationService(db)
     report = await moderation_service.resolve_report(
-        report_id=report_id,
-        resolve_data=resolve_data,
-        moderator_id=current_user.id
+        report_id=report_id, resolve_data=resolve_data, moderator_id=current_user.id
     )
     return report
 
@@ -116,7 +112,7 @@ async def resolve_report(
 async def ban_user(
     ban_data: BanCreate,
     current_user: User = Depends(require_moderator),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """
     Ban a user (moderator only).
@@ -133,6 +129,6 @@ async def ban_user(
         user_id=ban_data.user_id,
         reason=ban_data.reason,
         duration_days=ban_data.duration_days,
-        banned_by_id=current_user.id
+        banned_by_id=current_user.id,
     )
     return None

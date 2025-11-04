@@ -1,17 +1,12 @@
 """Unit tests for UserService"""
 
 import pytest
-from datetime import datetime
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.services.user_service import UserService
 from src.models.user import User, UserLevelEnum
 from src.schemas.user import UserCreate, UserUpdate, UserPasswordChange, UserEmailChange
-from src.core.exceptions import (
-    UserAlreadyExistsError,
-    UserNotFoundError,
-    InvalidCredentialsError
-)
+from src.core.exceptions import UserAlreadyExistsError, UserNotFoundError, InvalidCredentialsError
 
 
 @pytest.mark.asyncio
@@ -27,7 +22,7 @@ class TestUserService:
             email="newuser@example.com",
             username="newuser",
             password="SecurePass123!",
-            display_name="New User"
+            display_name="New User",
         )
 
         user = await service.create_user(user_data)
@@ -50,7 +45,7 @@ class TestUserService:
         user_data = UserCreate(
             email=test_user.email,  # Duplicate email
             username="differentuser",
-            password="SecurePass123!"
+            password="SecurePass123!",
         )
 
         with pytest.raises(UserAlreadyExistsError) as exc:
@@ -65,7 +60,7 @@ class TestUserService:
         user_data = UserCreate(
             email="different@example.com",
             username=test_user.username,  # Duplicate username
-            password="SecurePass123!"
+            password="SecurePass123!",
         )
 
         with pytest.raises(UserAlreadyExistsError) as exc:
@@ -129,7 +124,7 @@ class TestUserService:
         update_data = UserUpdate(
             display_name="Updated Name",
             bio="Updated bio",
-            avatar_url="https://example.com/avatar.jpg"
+            avatar_url="https://example.com/avatar.jpg",
         )
 
         updated_user = await service.update_user(test_user.id, update_data)
@@ -161,14 +156,14 @@ class TestUserService:
         service = UserService(test_db)
 
         password_data = UserPasswordChange(
-            current_password="TestPassword123!",
-            new_password="NewSecurePass456!"
+            current_password="TestPassword123!", new_password="NewSecurePass456!"
         )
 
         await service.change_password(test_user.id, password_data)
 
         # Verify new password works
         from src.core.security import verify_password
+
         refreshed_user = await service.get_user_by_id(test_user.id)
         assert verify_password("NewSecurePass456!", refreshed_user.password_hash)
         assert not verify_password("TestPassword123!", refreshed_user.password_hash)
@@ -178,8 +173,7 @@ class TestUserService:
         service = UserService(test_db)
 
         password_data = UserPasswordChange(
-            current_password="WrongPassword123!",
-            new_password="NewSecurePass456!"
+            current_password="WrongPassword123!", new_password="NewSecurePass456!"
         )
 
         with pytest.raises(InvalidCredentialsError) as exc:
@@ -191,10 +185,7 @@ class TestUserService:
         """Test successful email change"""
         service = UserService(test_db)
 
-        email_data = UserEmailChange(
-            new_email="newemail@example.com",
-            password="TestPassword123!"
-        )
+        email_data = UserEmailChange(new_email="newemail@example.com", password="TestPassword123!")
 
         updated_user = await service.change_email(test_user.id, email_data)
 
@@ -205,23 +196,21 @@ class TestUserService:
         """Test email change with wrong password"""
         service = UserService(test_db)
 
-        email_data = UserEmailChange(
-            new_email="newemail@example.com",
-            password="WrongPassword123!"
-        )
+        email_data = UserEmailChange(new_email="newemail@example.com", password="WrongPassword123!")
 
         with pytest.raises(InvalidCredentialsError):
             await service.change_email(test_user.id, email_data)
 
-    async def test_change_email_duplicate(self, test_db: AsyncSession, test_user: User, multiple_users: list[User]):
+    async def test_change_email_duplicate(
+        self, test_db: AsyncSession, test_user: User, multiple_users: list[User]
+    ):
         """Test email change to existing email fails"""
         service = UserService(test_db)
 
         other_user = multiple_users[1]  # Get another user
 
         email_data = UserEmailChange(
-            new_email=other_user.email,  # Use existing email
-            password="TestPassword123!"
+            new_email=other_user.email, password="TestPassword123!"  # Use existing email
         )
 
         with pytest.raises(UserAlreadyExistsError):
@@ -282,7 +271,9 @@ class TestUserService:
         assert total >= 1
         assert all(user.level == UserLevelEnum.SENIOR_MODERATOR for user in users)
 
-    async def test_list_users_active_filter(self, test_db: AsyncSession, multiple_users: list[User]):
+    async def test_list_users_active_filter(
+        self, test_db: AsyncSession, multiple_users: list[User]
+    ):
         """Test user list with active filter"""
         service = UserService(test_db)
 
@@ -299,7 +290,9 @@ class TestUserService:
         assert all(not user.is_active for user in inactive_users)
         assert inactive_total == 1
 
-    async def test_get_user_stats(self, test_db: AsyncSession, test_user: User, test_post, test_comment):
+    async def test_get_user_stats(
+        self, test_db: AsyncSession, test_user: User, test_post, test_comment
+    ):
         """Test getting user statistics"""
         service = UserService(test_db)
 

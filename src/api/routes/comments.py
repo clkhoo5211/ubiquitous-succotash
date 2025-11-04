@@ -11,13 +11,13 @@ from src.schemas.comment import (
     CommentResponse,
     CommentListResponse,
     CommentTreeResponse,
-    ContentStatus
+    ContentStatus,
 )
 from src.core.dependencies import (
     get_db,
     get_current_user,
     get_optional_current_user,
-    require_moderator
+    require_moderator,
 )
 from src.models.user import User
 from src.services.comment_service import CommentService
@@ -25,12 +25,17 @@ from src.services.comment_service import CommentService
 router = APIRouter()
 
 
-@router.post("/{post_id}/comments", response_model=CommentResponse, status_code=status.HTTP_201_CREATED, summary="Create a comment")
+@router.post(
+    "/{post_id}/comments",
+    response_model=CommentResponse,
+    status_code=status.HTTP_201_CREATED,
+    summary="Create a comment",
+)
 async def create_comment(
     post_id: int = Path(..., description="Post ID to comment on"),
     comment_data: CommentCreate = ...,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """
     Create a new comment on a post.
@@ -55,15 +60,19 @@ async def create_comment(
     return new_comment
 
 
-@router.get("/{post_id}/comments", response_model=CommentListResponse, summary="List comments for a post")
+@router.get(
+    "/{post_id}/comments", response_model=CommentListResponse, summary="List comments for a post"
+)
 async def list_comments(
     post_id: int = Path(..., description="Post ID"),
     page: int = Query(1, ge=1, description="Page number"),
     page_size: int = Query(50, ge=1, le=100, description="Comments per page"),
-    parent_id: Optional[int] = Query(None, description="Parent comment ID (null for root comments)"),
+    parent_id: Optional[int] = Query(
+        None, description="Parent comment ID (null for root comments)"
+    ),
     status: Optional[ContentStatus] = Query(ContentStatus.ACTIVE, description="Filter by status"),
     current_user: Optional[User] = Depends(get_optional_current_user),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """
     List comments for a post with pagination.
@@ -78,11 +87,7 @@ async def list_comments(
     """
     comment_service = CommentService(db)
     comments, total = await comment_service.list_comments(
-        post_id=post_id,
-        page=page,
-        page_size=page_size,
-        parent_id=parent_id,
-        status=status
+        post_id=post_id, page=page, page_size=page_size, parent_id=parent_id, status=status
     )
 
     # Add metadata for each comment
@@ -98,19 +103,17 @@ async def list_comments(
     total_pages = (total + page_size - 1) // page_size
 
     return CommentListResponse(
-        comments=comments,
-        total=total,
-        page=page,
-        page_size=page_size,
-        total_pages=total_pages
+        comments=comments, total=total, page=page, page_size=page_size, total_pages=total_pages
     )
 
 
-@router.get("/{post_id}/comments/tree", response_model=CommentTreeResponse, summary="Get comment tree")
+@router.get(
+    "/{post_id}/comments/tree", response_model=CommentTreeResponse, summary="Get comment tree"
+)
 async def get_comment_tree(
     post_id: int = Path(..., description="Post ID"),
     current_user: Optional[User] = Depends(get_optional_current_user),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """
     Get nested comment tree for a post (up to 5 levels deep).
@@ -136,24 +139,21 @@ async def get_comment_tree(
         else:
             comment.user_has_liked = False
 
-        if hasattr(comment, 'replies_list'):
+        if hasattr(comment, "replies_list"):
             for reply in comment.replies_list:
                 await add_metadata(reply)
 
     for comment in root_comments:
         await add_metadata(comment)
 
-    return CommentTreeResponse(
-        comments=root_comments,
-        total_root_comments=len(root_comments)
-    )
+    return CommentTreeResponse(comments=root_comments, total_root_comments=len(root_comments))
 
 
 @router.get("/comments/{comment_id}", response_model=CommentResponse, summary="Get comment by ID")
 async def get_comment_by_id(
     comment_id: int = Path(..., description="Comment ID"),
     current_user: Optional[User] = Depends(get_optional_current_user),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """
     Get a specific comment by its ID.
@@ -182,7 +182,7 @@ async def update_comment(
     comment_id: int = Path(..., description="Comment ID"),
     comment_data: CommentUpdate = ...,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """
     Update an existing comment.
@@ -194,7 +194,9 @@ async def update_comment(
     - `body`: Comment content
     """
     comment_service = CommentService(db)
-    updated_comment = await comment_service.update_comment(comment_id, comment_data, current_user.id)
+    updated_comment = await comment_service.update_comment(
+        comment_id, comment_data, current_user.id
+    )
 
     # Add metadata
     updated_comment.replies_count = await comment_service.get_replies_count(comment_id)
@@ -205,11 +207,13 @@ async def update_comment(
     return updated_comment
 
 
-@router.delete("/comments/{comment_id}", status_code=status.HTTP_204_NO_CONTENT, summary="Delete a comment")
+@router.delete(
+    "/comments/{comment_id}", status_code=status.HTTP_204_NO_CONTENT, summary="Delete a comment"
+)
 async def delete_comment(
     comment_id: int = Path(..., description="Comment ID"),
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """
     Delete a comment (soft delete - marks as DELETED status).
@@ -230,12 +234,14 @@ async def delete_comment(
     return None
 
 
-@router.patch("/comments/{comment_id}/moderate", response_model=CommentResponse, summary="Moderate a comment")
+@router.patch(
+    "/comments/{comment_id}/moderate", response_model=CommentResponse, summary="Moderate a comment"
+)
 async def moderate_comment(
     comment_id: int = Path(..., description="Comment ID"),
     moderation_data: CommentModerationUpdate = ...,
     current_user: User = Depends(require_moderator),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """
     Moderate a comment (moderator only).

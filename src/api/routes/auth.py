@@ -249,20 +249,20 @@ async def check_username(
     db: AsyncSession = Depends(get_db),
 ):
     """Check if username is available
-    
+
     Returns availability status for username validation during registration.
     """
     # Basic validation
     if len(username) < 3:
         return {"available": False, "reason": "Username must be at least 3 characters"}
-    
+
     # Check if username exists
     result = await db.execute(select(User).where(User.username == username))
     existing_user = result.scalar_one_or_none()
-    
+
     if existing_user:
         return {"available": False, "reason": "Username already taken"}
-    
+
     return {"available": True}
 
 
@@ -347,9 +347,7 @@ async def oauth_callback(
         # For now, we'll skip state validation in development
 
         # Exchange code for access token
-        access_token, refresh_token = await oauth_service.exchange_code_for_token(
-            provider, code
-        )
+        access_token, refresh_token = await oauth_service.exchange_code_for_token(provider, code)
 
         # Fetch user info from provider
         user_info = await oauth_service.get_user_info(provider, access_token)
@@ -362,9 +360,7 @@ async def oauth_callback(
         await db.commit()
 
         # Generate JWT token for our app
-        app_access_token = create_access_token(
-            data={"sub": user.id, "username": user.username}
-        )
+        app_access_token = create_access_token(data={"sub": user.id, "username": user.username})
 
         # Create secure session
         session_id = await create_session(user.id)

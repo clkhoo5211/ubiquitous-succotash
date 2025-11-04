@@ -11,11 +11,9 @@ from src.schemas.user import (
     UserPasswordChange,
     UserEmailChange,
     UserListResponse,
-    UserStatsResponse
+    UserStatsResponse,
 )
-from src.core.dependencies import (
-    get_db
-)
+from src.core.dependencies import get_db
 from src.api.dependencies.auth import require_auth
 from src.models.user import User, UserLevelEnum
 from src.services.user_service import UserService
@@ -24,9 +22,7 @@ router = APIRouter()
 
 
 @router.get("/me", response_model=UserDetailResponse, summary="Get current user profile")
-async def get_current_user_profile(
-    current_user: User = Depends(require_auth)
-):
+async def get_current_user_profile(current_user: User = Depends(require_auth)):
     """
     Get the authenticated user's detailed profile.
 
@@ -36,10 +32,7 @@ async def get_current_user_profile(
 
 
 @router.get("/{user_id}", response_model=UserResponse, summary="Get user by ID")
-async def get_user_by_id(
-    user_id: int,
-    db: AsyncSession = Depends(get_db)
-):
+async def get_user_by_id(user_id: int, db: AsyncSession = Depends(get_db)):
     """
     Get public profile of a user by their ID.
 
@@ -57,7 +50,7 @@ async def list_users(
     search: Optional[str] = Query(None, description="Search by username or display name"),
     level: Optional[UserLevelEnum] = Query(None, description="Filter by user level"),
     is_active: Optional[bool] = Query(None, description="Filter by active status"),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """
     List users with pagination and optional filters.
@@ -73,21 +66,13 @@ async def list_users(
     """
     user_service = UserService(db)
     users, total = await user_service.list_users(
-        page=page,
-        page_size=page_size,
-        search=search,
-        level=level,
-        is_active=is_active
+        page=page, page_size=page_size, search=search, level=level, is_active=is_active
     )
 
     total_pages = (total + page_size - 1) // page_size
 
     return UserListResponse(
-        users=users,
-        total=total,
-        page=page,
-        page_size=page_size,
-        total_pages=total_pages
+        users=users, total=total, page=page, page_size=page_size, total_pages=total_pages
     )
 
 
@@ -95,7 +80,7 @@ async def list_users(
 async def update_current_user_profile(
     user_data: UserUpdate,
     current_user: User = Depends(require_auth),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """
     Update the authenticated user's profile.
@@ -111,11 +96,13 @@ async def update_current_user_profile(
     return updated_user
 
 
-@router.post("/me/change-password", status_code=status.HTTP_204_NO_CONTENT, summary="Change password")
+@router.post(
+    "/me/change-password", status_code=status.HTTP_204_NO_CONTENT, summary="Change password"
+)
 async def change_password(
     password_data: UserPasswordChange,
     current_user: User = Depends(require_auth),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """
     Change the authenticated user's password.
@@ -134,7 +121,7 @@ async def change_password(
 async def change_email(
     email_data: UserEmailChange,
     current_user: User = Depends(require_auth),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """
     Change the authenticated user's email address.
@@ -151,8 +138,7 @@ async def change_email(
 
 @router.delete("/me", status_code=status.HTTP_204_NO_CONTENT, summary="Delete account")
 async def delete_account(
-    current_user: User = Depends(require_auth),
-    db: AsyncSession = Depends(get_db)
+    current_user: User = Depends(require_auth), db: AsyncSession = Depends(get_db)
 ):
     """
     Delete (deactivate) the authenticated user's account.
@@ -165,10 +151,7 @@ async def delete_account(
 
 
 @router.get("/{user_id}/stats", response_model=UserStatsResponse, summary="Get user statistics")
-async def get_user_stats(
-    user_id: int,
-    db: AsyncSession = Depends(get_db)
-):
+async def get_user_stats(user_id: int, db: AsyncSession = Depends(get_db)):
     """
     Get comprehensive statistics for a user.
 

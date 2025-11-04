@@ -11,7 +11,7 @@ import pytest
 from fastapi import UploadFile
 from PIL import Image
 
-from src.core.exceptions import IPFSError, StorageError, ValidationError
+from src.core.exceptions import IPFSError, ValidationError
 from src.schemas.media import ImageOptimizationRequest, MediaUploadResponse
 from src.services.media_service import MediaService
 
@@ -192,9 +192,7 @@ class TestImageOptimization:
         """Test that optimization errors return original content"""
         invalid_content = b"not an image"
 
-        result = await media_service.optimize_image(
-            invalid_content, ImageOptimizationRequest()
-        )
+        result = await media_service.optimize_image(invalid_content, ImageOptimizationRequest())
 
         # Should return original on error
         assert result == invalid_content
@@ -217,9 +215,7 @@ class TestIPFSUpload:
             mock_client.post.return_value = mock_response
             mock_client_class.return_value = mock_client
 
-            result = await media_service.upload_to_ipfs(
-                mock_image_file, optimize_images=False
-            )
+            result = await media_service.upload_to_ipfs(mock_image_file, optimize_images=False)
 
             assert isinstance(result, MediaUploadResponse)
             assert result.success is True
@@ -229,9 +225,7 @@ class TestIPFSUpload:
             assert result.mime_type == "image/jpeg"
 
     @pytest.mark.asyncio
-    async def test_upload_to_ipfs_with_optimization(
-        self, media_service, mock_large_image_file
-    ):
+    async def test_upload_to_ipfs_with_optimization(self, media_service, mock_large_image_file):
         """Test IPFS upload with image optimization enabled"""
         mock_response = MagicMock()
         mock_response.status_code = 200
@@ -248,9 +242,7 @@ class TestIPFSUpload:
             original_content = await mock_large_image_file.read()
             await mock_large_image_file.seek(0)
 
-            result = await media_service.upload_to_ipfs(
-                mock_large_image_file, optimize_images=True
-            )
+            result = await media_service.upload_to_ipfs(mock_large_image_file, optimize_images=True)
 
             assert result.success is True
             assert result.ipfs_hash == "QmTest789"
@@ -288,9 +280,7 @@ class TestIPFSUpload:
         assert "exceeds maximum" in str(exc_info.value)
 
     @pytest.mark.asyncio
-    async def test_upload_to_ipfs_lighthouse_error(
-        self, media_service, mock_image_file
-    ):
+    async def test_upload_to_ipfs_lighthouse_error(self, media_service, mock_image_file):
         """Test upload when Lighthouse API returns error"""
         # Response should be regular MagicMock, not AsyncMock (it's already awaited)
         mock_response = MagicMock()
@@ -314,9 +304,7 @@ class TestIPFSUpload:
             assert "IPFS upload failed" in str(exc_info.value)
 
     @pytest.mark.asyncio
-    async def test_upload_to_ipfs_no_hash_in_response(
-        self, media_service, mock_image_file
-    ):
+    async def test_upload_to_ipfs_no_hash_in_response(self, media_service, mock_image_file):
         """Test upload when Lighthouse doesn't return hash"""
         mock_response = MagicMock()
         mock_response.status_code = 200

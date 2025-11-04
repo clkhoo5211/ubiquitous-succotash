@@ -28,8 +28,7 @@ jobs:
           pip install black ruff mypy
 
       - name: Run Black (code formatter)
-        run: black --check src/ tests/ || echo "⚠️ Code formatting issues found - will not block CI"
-        continue-on-error: true
+        run: black --check src/ tests/
 
       - name: Run Ruff (linter)
         run: ruff check src/ tests/
@@ -86,8 +85,7 @@ jobs:
 
       - name: Run tests with coverage
         run: |
-          pytest tests/ --cov=src --cov-report=xml --cov-report=term-missing -v --cov-fail-under=0 || true
-          echo "⚠️ Coverage threshold check disabled - tests may pass even if coverage is below 80%"
+          pytest tests/ --cov=src --cov-report=xml --cov-report=term-missing -v
         env:
           DATABASE_URL: postgresql+asyncpg://forum_test:test_password@localhost:5432/forum_test
           REDIS_URL: redis://localhost:6379/0

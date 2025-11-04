@@ -9,6 +9,7 @@ from src.schemas.comment import CommentResponse
 
 class SearchResultItem(BaseModel):
     """Single search result item"""
+
     type: str  # "post", "user", or "comment"
     score: float  # Relevance score
     data: Union[PostResponse, UserResponse, CommentResponse]
@@ -16,6 +17,7 @@ class SearchResultItem(BaseModel):
 
 class SearchResponse(BaseModel):
     """Schema for search results"""
+
     query: str
     results: List[SearchResultItem]
     total: int

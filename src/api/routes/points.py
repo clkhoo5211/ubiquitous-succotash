@@ -12,13 +12,9 @@ from src.schemas.points import (
     LeaderboardResponse,
     AdminAdjustment,
     CryptoRewardRequest,
-    TransactionType
+    TransactionType,
 )
-from src.core.dependencies import (
-    get_db,
-    get_current_user,
-    require_senior_moderator
-)
+from src.core.dependencies import get_db, get_current_user, require_senior_moderator
 from src.models.user import User
 from src.services.point_service import PointService
 
@@ -27,8 +23,7 @@ router = APIRouter()
 
 @router.get("/me/points", response_model=UserPointsResponse, summary="Get my points summary")
 async def get_my_points(
-    current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
+    current_user: User = Depends(get_current_user), db: AsyncSession = Depends(get_db)
 ):
     """
     Get the authenticated user's points summary.
@@ -45,10 +40,11 @@ async def get_my_points(
     return summary
 
 
-@router.get("/users/{user_id}/points", response_model=UserPointsResponse, summary="Get user points summary")
+@router.get(
+    "/users/{user_id}/points", response_model=UserPointsResponse, summary="Get user points summary"
+)
 async def get_user_points(
-    user_id: int = Path(..., description="User ID"),
-    db: AsyncSession = Depends(get_db)
+    user_id: int = Path(..., description="User ID"), db: AsyncSession = Depends(get_db)
 ):
     """
     Get a user's points summary (public view).
@@ -64,13 +60,17 @@ async def get_user_points(
     return summary
 
 
-@router.get("/me/transactions", response_model=TransactionListResponse, summary="Get my transaction history")
+@router.get(
+    "/me/transactions", response_model=TransactionListResponse, summary="Get my transaction history"
+)
 async def get_my_transactions(
     page: int = Query(1, ge=1, description="Page number"),
     page_size: int = Query(50, ge=1, le=100, description="Transactions per page"),
-    transaction_type: Optional[TransactionType] = Query(None, description="Filter by transaction type"),
+    transaction_type: Optional[TransactionType] = Query(
+        None, description="Filter by transaction type"
+    ),
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """
     Get the authenticated user's transaction history.
@@ -84,10 +84,7 @@ async def get_my_transactions(
     """
     point_service = PointService(db)
     transactions, total = await point_service.get_user_transactions(
-        user_id=current_user.id,
-        page=page,
-        page_size=page_size,
-        transaction_type=transaction_type
+        user_id=current_user.id, page=page, page_size=page_size, transaction_type=transaction_type
     )
 
     total_pages = (total + page_size - 1) // page_size
@@ -97,17 +94,23 @@ async def get_my_transactions(
         total=total,
         page=page,
         page_size=page_size,
-        total_pages=total_pages
+        total_pages=total_pages,
     )
 
 
-@router.get("/users/{user_id}/transactions", response_model=TransactionListResponse, summary="Get user transaction history")
+@router.get(
+    "/users/{user_id}/transactions",
+    response_model=TransactionListResponse,
+    summary="Get user transaction history",
+)
 async def get_user_transactions(
     user_id: int = Path(..., description="User ID"),
     page: int = Query(1, ge=1, description="Page number"),
     page_size: int = Query(50, ge=1, le=100, description="Transactions per page"),
-    transaction_type: Optional[TransactionType] = Query(None, description="Filter by transaction type"),
-    db: AsyncSession = Depends(get_db)
+    transaction_type: Optional[TransactionType] = Query(
+        None, description="Filter by transaction type"
+    ),
+    db: AsyncSession = Depends(get_db),
 ):
     """
     Get a user's transaction history (public view).
@@ -121,10 +124,7 @@ async def get_user_transactions(
     """
     point_service = PointService(db)
     transactions, total = await point_service.get_user_transactions(
-        user_id=user_id,
-        page=page,
-        page_size=page_size,
-        transaction_type=transaction_type
+        user_id=user_id, page=page, page_size=page_size, transaction_type=transaction_type
     )
 
     total_pages = (total + page_size - 1) // page_size
@@ -134,14 +134,14 @@ async def get_user_transactions(
         total=total,
         page=page,
         page_size=page_size,
-        total_pages=total_pages
+        total_pages=total_pages,
     )
 
 
-@router.get("/economy", response_model=PointEconomyResponse, summary="Get point economy configuration")
-async def get_economy_config(
-    db: AsyncSession = Depends(get_db)
-):
+@router.get(
+    "/economy", response_model=PointEconomyResponse, summary="Get point economy configuration"
+)
+async def get_economy_config(db: AsyncSession = Depends(get_db)):
     """
     Get the point economy configuration.
 
@@ -159,7 +159,7 @@ async def get_economy_config(
 async def get_leaderboard(
     page: int = Query(1, ge=1, description="Page number"),
     page_size: int = Query(50, ge=1, le=100, description="Users per page"),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """
     Get the points leaderboard.
@@ -170,16 +170,10 @@ async def get_leaderboard(
     - Current rank and points
     """
     point_service = PointService(db)
-    leaderboard, total = await point_service.get_leaderboard(
-        page=page,
-        page_size=page_size
-    )
+    leaderboard, total = await point_service.get_leaderboard(page=page, page_size=page_size)
 
     return LeaderboardResponse(
-        leaderboard=leaderboard,
-        total_users=total,
-        page=page,
-        page_size=page_size
+        leaderboard=leaderboard, total_users=total, page=page, page_size=page_size
     )
 
 
@@ -187,7 +181,7 @@ async def get_leaderboard(
 async def claim_crypto_reward(
     reward_request: CryptoRewardRequest,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """
     Claim crypto reward by exchanging points for BNB.
@@ -205,17 +199,18 @@ async def claim_crypto_reward(
     """
     point_service = PointService(db)
     transaction = await point_service.claim_crypto_reward(
-        user_id=current_user.id,
-        wallet_address=reward_request.bnb_wallet_address
+        user_id=current_user.id, wallet_address=reward_request.bnb_wallet_address
     )
     return transaction
 
 
-@router.post("/admin/adjust", response_model=TransactionResponse, summary="Admin: Adjust user points")
+@router.post(
+    "/admin/adjust", response_model=TransactionResponse, summary="Admin: Adjust user points"
+)
 async def admin_adjust_points(
     adjustment: AdminAdjustment,
     current_user: User = Depends(require_senior_moderator),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """
     Manually adjust a user's points (senior moderator only).

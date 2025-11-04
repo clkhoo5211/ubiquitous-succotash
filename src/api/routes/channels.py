@@ -3,12 +3,7 @@
 from fastapi import APIRouter, Depends, status, Path
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.schemas.channel import (
-    ChannelCreate,
-    ChannelUpdate,
-    ChannelResponse,
-    ChannelListResponse
-)
+from src.schemas.channel import ChannelCreate, ChannelUpdate, ChannelResponse, ChannelListResponse
 from src.core.dependencies import get_db, require_moderator
 from src.models.user import User
 from src.services.channel_service import ChannelService
@@ -16,11 +11,16 @@ from src.services.channel_service import ChannelService
 router = APIRouter()
 
 
-@router.post("/", response_model=ChannelResponse, status_code=status.HTTP_201_CREATED, summary="Create a channel")
+@router.post(
+    "/",
+    response_model=ChannelResponse,
+    status_code=status.HTTP_201_CREATED,
+    summary="Create a channel",
+)
 async def create_channel(
     channel_data: ChannelCreate,
     current_user: User = Depends(require_moderator),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """
     Create a new channel (moderator only).
@@ -39,9 +39,7 @@ async def create_channel(
 
 
 @router.get("/", response_model=ChannelListResponse, summary="List all channels")
-async def list_channels(
-    db: AsyncSession = Depends(get_db)
-):
+async def list_channels(db: AsyncSession = Depends(get_db)):
     """
     Get all channels.
 
@@ -56,8 +54,7 @@ async def list_channels(
 
 @router.get("/{channel_id}", response_model=ChannelResponse, summary="Get channel by ID")
 async def get_channel_by_id(
-    channel_id: int = Path(..., description="Channel ID"),
-    db: AsyncSession = Depends(get_db)
+    channel_id: int = Path(..., description="Channel ID"), db: AsyncSession = Depends(get_db)
 ):
     """Get channel details by ID."""
     channel_service = ChannelService(db)
@@ -67,8 +64,7 @@ async def get_channel_by_id(
 
 @router.get("/slug/{slug}", response_model=ChannelResponse, summary="Get channel by slug")
 async def get_channel_by_slug(
-    slug: str = Path(..., description="Channel slug"),
-    db: AsyncSession = Depends(get_db)
+    slug: str = Path(..., description="Channel slug"), db: AsyncSession = Depends(get_db)
 ):
     """Get channel details by slug (URL-friendly name)."""
     channel_service = ChannelService(db)
@@ -81,7 +77,7 @@ async def update_channel(
     channel_id: int = Path(..., description="Channel ID"),
     channel_data: ChannelUpdate = ...,
     current_user: User = Depends(require_moderator),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """
     Update a channel (moderator only).
@@ -102,7 +98,7 @@ async def update_channel(
 async def delete_channel(
     channel_id: int = Path(..., description="Channel ID"),
     current_user: User = Depends(require_moderator),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """
     Delete a channel (moderator only).

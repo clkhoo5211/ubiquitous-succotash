@@ -8,6 +8,7 @@ from enum import Enum
 
 class ContentStatus(str, Enum):
     """Content moderation status"""
+
     ACTIVE = "active"
     PENDING_REVIEW = "pending_review"
     HIDDEN = "hidden"
@@ -17,6 +18,7 @@ class ContentStatus(str, Enum):
 # Base schemas
 class CommentBase(BaseModel):
     """Base comment schema"""
+
     body: str = Field(..., min_length=1, max_length=10000)
     parent_id: Optional[int] = Field(None, description="Parent comment ID for nested replies")
 
@@ -34,6 +36,7 @@ class CommentCreate(CommentBase):
 
 class CommentUpdate(BaseModel):
     """Schema for updating a comment"""
+
     body: str = Field(..., min_length=1, max_length=10000)
 
     @validator("body")
@@ -45,12 +48,14 @@ class CommentUpdate(BaseModel):
 
 class CommentModerationUpdate(BaseModel):
     """Schema for moderator actions on comments"""
+
     status: ContentStatus
 
 
 # Response schemas
 class CommentAuthorResponse(BaseModel):
     """Minimal user info for comment author"""
+
     id: int
     username: str
     display_name: Optional[str]
@@ -63,6 +68,7 @@ class CommentAuthorResponse(BaseModel):
 
 class CommentResponse(BaseModel):
     """Schema for comment response"""
+
     id: int
     post_id: int
     parent_id: Optional[int]
@@ -82,6 +88,7 @@ class CommentResponse(BaseModel):
 
 class CommentWithRepliesResponse(CommentResponse):
     """Schema for comment with nested replies"""
+
     replies: List["CommentWithRepliesResponse"] = []
 
     class Config:
@@ -94,6 +101,7 @@ CommentWithRepliesResponse.model_rebuild()
 
 class CommentListResponse(BaseModel):
     """Schema for paginated comment list"""
+
     comments: List[CommentResponse]
     total: int
     page: int
@@ -103,5 +111,6 @@ class CommentListResponse(BaseModel):
 
 class CommentTreeResponse(BaseModel):
     """Schema for comment tree (with nested replies)"""
+
     comments: List[CommentWithRepliesResponse]
     total_root_comments: int

@@ -8,17 +8,8 @@ from sqlalchemy.orm import selectinload
 
 from src.models.content import Post, ContentStatus, Like
 from src.models.organization import Channel, PostTag
-from src.schemas.post import (
-    PostCreate,
-    PostUpdate,
-    PostModerationUpdate,
-    PostSortBy
-)
-from src.core.exceptions import (
-    PostNotFoundError,
-    ChannelNotFoundError,
-    PermissionDeniedError
-)
+from src.schemas.post import PostCreate, PostUpdate, PostModerationUpdate, PostSortBy
+from src.core.exceptions import PostNotFoundError, ChannelNotFoundError, PermissionDeniedError
 
 
 class PostService:
@@ -55,7 +46,7 @@ class PostService:
             is_locked=False,
             created_at=datetime.utcnow(),
             updated_at=datetime.utcnow(),
-            last_activity_at=datetime.utcnow()
+            last_activity_at=datetime.utcnow(),
         )
 
         self.db.add(new_post)
@@ -82,7 +73,7 @@ class PostService:
                 selectinload(Post.author),
                 selectinload(Post.channel),
                 selectinload(Post.tags),
-                selectinload(Post.media)
+                selectinload(Post.media),
             )
             .where(Post.id == post_id)
         )
@@ -175,14 +166,14 @@ class PostService:
         status: Optional[ContentStatus] = ContentStatus.ACTIVE,
         sort_by: PostSortBy = PostSortBy.CREATED_DESC,
         search: Optional[str] = None,
-        tag_ids: Optional[List[int]] = None
+        tag_ids: Optional[List[int]] = None,
     ) -> tuple[List[Post], int]:
         """List posts with pagination and filters"""
         query = select(Post).options(
             selectinload(Post.author),
             selectinload(Post.channel),
             selectinload(Post.tags),
-            selectinload(Post.media)
+            selectinload(Post.media),
         )
 
         # Apply filters
@@ -193,10 +184,7 @@ class PostService:
         if status:
             query = query.where(Post.status == status)
         if search:
-            search_filter = or_(
-                Post.title.ilike(f"%{search}%"),
-                Post.body.ilike(f"%{search}%")
-            )
+            search_filter = or_(Post.title.ilike(f"%{search}%"), Post.body.ilike(f"%{search}%"))
             query = query.where(search_filter)
 
         # Filter by tags if provided
@@ -244,27 +232,22 @@ class PostService:
     async def check_user_liked_post(self, post_id: int, user_id: int) -> bool:
         """Check if user has liked a post"""
         result = await self.db.execute(
-            select(Like).where(
-                and_(
-                    Like.post_id == post_id,
-                    Like.user_id == user_id
-                )
-            )
+            select(Like).where(and_(Like.post_id == post_id, Like.user_id == user_id))
         )
         return result.scalar_one_or_none() is not None
 
     def _sanitize_html(self, body: str) -> str:
         """Sanitize HTML content - supports both Markdown and raw HTML"""
         import re
-        
+
         # Check if body contains HTML tags
-        has_html = re.search(r'<[^>]+>', body)
-        
+        has_html = re.search(r"<[^>]+>", body)
+
         if has_html:
             # If HTML is detected, use it as-is for interactive content
             # We allow interactive HTML including forms, buttons, canvas, etc.
             # Scripts are allowed for interactivity (user explicitly wants HTML)
-            
+
             # Return HTML as-is - it will be rendered with |safe in template
             # Note: In production, consider using Content Security Policy (CSP)
             # to restrict script execution for security
@@ -272,6 +255,7 @@ class PostService:
         else:
             # No HTML tags - treat as Markdown and convert
             import html
+
             escaped = html.escape(body)
             html_content = escaped.replace("\n", "<br>")
             return html_content

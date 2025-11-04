@@ -12,13 +12,13 @@ from src.schemas.post import (
     PostDetailResponse,
     PostListResponse,
     PostSortBy,
-    ContentStatus
+    ContentStatus,
 )
 from src.core.dependencies import (
     get_db,
     get_current_user,
     get_optional_current_user,
-    require_moderator
+    require_moderator,
 )
 from src.models.user import User
 from src.services.post_service import PostService
@@ -26,11 +26,13 @@ from src.services.post_service import PostService
 router = APIRouter()
 
 
-@router.post("/", response_model=PostResponse, status_code=status.HTTP_201_CREATED, summary="Create a post")
+@router.post(
+    "/", response_model=PostResponse, status_code=status.HTTP_201_CREATED, summary="Create a post"
+)
 async def create_post(
     post_data: PostCreate,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """
     Create a new post.
@@ -52,7 +54,7 @@ async def create_post(
 async def get_post_by_id(
     post_id: int,
     current_user: Optional[User] = Depends(get_optional_current_user),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """
     Get a post by its ID.
@@ -69,10 +71,7 @@ async def get_post_by_id(
         user_has_liked = await post_service.check_user_liked_post(post_id, current_user.id)
 
     # Create response with user_has_liked field
-    post_dict = {
-        **post.__dict__,
-        "user_has_liked": user_has_liked
-    }
+    post_dict = {**post.__dict__, "user_has_liked": user_has_liked}
 
     return post_dict
 
@@ -87,7 +86,7 @@ async def list_posts(
     sort_by: PostSortBy = Query(PostSortBy.CREATED_DESC, description="Sort order"),
     search: Optional[str] = Query(None, description="Search in title and body"),
     tag_ids: Optional[str] = Query(None, description="Comma-separated tag IDs"),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """
     List posts with pagination and filters.
@@ -123,17 +122,13 @@ async def list_posts(
         status=status,
         sort_by=sort_by,
         search=search,
-        tag_ids=tag_ids_list
+        tag_ids=tag_ids_list,
     )
 
     total_pages = (total + page_size - 1) // page_size
 
     return PostListResponse(
-        posts=posts,
-        total=total,
-        page=page,
-        page_size=page_size,
-        total_pages=total_pages
+        posts=posts, total=total, page=page, page_size=page_size, total_pages=total_pages
     )
 
 
@@ -142,7 +137,7 @@ async def update_post(
     post_id: int,
     post_data: PostUpdate,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """
     Update an existing post.
@@ -162,9 +157,7 @@ async def update_post(
 
 @router.delete("/{post_id}", status_code=status.HTTP_204_NO_CONTENT, summary="Delete a post")
 async def delete_post(
-    post_id: int,
-    current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
+    post_id: int, current_user: User = Depends(get_current_user), db: AsyncSession = Depends(get_db)
 ):
     """
     Delete a post (soft delete - marks as DELETED status).
@@ -185,7 +178,7 @@ async def moderate_post(
     post_id: int,
     moderation_data: PostModerationUpdate,
     current_user: User = Depends(require_moderator),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """
     Moderate a post (moderator only).

@@ -10,7 +10,7 @@ import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.core.exceptions import BlockchainError, InsufficientPointsError
-from src.models.user import User, UserLevelEnum
+from src.models.user import User
 from src.schemas.blockchain import (
     TransactionStatusResponse,
     WalletBalanceResponse,
@@ -60,13 +60,9 @@ class TestWalletVerification:
     """Test wallet signature verification"""
 
     @pytest.mark.asyncio
-    async def test_verify_valid_signature(
-        self, blockchain_service, wallet_connect_request
-    ):
+    async def test_verify_valid_signature(self, blockchain_service, wallet_connect_request):
         """Test signature verification with valid signature"""
-        with patch.object(
-            blockchain_service.w3.eth.account, "recover_message"
-        ) as mock_recover:
+        with patch.object(blockchain_service.w3.eth.account, "recover_message") as mock_recover:
             mock_recover.return_value = wallet_connect_request.wallet_address
 
             is_valid, message = await blockchain_service.verify_wallet_signature(
@@ -77,13 +73,9 @@ class TestWalletVerification:
             assert message == "Wallet verified successfully"
 
     @pytest.mark.asyncio
-    async def test_verify_invalid_signature(
-        self, blockchain_service, wallet_connect_request
-    ):
+    async def test_verify_invalid_signature(self, blockchain_service, wallet_connect_request):
         """Test signature verification with invalid signature"""
-        with patch.object(
-            blockchain_service.w3.eth.account, "recover_message"
-        ) as mock_recover:
+        with patch.object(blockchain_service.w3.eth.account, "recover_message") as mock_recover:
             # Return different address
             mock_recover.return_value = "0xdifferentaddress"
 
@@ -95,13 +87,9 @@ class TestWalletVerification:
             assert message == "Signature verification failed"
 
     @pytest.mark.asyncio
-    async def test_verify_signature_exception(
-        self, blockchain_service, wallet_connect_request
-    ):
+    async def test_verify_signature_exception(self, blockchain_service, wallet_connect_request):
         """Test signature verification when exception occurs"""
-        with patch.object(
-            blockchain_service.w3.eth.account, "recover_message"
-        ) as mock_recover:
+        with patch.object(blockchain_service.w3.eth.account, "recover_message") as mock_recover:
             mock_recover.side_effect = Exception("Invalid signature format")
 
             is_valid, message = await blockchain_service.verify_wallet_signature(
@@ -120,9 +108,7 @@ class TestWalletConnection:
         self, blockchain_service, mock_db_session, mock_user, wallet_connect_request
     ):
         """Test successful wallet connection"""
-        with patch.object(
-            blockchain_service, "verify_wallet_signature"
-        ) as mock_verify:
+        with patch.object(blockchain_service, "verify_wallet_signature") as mock_verify:
             mock_verify.return_value = (True, "Wallet verified successfully")
 
             result = await blockchain_service.connect_wallet(
@@ -140,9 +126,7 @@ class TestWalletConnection:
         self, blockchain_service, mock_db_session, mock_user, wallet_connect_request
     ):
         """Test wallet connection with failed verification"""
-        with patch.object(
-            blockchain_service, "verify_wallet_signature"
-        ) as mock_verify:
+        with patch.object(blockchain_service, "verify_wallet_signature") as mock_verify:
             mock_verify.return_value = (False, "Signature verification failed")
 
             result = await blockchain_service.connect_wallet(
@@ -163,9 +147,7 @@ class TestWalletBalance:
         test_address = "0x742d35cc6634c0532925a3b844bc9e7595f0beb0"
         test_balance_wei = 5000000000000000000  # 5 BNB in wei
 
-        with patch.object(
-            blockchain_service.w3.eth, "get_balance"
-        ) as mock_get_balance:
+        with patch.object(blockchain_service.w3.eth, "get_balance") as mock_get_balance:
             mock_get_balance.return_value = test_balance_wei
 
             balance = await blockchain_service.get_wallet_balance(test_address)
@@ -180,9 +162,7 @@ class TestWalletBalance:
 
         test_address = "0x742d35cc6634c0532925a3b844bc9e7595f0beb0"
 
-        with patch.object(
-            blockchain_service.w3.eth, "get_balance"
-        ) as mock_get_balance:
+        with patch.object(blockchain_service.w3.eth, "get_balance") as mock_get_balance:
             mock_get_balance.side_effect = Web3Exception("Network timeout")
 
             with pytest.raises(BlockchainError) as exc_info:
@@ -191,21 +171,15 @@ class TestWalletBalance:
             assert "Failed to fetch wallet balance" in str(exc_info.value)
 
     @pytest.mark.asyncio
-    async def test_get_user_wallet_info(
-        self, blockchain_service, mock_db_session, mock_user
-    ):
+    async def test_get_user_wallet_info(self, blockchain_service, mock_db_session, mock_user):
         """Test getting comprehensive wallet info for user"""
         mock_user.wallet_address = "0x742d35cc6634c0532925a3b844bc9e7595f0beb0"
         mock_user.points = 50000
 
-        with patch.object(
-            blockchain_service, "get_wallet_balance"
-        ) as mock_get_balance:
+        with patch.object(blockchain_service, "get_wallet_balance") as mock_get_balance:
             mock_get_balance.return_value = Decimal("5.0")
 
-            result = await blockchain_service.get_user_wallet_info(
-                mock_db_session, mock_user
-            )
+            result = await blockchain_service.get_user_wallet_info(mock_db_session, mock_user)
 
             assert isinstance(result, WalletBalanceResponse)
             assert result.wallet_address == mock_user.wallet_address
@@ -247,17 +221,13 @@ class TestPointsRedemption:
     """Test points-to-BNB redemption"""
 
     @pytest.mark.asyncio
-    async def test_redeem_points_success(
-        self, blockchain_service, mock_db_session, mock_user
-    ):
+    async def test_redeem_points_success(self, blockchain_service, mock_db_session, mock_user):
         """Test successful points redemption"""
         points_to_redeem = 20000
         wallet_address = "0x742d35cc6634c0532925a3b844bc9e7595f0beb0"
         expected_bnb = Decimal("20.0")
 
-        with patch.object(
-            blockchain_service, "send_bnb_reward"
-        ) as mock_send_bnb:
+        with patch.object(blockchain_service, "send_bnb_reward") as mock_send_bnb:
             mock_send_bnb.return_value = "0x" + "0" * 64
 
             tx_hash, bnb_amount = await blockchain_service.redeem_points_for_bnb(
@@ -322,15 +292,15 @@ class TestTransactionStatus:
         async def mock_block_number_func():
             return 1012
 
-        with patch.object(
-            blockchain_service.w3.eth, "get_transaction_receipt"
-        ) as mock_receipt_call, patch.object(
-            blockchain_service.w3.eth, "get_transaction"
-        ) as mock_tx_call, patch.object(
-            type(blockchain_service.w3.eth),
-            "block_number",
-            new_callable=PropertyMock,
-            return_value=mock_block_number_func()
+        with (
+            patch.object(blockchain_service.w3.eth, "get_transaction_receipt") as mock_receipt_call,
+            patch.object(blockchain_service.w3.eth, "get_transaction") as mock_tx_call,
+            patch.object(
+                type(blockchain_service.w3.eth),
+                "block_number",
+                new_callable=PropertyMock,
+                return_value=mock_block_number_func(),
+            ),
         ):
             mock_receipt_call.return_value = mock_receipt
             mock_tx_call.return_value = mock_tx
@@ -348,9 +318,7 @@ class TestTransactionStatus:
         """Test getting status of pending transaction"""
         tx_hash = "0x" + "1" * 64
 
-        with patch.object(
-            blockchain_service.w3.eth, "get_transaction_receipt"
-        ) as mock_receipt:
+        with patch.object(blockchain_service.w3.eth, "get_transaction_receipt") as mock_receipt:
             mock_receipt.return_value = None  # Pending
 
             result = await blockchain_service.get_transaction_status(tx_hash)
@@ -376,15 +344,15 @@ class TestTransactionStatus:
         async def mock_block_number_func():
             return 1005
 
-        with patch.object(
-            blockchain_service.w3.eth, "get_transaction_receipt"
-        ) as mock_receipt_call, patch.object(
-            blockchain_service.w3.eth, "get_transaction"
-        ) as mock_tx_call, patch.object(
-            type(blockchain_service.w3.eth),
-            "block_number",
-            new_callable=PropertyMock,
-            return_value=mock_block_number_func()
+        with (
+            patch.object(blockchain_service.w3.eth, "get_transaction_receipt") as mock_receipt_call,
+            patch.object(blockchain_service.w3.eth, "get_transaction") as mock_tx_call,
+            patch.object(
+                type(blockchain_service.w3.eth),
+                "block_number",
+                new_callable=PropertyMock,
+                return_value=mock_block_number_func(),
+            ),
         ):
             mock_receipt_call.return_value = mock_receipt
             mock_tx_call.return_value = mock_tx

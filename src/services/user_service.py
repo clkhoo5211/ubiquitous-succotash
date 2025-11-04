@@ -12,14 +12,10 @@ from src.schemas.user import (
     UserUpdate,
     UserPasswordChange,
     UserEmailChange,
-    UserStatsResponse
+    UserStatsResponse,
 )
 from src.core.security import hash_password, verify_password
-from src.core.exceptions import (
-    UserAlreadyExistsError,
-    UserNotFoundError,
-    InvalidCredentialsError
-)
+from src.core.exceptions import UserAlreadyExistsError, UserNotFoundError, InvalidCredentialsError
 
 
 class UserService:
@@ -31,9 +27,7 @@ class UserService:
     async def create_user(self, user_data: UserCreate) -> User:
         """Create a new user"""
         # Check if email already exists
-        existing_email = await self.db.execute(
-            select(User).where(User.email == user_data.email)
-        )
+        existing_email = await self.db.execute(select(User).where(User.email == user_data.email))
         if existing_email.scalar_one_or_none():
             raise UserAlreadyExistsError(f"Email {user_data.email} already registered")
 
@@ -60,7 +54,7 @@ class UserService:
             is_active=True,
             email_verified=False,
             created_at=datetime.utcnow(),
-            updated_at=datetime.utcnow()
+            updated_at=datetime.utcnow(),
         )
 
         self.db.add(new_user)
@@ -71,9 +65,7 @@ class UserService:
 
     async def get_user_by_id(self, user_id: int) -> User:
         """Get user by ID"""
-        result = await self.db.execute(
-            select(User).where(User.id == user_id)
-        )
+        result = await self.db.execute(select(User).where(User.id == user_id))
         user = result.scalar_one_or_none()
 
         if not user:
@@ -83,9 +75,7 @@ class UserService:
 
     async def get_user_by_username(self, username: str) -> User:
         """Get user by username"""
-        result = await self.db.execute(
-            select(User).where(User.username == username)
-        )
+        result = await self.db.execute(select(User).where(User.username == username))
         user = result.scalar_one_or_none()
 
         if not user:
@@ -95,9 +85,7 @@ class UserService:
 
     async def get_user_by_email(self, email: str) -> User:
         """Get user by email"""
-        result = await self.db.execute(
-            select(User).where(User.email == email)
-        )
+        result = await self.db.execute(select(User).where(User.email == email))
         user = result.scalar_one_or_none()
 
         if not user:
@@ -116,7 +104,7 @@ class UserService:
             user.bio = user_data.bio
         if user_data.avatar_url is not None:
             user.avatar_url = user_data.avatar_url
-        
+
         # Update wallet address if provided in request (including None to disconnect)
         # In Pydantic v2, None values are included in model_dump(exclude_unset=True)
         # So we check if the field was explicitly provided by checking user_data object
@@ -124,9 +112,9 @@ class UserService:
             update_fields = user_data.model_dump(exclude_unset=True)
         except AttributeError:
             update_fields = user_data.dict(exclude_unset=True)
-        
-        if 'bnb_wallet_address' in update_fields:
-            user.bnb_wallet_address = update_fields['bnb_wallet_address']
+
+        if "bnb_wallet_address" in update_fields:
+            user.bnb_wallet_address = update_fields["bnb_wallet_address"]
 
         user.updated_at = datetime.utcnow()
 
@@ -159,10 +147,7 @@ class UserService:
 
         # Check if new email already exists
         existing_email = await self.db.execute(
-            select(User).where(and_(
-                User.email == email_data.new_email,
-                User.id != user_id
-            ))
+            select(User).where(and_(User.email == email_data.new_email, User.id != user_id))
         )
         if existing_email.scalar_one_or_none():
             raise UserAlreadyExistsError(f"Email {email_data.new_email} already in use")
@@ -192,7 +177,7 @@ class UserService:
         page_size: int = 20,
         search: Optional[str] = None,
         level: Optional[UserLevelEnum] = None,
-        is_active: Optional[bool] = None
+        is_active: Optional[bool] = None,
     ) -> tuple[list[User], int]:
         """List users with pagination and filters"""
         query = select(User)
@@ -200,8 +185,7 @@ class UserService:
         # Apply filters
         if search:
             search_filter = or_(
-                User.username.ilike(f"%{search}%"),
-                User.display_name.ilike(f"%{search}%")
+                User.username.ilike(f"%{search}%"), User.display_name.ilike(f"%{search}%")
             )
             query = query.where(search_filter)
 
@@ -277,16 +261,16 @@ class UserService:
         month_start = datetime.utcnow().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
 
         posts_this_month = await self.db.execute(
-            select(func.count()).select_from(Post).where(
-                and_(Post.user_id == user_id, Post.created_at >= month_start)
-            )
+            select(func.count())
+            .select_from(Post)
+            .where(and_(Post.user_id == user_id, Post.created_at >= month_start))
         )
         posts_month = posts_this_month.scalar()
 
         comments_this_month = await self.db.execute(
-            select(func.count()).select_from(Comment).where(
-                and_(Comment.user_id == user_id, Comment.created_at >= month_start)
-            )
+            select(func.count())
+            .select_from(Comment)
+            .where(and_(Comment.user_id == user_id, Comment.created_at >= month_start))
         )
         comments_month = comments_this_month.scalar()
 
@@ -301,7 +285,7 @@ class UserService:
             level=user.level,
             account_age_days=account_age_days,
             posts_this_month=posts_month,
-            comments_this_month=comments_month
+            comments_this_month=comments_month,
         )
 
     async def update_last_login(self, user_id: int) -> None:

@@ -17,11 +17,7 @@ class ModerationService:
     def __init__(self, db: AsyncSession):
         self.db = db
 
-    async def create_report(
-        self,
-        report_data: ReportCreate,
-        reporter_id: int
-    ) -> Report:
+    async def create_report(self, report_data: ReportCreate, reporter_id: int) -> Report:
         """Create a content report"""
         # Validate that at least one target is specified
         if not report_data.post_id and not report_data.comment_id:
@@ -37,7 +33,7 @@ class ModerationService:
             reason=report_data.reason,
             description=report_data.description,
             status=ReportStatus.PENDING,
-            created_at=datetime.utcnow()
+            created_at=datetime.utcnow(),
         )
 
         self.db.add(report)
@@ -48,9 +44,7 @@ class ModerationService:
 
     async def get_report_by_id(self, report_id: int) -> Report:
         """Get report by ID"""
-        result = await self.db.execute(
-            select(Report).where(Report.id == report_id)
-        )
+        result = await self.db.execute(select(Report).where(Report.id == report_id))
         report = result.scalar_one_or_none()
         if not report:
             raise ValidationError(f"Report with ID {report_id} not found")
@@ -61,7 +55,7 @@ class ModerationService:
         page: int = 1,
         page_size: int = 50,
         status: Optional[ReportStatus] = None,
-        reason: Optional[ReportReason] = None
+        reason: Optional[ReportReason] = None,
     ) -> Tuple[List[Report], int]:
         """List reports with filters"""
         query = select(Report)
@@ -94,10 +88,7 @@ class ModerationService:
         return list(reports), total
 
     async def resolve_report(
-        self,
-        report_id: int,
-        resolve_data: ReportResolve,
-        moderator_id: int
+        self, report_id: int, resolve_data: ReportResolve, moderator_id: int
     ) -> Report:
         """Resolve a report"""
         report = await self.get_report_by_id(report_id)
@@ -114,17 +105,11 @@ class ModerationService:
         return report
 
     async def ban_user(
-        self,
-        user_id: int,
-        reason: str,
-        duration_days: Optional[int],
-        banned_by_id: int
+        self, user_id: int, reason: str, duration_days: Optional[int], banned_by_id: int
     ) -> User:
         """Ban a user (placeholder - needs Ban model)"""
         # Get user
-        result = await self.db.execute(
-            select(User).where(User.id == user_id)
-        )
+        result = await self.db.execute(select(User).where(User.id == user_id))
         user = result.scalar_one_or_none()
         if not user:
             raise ValidationError(f"User with ID {user_id} not found")

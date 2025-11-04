@@ -37,6 +37,11 @@ from src.routes import frontend
 from src.core.config import config
 from src.core.database import init_db, close_db
 from src.core.session import init_redis, close_redis
+from src.middleware.security_headers import SecurityHeadersMiddleware
+from src.middleware.https_redirect import HTTPSRedirectMiddleware
+from src.middleware.rate_limit import limiter
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
 
 
 @asynccontextmanager
@@ -125,13 +130,9 @@ app.add_middleware(
 )
 
 # Security Headers (FIX HIGH-001: Add comprehensive security headers)
-from src.middleware.security_headers import SecurityHeadersMiddleware
-
 app.add_middleware(SecurityHeadersMiddleware)
 
 # HTTPS Redirect (FIX CRT-003: Enforce HTTPS in production)
-from src.middleware.https_redirect import HTTPSRedirectMiddleware
-
 if config.app.environment == "production":
     app.add_middleware(HTTPSRedirectMiddleware)
 
@@ -143,10 +144,6 @@ if config.app.environment == "production":
     app.add_middleware(TrustedHostMiddleware, allowed_hosts=config.app.allowed_hosts)
 
 # Rate Limiting (FIX HIGH-004: Prevent brute force and DoS)
-from slowapi import _rate_limit_exceeded_handler
-from slowapi.errors import RateLimitExceeded
-from src.middleware.rate_limit import limiter
-
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 

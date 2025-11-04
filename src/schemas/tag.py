@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field, validator
 
 class TagBase(BaseModel):
     """Base tag schema"""
+
     name: str = Field(..., min_length=2, max_length=50)
     description: Optional[str] = Field(None, max_length=255)
     color: str = Field("#6B7280", pattern=r"^#[0-9A-Fa-f]{6}$")
@@ -14,6 +15,7 @@ class TagBase(BaseModel):
 
 class TagCreate(TagBase):
     """Schema for creating a tag"""
+
     @validator("name")
     def name_valid(cls, v):
         if not v.strip():
@@ -23,6 +25,7 @@ class TagCreate(TagBase):
 
 class TagUpdate(BaseModel):
     """Schema for updating a tag"""
+
     name: Optional[str] = Field(None, min_length=2, max_length=50)
     description: Optional[str] = Field(None, max_length=255)
     color: Optional[str] = Field(None, pattern=r"^#[0-9A-Fa-f]{6}$")
@@ -30,6 +33,7 @@ class TagUpdate(BaseModel):
 
 class TagResponse(BaseModel):
     """Schema for tag response"""
+
     id: int
     name: str
     slug: str
@@ -44,5 +48,6 @@ class TagResponse(BaseModel):
 
 class TagListResponse(BaseModel):
     """Schema for tag list"""
+
     tags: list[TagResponse]
     total: int

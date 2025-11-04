@@ -8,6 +8,7 @@ from enum import Enum
 
 class UserLevelEnum(str, Enum):
     """User level enumeration"""
+
     NEW_USER = "NEW_USER"
     ACTIVE_USER = "ACTIVE_USER"
     TRUSTED_USER = "TRUSTED_USER"
@@ -18,6 +19,7 @@ class UserLevelEnum(str, Enum):
 # Base schemas
 class UserBase(BaseModel):
     """Base user schema with common fields"""
+
     email: Optional[EmailStr] = None
     username: Optional[str] = Field(None, min_length=3, max_length=50)
     display_name: Optional[str] = Field(None, max_length=100)
@@ -43,6 +45,7 @@ class UserBase(BaseModel):
 # Request schemas
 class UserCreate(UserBase):
     """Schema for user registration"""
+
     email: EmailStr
     username: str = Field(..., min_length=3, max_length=50)
     password: str = Field(..., min_length=8, max_length=100)
@@ -63,6 +66,7 @@ class UserCreate(UserBase):
 
 class UserUpdate(BaseModel):
     """Schema for updating user profile"""
+
     display_name: Optional[str] = Field(None, max_length=100)
     bio: Optional[str] = Field(None, max_length=500)
     avatar_url: Optional[str] = Field(None, max_length=500)
@@ -75,7 +79,7 @@ class UserUpdate(BaseModel):
             raise ValueError("Invalid BNB wallet address format")
         # Return None for empty string to normalize
         return v if v and v != "" else None
-    
+
     class Config:
         # Allow setting fields to None explicitly (for disconnect)
         validate_assignment = False
@@ -83,6 +87,7 @@ class UserUpdate(BaseModel):
 
 class UserPasswordChange(BaseModel):
     """Schema for password change"""
+
     current_password: str = Field(..., min_length=8, max_length=100)
     new_password: str = Field(..., min_length=8, max_length=100)
 
@@ -101,6 +106,7 @@ class UserPasswordChange(BaseModel):
 
 class UserEmailChange(BaseModel):
     """Schema for email change"""
+
     new_email: EmailStr
     password: str = Field(..., min_length=8, max_length=100)
 
@@ -108,6 +114,7 @@ class UserEmailChange(BaseModel):
 # Response schemas
 class UserResponse(BaseModel):
     """Schema for user response (public profile)"""
+
     id: int
     username: str
     display_name: Optional[str]
@@ -124,6 +131,7 @@ class UserResponse(BaseModel):
 
 class UserDetailResponse(UserResponse):
     """Schema for detailed user response (private profile)"""
+
     email: Optional[EmailStr]
     bnb_wallet_address: Optional[str]
     email_verified: bool
@@ -136,6 +144,7 @@ class UserDetailResponse(UserResponse):
 
 class UserListResponse(BaseModel):
     """Schema for paginated user list"""
+
     users: list[UserResponse]
     total: int
     page: int
@@ -146,6 +155,7 @@ class UserListResponse(BaseModel):
 # Statistics schema
 class UserStatsResponse(BaseModel):
     """Schema for user statistics"""
+
     user_id: int
     username: str
     total_posts: int

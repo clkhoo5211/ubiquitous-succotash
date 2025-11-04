@@ -7,16 +7,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from src.models.content import Comment, ContentStatus, Post, Like
-from src.schemas.comment import (
-    CommentCreate,
-    CommentUpdate,
-    CommentModerationUpdate
-)
+from src.schemas.comment import CommentCreate, CommentUpdate, CommentModerationUpdate
 from src.core.exceptions import (
     CommentNotFoundError,
     PostNotFoundError,
     PermissionDeniedError,
-    ValidationError
+    ValidationError,
 )
 
 
@@ -27,16 +23,11 @@ class CommentService:
         self.db = db
 
     async def create_comment(
-        self,
-        post_id: int,
-        comment_data: CommentCreate,
-        author_id: int
+        self, post_id: int, comment_data: CommentCreate, author_id: int
     ) -> Comment:
         """Create a new comment on a post"""
         # Verify post exists
-        post_result = await self.db.execute(
-            select(Post).where(Post.id == post_id)
-        )
+        post_result = await self.db.execute(select(Post).where(Post.id == post_id))
         post = post_result.scalar_one_or_none()
         if not post:
             raise PostNotFoundError(f"Post with ID {post_id} not found")
@@ -52,7 +43,9 @@ class CommentService:
             )
             parent_comment = parent_result.scalar_one_or_none()
             if not parent_comment:
-                raise CommentNotFoundError(f"Parent comment with ID {comment_data.parent_id} not found")
+                raise CommentNotFoundError(
+                    f"Parent comment with ID {comment_data.parent_id} not found"
+                )
             if parent_comment.post_id != post_id:
                 raise ValidationError("Parent comment does not belong to this post")
 
@@ -69,7 +62,7 @@ class CommentService:
             like_count=0,
             status=ContentStatus.ACTIVE,
             created_at=datetime.utcnow(),
-            updated_at=datetime.utcnow()
+            updated_at=datetime.utcnow(),
         )
 
         self.db.add(new_comment)
@@ -86,9 +79,7 @@ class CommentService:
     async def get_comment_by_id(self, comment_id: int) -> Comment:
         """Get comment by ID"""
         result = await self.db.execute(
-            select(Comment)
-            .options(selectinload(Comment.author))
-            .where(Comment.id == comment_id)
+            select(Comment).options(selectinload(Comment.author)).where(Comment.id == comment_id)
         )
         comment = result.scalar_one_or_none()
 
@@ -98,10 +89,7 @@ class CommentService:
         return comment
 
     async def update_comment(
-        self,
-        comment_id: int,
-        comment_data: CommentUpdate,
-        user_id: int
+        self, comment_id: int, comment_data: CommentUpdate, user_id: int
     ) -> Comment:
         """Update a comment"""
         comment = await self.get_comment_by_id(comment_id)
@@ -121,10 +109,7 @@ class CommentService:
         return comment
 
     async def delete_comment(
-        self,
-        comment_id: int,
-        user_id: int,
-        is_moderator: bool = False
+        self, comment_id: int, user_id: int, is_moderator: bool = False
     ) -> None:
         """Delete a comment (soft delete)"""
         comment = await self.get_comment_by_id(comment_id)
@@ -138,9 +123,7 @@ class CommentService:
         comment.updated_at = datetime.utcnow()
 
         # Decrement post comment count
-        post_result = await self.db.execute(
-            select(Post).where(Post.id == comment.post_id)
-        )
+        post_result = await self.db.execute(select(Post).where(Post.id == comment.post_id))
         post = post_result.scalar_one_or_none()
         if post and post.comment_count > 0:
             post.comment_count -= 1
@@ -148,9 +131,7 @@ class CommentService:
         await self.db.commit()
 
     async def moderate_comment(
-        self,
-        comment_id: int,
-        moderation_data: CommentModerationUpdate
+        self, comment_id: int, moderation_data: CommentModerationUpdate
     ) -> Comment:
         """Moderate a comment (moderator only)"""
         comment = await self.get_comment_by_id(comment_id)
@@ -170,7 +151,7 @@ class CommentService:
         page: int = 1,
         page_size: int = 50,
         parent_id: Optional[int] = None,
-        status: Optional[ContentStatus] = ContentStatus.ACTIVE
+        status: Optional[ContentStatus] = ContentStatus.ACTIVE,
     ) -> tuple[List[Comment], int]:
         """List comments for a post with pagination"""
         query = select(Comment).options(selectinload(Comment.author))
@@ -222,12 +203,7 @@ class CommentService:
         result = await self.db.execute(
             select(Comment)
             .options(selectinload(Comment.author))
-            .where(
-                and_(
-                    Comment.post_id == post_id,
-                    Comment.status == ContentStatus.ACTIVE
-                )
-            )
+            .where(and_(Comment.post_id == post_id, Comment.status == ContentStatus.ACTIVE))
             .order_by(Comment.created_at.asc())
         )
         all_comments = result.scalars().all()
@@ -238,16 +214,16 @@ class CommentService:
 
         for comment in all_comments:
             # Add replies list to each comment (for response schema)
-            if not hasattr(comment, 'replies_list'):
+            if not hasattr(comment, "replies_list"):
                 comment.replies_list = []
-            if not hasattr(comment, 'replies_count'):
+            if not hasattr(comment, "replies_count"):
                 comment.replies_count = 0
 
             if comment.parent_id is None:
                 root_comments.append(comment)
             elif comment.parent_id in comment_dict:
                 parent = comment_dict[comment.parent_id]
-                if not hasattr(parent, 'replies_list'):
+                if not hasattr(parent, "replies_list"):
                     parent.replies_list = []
                 parent.replies_list.append(comment)
                 parent.replies_count = len(parent.replies_list)
@@ -257,24 +233,16 @@ class CommentService:
     async def check_user_liked_comment(self, comment_id: int, user_id: int) -> bool:
         """Check if user has liked a comment"""
         result = await self.db.execute(
-            select(Like).where(
-                and_(
-                    Like.comment_id == comment_id,
-                    Like.user_id == user_id
-                )
-            )
+            select(Like).where(and_(Like.comment_id == comment_id, Like.user_id == user_id))
         )
         return result.scalar_one_or_none() is not None
 
     async def get_replies_count(self, comment_id: int) -> int:
         """Get count of direct replies to a comment"""
         result = await self.db.execute(
-            select(func.count()).select_from(Comment).where(
-                and_(
-                    Comment.parent_id == comment_id,
-                    Comment.status == ContentStatus.ACTIVE
-                )
-            )
+            select(func.count())
+            .select_from(Comment)
+            .where(and_(Comment.parent_id == comment_id, Comment.status == ContentStatus.ACTIVE))
         )
         return result.scalar()
 
@@ -282,6 +250,7 @@ class CommentService:
         """Sanitize HTML content (basic implementation)"""
         # TODO: Implement proper HTML sanitization using bleach library
         import html
+
         escaped = html.escape(body)
         html_content = escaped.replace("\n", "<br>")
         return html_content

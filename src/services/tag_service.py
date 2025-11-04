@@ -20,8 +20,8 @@ class TagService:
     def _generate_slug(self, name: str) -> str:
         """Generate URL-friendly slug"""
         slug = name.lower()
-        slug = re.sub(r'[^a-z0-9]+', '-', slug)
-        slug = slug.strip('-')
+        slug = re.sub(r"[^a-z0-9]+", "-", slug)
+        slug = slug.strip("-")
         return slug
 
     async def create_tag(self, tag_data: TagCreate) -> Tag:
@@ -29,9 +29,7 @@ class TagService:
         slug = self._generate_slug(tag_data.name)
 
         # Check if slug exists
-        existing = await self.db.execute(
-            select(Tag).where(Tag.slug == slug)
-        )
+        existing = await self.db.execute(select(Tag).where(Tag.slug == slug))
         if existing.scalar_one_or_none():
             raise ValidationError(f"Tag with slug '{slug}' already exists")
 
@@ -41,7 +39,7 @@ class TagService:
             description=tag_data.description,
             color=tag_data.color,
             post_count=0,
-            created_at=datetime.utcnow()
+            created_at=datetime.utcnow(),
         )
 
         self.db.add(tag)
@@ -51,9 +49,7 @@ class TagService:
 
     async def get_tag_by_id(self, tag_id: int) -> Tag:
         """Get tag by ID"""
-        result = await self.db.execute(
-            select(Tag).where(Tag.id == tag_id)
-        )
+        result = await self.db.execute(select(Tag).where(Tag.id == tag_id))
         tag = result.scalar_one_or_none()
         if not tag:
             raise TagNotFoundError(f"Tag with ID {tag_id} not found")
@@ -61,9 +57,7 @@ class TagService:
 
     async def get_tag_by_slug(self, slug: str) -> Tag:
         """Get tag by slug"""
-        result = await self.db.execute(
-            select(Tag).where(Tag.slug == slug)
-        )
+        result = await self.db.execute(select(Tag).where(Tag.slug == slug))
         tag = result.scalar_one_or_none()
         if not tag:
             raise TagNotFoundError(f"Tag with slug '{slug}' not found")
@@ -93,8 +87,6 @@ class TagService:
 
     async def list_tags(self) -> List[Tag]:
         """List all tags (sorted by post_count desc)"""
-        result = await self.db.execute(
-            select(Tag).order_by(Tag.post_count.desc(), Tag.name)
-        )
+        result = await self.db.execute(select(Tag).order_by(Tag.post_count.desc(), Tag.name))
         tags = result.scalars().all()
         return list(tags)

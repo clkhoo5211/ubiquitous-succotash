@@ -8,6 +8,7 @@ from enum import Enum
 
 class ReportReason(str, Enum):
     """Report reasons"""
+
     SPAM = "spam"
     HARASSMENT = "harassment"
     HATE_SPEECH = "hate_speech"
@@ -20,6 +21,7 @@ class ReportReason(str, Enum):
 
 class ReportStatus(str, Enum):
     """Report status"""
+
     PENDING = "pending"
     REVIEWING = "reviewing"
     RESOLVED = "resolved"
@@ -28,6 +30,7 @@ class ReportStatus(str, Enum):
 
 class ReportCreate(BaseModel):
     """Create a report"""
+
     post_id: Optional[int] = None
     comment_id: Optional[int] = None
     reason: ReportReason
@@ -36,6 +39,7 @@ class ReportCreate(BaseModel):
 
 class ReportResolve(BaseModel):
     """Resolve a report"""
+
     status: ReportStatus
     moderator_notes: Optional[str] = Field(None, max_length=1000)
     resolution: Optional[str] = Field(None, max_length=1000)
@@ -43,6 +47,7 @@ class ReportResolve(BaseModel):
 
 class ReportResponse(BaseModel):
     """Report response"""
+
     id: int
     reporter_id: int
     post_id: Optional[int]
@@ -62,6 +67,7 @@ class ReportResponse(BaseModel):
 
 class ReportListResponse(BaseModel):
     """Paginated reports"""
+
     reports: list[ReportResponse]
     total: int
     page: int
@@ -71,6 +77,7 @@ class ReportListResponse(BaseModel):
 
 class BanCreate(BaseModel):
     """Ban a user"""
+
     user_id: int
     reason: str = Field(..., min_length=10, max_length=500)
     duration_days: Optional[int] = Field(None, description="None = permanent ban")
@@ -78,6 +85,7 @@ class BanCreate(BaseModel):
 
 class BanResponse(BaseModel):
     """Ban response"""
+
     id: int
     user_id: int
     banned_by_id: int

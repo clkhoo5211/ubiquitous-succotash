@@ -8,12 +8,14 @@ from pydantic import BaseModel
 # Request schemas
 class LikeCreate(BaseModel):
     """Schema for creating a like"""
+
     pass  # No fields needed, user_id comes from auth, target from URL
 
 
 # Response schemas
 class LikeUserResponse(BaseModel):
     """Minimal user info for like author"""
+
     id: int
     username: str
     display_name: Optional[str]
@@ -25,6 +27,7 @@ class LikeUserResponse(BaseModel):
 
 class LikeResponse(BaseModel):
     """Schema for like response"""
+
     id: int
     user_id: int
     post_id: Optional[int]
@@ -38,6 +41,7 @@ class LikeResponse(BaseModel):
 
 class LikeListResponse(BaseModel):
     """Schema for paginated like list"""
+
     likes: list[LikeResponse]
     total: int
     page: int
@@ -47,6 +51,7 @@ class LikeListResponse(BaseModel):
 
 class LikeStatsResponse(BaseModel):
     """Schema for like statistics"""
+
     content_id: int
     content_type: str  # "post" or "comment"
     total_likes: int

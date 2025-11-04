@@ -16,30 +16,22 @@ class SearchService:
         self.db = db
 
     async def search_posts(
-        self,
-        query: str,
-        page: int = 1,
-        page_size: int = 20
+        self, query: str, page: int = 1, page_size: int = 20
     ) -> Tuple[List[Post], int]:
         """Search posts by title and body"""
-        search_filter = or_(
-            Post.title.ilike(f"%{query}%"),
-            Post.body.ilike(f"%{query}%")
-        )
+        search_filter = or_(Post.title.ilike(f"%{query}%"), Post.body.ilike(f"%{query}%"))
 
-        stmt = select(Post).options(
-            selectinload(Post.author),
-            selectinload(Post.channel),
-            selectinload(Post.tags)
-        ).where(
-            search_filter,
-            Post.status == ContentStatus.ACTIVE
+        stmt = (
+            select(Post)
+            .options(selectinload(Post.author), selectinload(Post.channel), selectinload(Post.tags))
+            .where(search_filter, Post.status == ContentStatus.ACTIVE)
         )
 
         # Get total count
-        count_stmt = select(func.count()).select_from(Post).where(
-            search_filter,
-            Post.status == ContentStatus.ACTIVE
+        count_stmt = (
+            select(func.count())
+            .select_from(Post)
+            .where(search_filter, Post.status == ContentStatus.ACTIVE)
         )
         count_result = await self.db.execute(count_stmt)
         total = count_result.scalar()
@@ -57,27 +49,17 @@ class SearchService:
         return list(posts), total
 
     async def search_users(
-        self,
-        query: str,
-        page: int = 1,
-        page_size: int = 20
+        self, query: str, page: int = 1, page_size: int = 20
     ) -> Tuple[List[User], int]:
         """Search users by username and display name"""
         search_filter = or_(
-            User.username.ilike(f"%{query}%"),
-            User.display_name.ilike(f"%{query}%")
+            User.username.ilike(f"%{query}%"), User.display_name.ilike(f"%{query}%")
         )
 
-        stmt = select(User).where(
-            search_filter,
-            User.is_active == True
-        )
+        stmt = select(User).where(search_filter, User.is_active)
 
         # Get total count
-        count_stmt = select(func.count()).select_from(User).where(
-            search_filter,
-            User.is_active == True
-        )
+        count_stmt = select(func.count()).select_from(User).where(search_filter, User.is_active)
         count_result = await self.db.execute(count_stmt)
         total = count_result.scalar()
 
@@ -94,25 +76,22 @@ class SearchService:
         return list(users), total
 
     async def search_comments(
-        self,
-        query: str,
-        page: int = 1,
-        page_size: int = 20
+        self, query: str, page: int = 1, page_size: int = 20
     ) -> Tuple[List[Comment], int]:
         """Search comments by body"""
         search_filter = Comment.body.ilike(f"%{query}%")
 
-        stmt = select(Comment).options(
-            selectinload(Comment.author)
-        ).where(
-            search_filter,
-            Comment.status == ContentStatus.ACTIVE
+        stmt = (
+            select(Comment)
+            .options(selectinload(Comment.author))
+            .where(search_filter, Comment.status == ContentStatus.ACTIVE)
         )
 
         # Get total count
-        count_stmt = select(func.count()).select_from(Comment).where(
-            search_filter,
-            Comment.status == ContentStatus.ACTIVE
+        count_stmt = (
+            select(func.count())
+            .select_from(Comment)
+            .where(search_filter, Comment.status == ContentStatus.ACTIVE)
         )
         count_result = await self.db.execute(count_stmt)
         total = count_result.scalar()

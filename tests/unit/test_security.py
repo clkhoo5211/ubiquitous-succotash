@@ -1,7 +1,11 @@
 """Unit tests for security utilities"""
 
-import pytest
-from src.core.security import hash_password, verify_password, create_access_token, verify_access_token
+from src.core.security import (
+    hash_password,
+    verify_password,
+    create_access_token,
+    verify_access_token,
+)
 
 
 def test_password_hashing():

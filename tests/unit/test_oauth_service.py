@@ -10,7 +10,7 @@ import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.core.exceptions import OAuthError, OAuthProviderError
-from src.models.user import OAuth2Provider, OAuthAccount, User, UserLevelEnum
+from src.models.user import OAuthAccount, User
 from src.services.oauth_service import OAuth2Service
 
 
@@ -146,9 +146,7 @@ class TestTokenExchange:
     """Test authorization code to access token exchange"""
 
     @pytest.mark.asyncio
-    async def test_exchange_code_for_token_success(
-        self, oauth_service, mock_oauth_config
-    ):
+    async def test_exchange_code_for_token_success(self, oauth_service, mock_oauth_config):
         """Test successful token exchange"""
         code = "auth_code_123"
         mock_response = MagicMock()
@@ -165,17 +163,13 @@ class TestTokenExchange:
             mock_client.post.return_value = mock_response
             mock_client_class.return_value = mock_client
 
-            access_token, refresh_token = await oauth_service.exchange_code_for_token(
-                "meta", code
-            )
+            access_token, refresh_token = await oauth_service.exchange_code_for_token("meta", code)
 
             assert access_token == "access_token_abc"
             assert refresh_token == "refresh_token_xyz"
 
     @pytest.mark.asyncio
-    async def test_exchange_code_for_token_error(
-        self, oauth_service, mock_oauth_config
-    ):
+    async def test_exchange_code_for_token_error(self, oauth_service, mock_oauth_config):
         """Test token exchange with API error"""
         code = "auth_code_123"
         mock_response = MagicMock()
@@ -195,9 +189,7 @@ class TestTokenExchange:
             assert "Failed to exchange code for token" in str(exc_info.value)
 
     @pytest.mark.asyncio
-    async def test_exchange_code_for_token_no_access_token(
-        self, oauth_service, mock_oauth_config
-    ):
+    async def test_exchange_code_for_token_no_access_token(self, oauth_service, mock_oauth_config):
         """Test token exchange when no access token in response"""
         code = "auth_code_123"
         mock_response = MagicMock()
@@ -346,9 +338,7 @@ class TestFindOrCreateUser:
         mock_result.scalar_one_or_none.return_value = mock_oauth_account
         mock_db_session.execute.return_value = mock_result
 
-        user = await oauth_service.find_or_create_user(
-            mock_db_session, "meta", user_info
-        )
+        user = await oauth_service.find_or_create_user(mock_db_session, "meta", user_info)
 
         assert user == mock_user
         # Should not add new user
@@ -378,9 +368,7 @@ class TestFindOrCreateUser:
         ]
         mock_db_session.execute.side_effect = mock_results
 
-        user = await oauth_service.find_or_create_user(
-            mock_db_session, "meta", user_info
-        )
+        user = await oauth_service.find_or_create_user(mock_db_session, "meta", user_info)
 
         assert user == mock_user
         # Should create OAuth account for existing user
@@ -406,9 +394,7 @@ class TestFindOrCreateUser:
         ]
         mock_db_session.execute.side_effect = mock_results
 
-        user = await oauth_service.find_or_create_user(
-            mock_db_session, "meta", user_info
-        )
+        _ = await oauth_service.find_or_create_user(mock_db_session, "meta", user_info)
 
         # Should add new user and OAuth account
         assert mock_db_session.add.call_count == 2  # User + OAuthAccount
@@ -437,17 +423,13 @@ class TestFindOrCreateUser:
         ]
         mock_db_session.execute.side_effect = mock_results
 
-        user = await oauth_service.find_or_create_user(
-            mock_db_session, "meta", user_info
-        )
+        _ = await oauth_service.find_or_create_user(mock_db_session, "meta", user_info)
 
         # Should create user with incremented username
         assert mock_db_session.add.called
 
     @pytest.mark.asyncio
-    async def test_create_user_no_email(
-        self, oauth_service, mock_db_session, mock_oauth_config
-    ):
+    async def test_create_user_no_email(self, oauth_service, mock_db_session, mock_oauth_config):
         """Test creating user when OAuth provider doesn't provide email"""
         user_info = {
             "provider_id": "reddit_user_123",
@@ -462,9 +444,7 @@ class TestFindOrCreateUser:
         ]
         mock_db_session.execute.side_effect = mock_results
 
-        user = await oauth_service.find_or_create_user(
-            mock_db_session, "reddit", user_info
-        )
+        _ = await oauth_service.find_or_create_user(mock_db_session, "reddit", user_info)
 
         # Should create user with synthetic email
         assert mock_db_session.add.called
@@ -482,9 +462,7 @@ class TestFindOrCreateUser:
         }
 
         with pytest.raises(OAuthError) as exc_info:
-            await oauth_service.find_or_create_user(
-                mock_db_session, "invalid_provider", user_info
-            )
+            await oauth_service.find_or_create_user(mock_db_session, "invalid_provider", user_info)
 
         assert "Invalid OAuth provider" in str(exc_info.value)
 

@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field, validator
 
 class ChannelBase(BaseModel):
     """Base channel schema"""
+
     name: str = Field(..., min_length=2, max_length=100)
     description: Optional[str] = Field(None, max_length=1000)
     icon: Optional[str] = Field(None, max_length=50)
@@ -15,6 +16,7 @@ class ChannelBase(BaseModel):
 
 class ChannelCreate(ChannelBase):
     """Schema for creating a channel"""
+
     @validator("name")
     def name_valid(cls, v):
         if not v.strip():
@@ -24,6 +26,7 @@ class ChannelCreate(ChannelBase):
 
 class ChannelUpdate(BaseModel):
     """Schema for updating a channel"""
+
     name: Optional[str] = Field(None, min_length=2, max_length=100)
     description: Optional[str] = Field(None, max_length=1000)
     icon: Optional[str] = Field(None, max_length=50)
@@ -33,6 +36,7 @@ class ChannelUpdate(BaseModel):
 
 class ChannelResponse(BaseModel):
     """Schema for channel response"""
+
     id: int
     name: str
     slug: str
@@ -51,5 +55,6 @@ class ChannelResponse(BaseModel):
 
 class ChannelListResponse(BaseModel):
     """Schema for channel list"""
+
     channels: list[ChannelResponse]
     total: int

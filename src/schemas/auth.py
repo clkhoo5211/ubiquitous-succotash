@@ -5,6 +5,7 @@ from pydantic import BaseModel, EmailStr, Field, validator
 
 class UserRegister(BaseModel):
     """Schema for user registration"""
+
     email: EmailStr
     username: str = Field(..., min_length=3, max_length=50)
     password: str = Field(..., min_length=8, max_length=100)
@@ -31,12 +32,14 @@ class UserRegister(BaseModel):
 
 class UserLogin(BaseModel):
     """Schema for user login"""
+
     username: str = Field(..., description="Username or email")
     password: str = Field(..., min_length=8, max_length=100)
 
 
 class TokenResponse(BaseModel):
     """Schema for token response"""
+
     access_token: str
     token_type: str = "bearer"
     expires_in: int = 3600  # seconds
@@ -44,4 +47,5 @@ class TokenResponse(BaseModel):
 
 class RefreshTokenRequest(BaseModel):
     """Schema for token refresh"""
+
     refresh_token: str
