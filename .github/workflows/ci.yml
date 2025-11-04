@@ -90,6 +90,9 @@ jobs:
           DATABASE_URL: postgresql+asyncpg://forum_test:test_password@localhost:5432/forum_test
           REDIS_URL: redis://localhost:6379/0
           PYTHONPATH: ${{ github.workspace }}
+          APP_SECRET_KEY: test_secret_key_for_ci_minimum_32_chars_long
+          SECURITY_JWT_SECRET_KEY: test_jwt_secret_key_for_ci_min_32_chars
+          IPFS_API_KEY: test_ipfs_api_key_for_ci_purposes_only
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
