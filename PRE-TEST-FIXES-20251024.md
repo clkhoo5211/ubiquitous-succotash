@@ -106,18 +106,22 @@ async def require_senior_moderator(current_user: User = Depends(require_auth)) -
 ### 3. ✅ [templates/index.html:217,227](templates/index.html#L217)
 
 **Before**:
+{% raw %}
 ```jinja2
 {% if current_user and (current_user.id == post.author.id or current_user.level in ['moderator', 'senior_moderator', 'admin']) %}
     <!-- ... -->
     {% if current_user.level in ['moderator', 'senior_moderator', 'admin'] %}
 ```
+{% endraw %}
 
 **After**:
+{% raw %}
 ```jinja2
 {% if current_user and (current_user.id == post.author.id or current_user.level in ['moderator', 'senior_moderator']) %}
     <!-- ... -->
     {% if current_user.level in ['moderator', 'senior_moderator'] %}
 ```
+{% endraw %}
 
 **Changes**:
 - Removed `'admin'` from level checks in post action dropdown
