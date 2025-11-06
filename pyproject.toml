@@ -28,6 +28,7 @@ dependencies = [
     "bleach>=6.2.0",
     "redis>=5.2.0",
     "celery>=5.4.0",
+    "slowapi>=0.1.9",
 ]
 
 [project.optional-dependencies]
