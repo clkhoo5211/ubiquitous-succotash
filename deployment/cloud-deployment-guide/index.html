@@ -1,0 +1,2222 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://clkhoo5211.github.io/ubiquitous-succotash/deployment/cloud-deployment-guide/">
+      
+      
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.23">
+    
+    
+      
+        <title>☁️ Cloud Deployment Guide - Decentralized Autonomous Forum</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.84d31ad4.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="cyan">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#cloud-deployment-guide" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Decentralized Autonomous Forum" class="md-header__button md-logo" aria-label="Decentralized Autonomous Forum" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Decentralized Autonomous Forum
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              ☁️ Cloud Deployment Guide
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="cyan"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/clkhoo5211/ubiquitous-succotash" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    clkhoo5211/ubiquitous-succotash
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../index.md" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../getting-started/installation.md" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../architecture/overview.md" class="md-tabs__link">
+          
+  
+  
+  Architecture
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../local.md" class="md-tabs__link">
+          
+  
+  
+  Deployment
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../contributing.md" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Decentralized Autonomous Forum" class="md-nav__button md-logo" aria-label="Decentralized Autonomous Forum" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Decentralized Autonomous Forum
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/clkhoo5211/ubiquitous-succotash" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    clkhoo5211/ubiquitous-succotash
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../index.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Getting Started
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/installation.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Installation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/configuration.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Configuration
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Architecture
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Architecture
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/overview.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/database.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Database Schema
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/api.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    API Documentation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Deployment
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Deployment
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../local.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Local Development
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../production.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Production
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Contributing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      📋 Table of Contents
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      Prerequisites
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prerequisites">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#required-accounts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Required Accounts
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#required-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      Required Tools
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#payment-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Payment Methods
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-postgresql-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. PostgreSQL Deployment
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. PostgreSQL Deployment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-a-supabase-recommended-easy-free-tier-available" class="md-nav__link">
+    <span class="md-ellipsis">
+      Option A: Supabase (Recommended - Easy, Free Tier Available)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Option A: Supabase (Recommended - Easy, Free Tier Available)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#setup-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setup Steps:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-b-neon-recommended-serverless-free-tier" class="md-nav__link">
+    <span class="md-ellipsis">
+      Option B: Neon (Recommended - Serverless, Free Tier)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Option B: Neon (Recommended - Serverless, Free Tier)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#setup-steps_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setup Steps:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-c-railway-recommended-all-in-one-platform" class="md-nav__link">
+    <span class="md-ellipsis">
+      Option C: Railway (Recommended - All-in-One Platform)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Option C: Railway (Recommended - All-in-One Platform)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#setup-steps_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setup Steps:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-d-self-hosted-on-cloud-vm-advanced" class="md-nav__link">
+    <span class="md-ellipsis">
+      Option D: Self-Hosted on Cloud VM (Advanced)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Option D: Self-Hosted on Cloud VM (Advanced)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aws-ec2-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      AWS EC2 Setup:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-redis-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Redis Deployment
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Redis Deployment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-a-upstash-recommended-serverless-free-tier" class="md-nav__link">
+    <span class="md-ellipsis">
+      Option A: Upstash (Recommended - Serverless, Free Tier)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Option A: Upstash (Recommended - Serverless, Free Tier)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#setup-steps_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setup Steps:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-b-railway-if-using-for-postgresql-too" class="md-nav__link">
+    <span class="md-ellipsis">
+      Option B: Railway (If using for PostgreSQL too)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Option B: Railway (If using for PostgreSQL too)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#setup-steps_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setup Steps:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-c-redis-cloud-managed-by-redis-labs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Option C: Redis Cloud (Managed by Redis Labs)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Option C: Redis Cloud (Managed by Redis Labs)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#setup-steps_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setup Steps:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-application-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Application Deployment
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Application Deployment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-a-railway-recommended-easiest" class="md-nav__link">
+    <span class="md-ellipsis">
+      Option A: Railway (Recommended - Easiest)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Option A: Railway (Recommended - Easiest)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#setup-steps_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setup Steps:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-b-docker-on-cloud-vm-aws-ec2-google-compute-azure-vm" class="md-nav__link">
+    <span class="md-ellipsis">
+      Option B: Docker on Cloud VM (AWS EC2, Google Compute, Azure VM)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Option B: Docker on Cloud VM (AWS EC2, Google Compute, Azure VM)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aws-ec2-setup_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      AWS EC2 Setup:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-c-kubernetes-advanced-for-production-scale" class="md-nav__link">
+    <span class="md-ellipsis">
+      Option C: Kubernetes (Advanced - For Production Scale)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Option C: Kubernetes (Advanced - For Production Scale)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Prerequisites:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deployment:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-monitoring-logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Monitoring &amp; Logging
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Monitoring &amp; Logging">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-a-grafana-cloud-free-tier-available" class="md-nav__link">
+    <span class="md-ellipsis">
+      Option A: Grafana Cloud (Free Tier Available)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Option A: Grafana Cloud (Free Tier Available)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#setup-steps_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setup Steps:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-b-self-hosted-prometheus-grafana" class="md-nav__link">
+    <span class="md-ellipsis">
+      Option B: Self-Hosted Prometheus + Grafana
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-domain-ssl-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Domain &amp; SSL Setup
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Domain &amp; SSL Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-purchase-domain" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 1: Purchase Domain
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-configure-dns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 2: Configure DNS
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-ssl-with-lets-encrypt-free" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 3: SSL with Let's Encrypt (Free)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-environment-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Environment Configuration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Environment Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#complete-envproduction-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      Complete .env.production Template
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-post-deployment-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Post-Deployment Verification
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Post-Deployment Verification">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      Checklist
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-deployment-scripts" class="md-nav__link">
+    <span class="md-ellipsis">
+      8. Deployment Scripts
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Deployment Scripts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deploysh-complete-deployment-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      deploy.sh (Complete Deployment Script)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-cost-estimation" class="md-nav__link">
+    <span class="md-ellipsis">
+      9. Cost Estimation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Cost Estimation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#free-tier-setup-suitable-for-mvptesting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Free Tier Setup (Suitable for MVP/Testing)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#production-setup-recommended-for-launch" class="md-nav__link">
+    <span class="md-ellipsis">
+      Production Setup (Recommended for Launch)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      10. Troubleshooting
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common Issues
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#database-connection-failed" class="md-nav__link">
+    <span class="md-ellipsis">
+      Database Connection Failed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#redis-connection-failed" class="md-nav__link">
+    <span class="md-ellipsis">
+      Redis Connection Failed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#application-wont-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      Application Won't Start
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-next-steps-after-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      11. Next Steps After Deployment
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="cloud-deployment-guide">☁️ Cloud Deployment Guide</h1>
+<p><strong>Decentralized Autonomous Forum Platform</strong>
+<strong>Version</strong>: 1.0
+<strong>Last Updated</strong>: 2025-10-24</p>
+<hr />
+<h2 id="table-of-contents">📋 Table of Contents</h2>
+<ol>
+<li><a href="#prerequisites">Prerequisites</a></li>
+<li><a href="#postgresql-deployment">PostgreSQL Deployment</a></li>
+<li><a href="#redis-deployment">Redis Deployment</a></li>
+<li><a href="#application-deployment">Application Deployment</a></li>
+<li><a href="#monitoring--logging">Monitoring &amp; Logging</a></li>
+<li><a href="#domain--ssl-setup">Domain &amp; SSL Setup</a></li>
+<li><a href="#environment-configuration">Environment Configuration</a></li>
+<li><a href="#post-deployment-verification">Post-Deployment Verification</a></li>
+</ol>
+<hr />
+<h2 id="prerequisites">Prerequisites</h2>
+<h3 id="required-accounts">Required Accounts</h3>
+<ul>
+<li>[ ] Cloud provider account (AWS/Azure/GCP) OR managed service accounts</li>
+<li>[ ] Domain registrar account (Namecheap, Google Domains, Cloudflare)</li>
+<li>[ ] GitHub account (for CI/CD)</li>
+<li>[ ] Email service (SendGrid, Mailgun, AWS SES)</li>
+</ul>
+<h3 id="required-tools">Required Tools</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Install required CLI tools</span>
+brew<span class="w"> </span>install<span class="w"> </span>docker<span class="w"> </span>docker-compose<span class="w">  </span><span class="c1"># macOS</span>
+brew<span class="w"> </span>install<span class="w"> </span>postgresql<span class="w"> </span>redis<span class="w">        </span><span class="c1"># For local testing</span>
+brew<span class="w"> </span>install<span class="w"> </span>kubectl<span class="w">                 </span><span class="c1"># Kubernetes CLI</span>
+brew<span class="w"> </span>install<span class="w"> </span>terraform<span class="w">              </span><span class="c1"># Infrastructure as Code (optional)</span>
+</code></pre></div>
+<h3 id="payment-methods">Payment Methods</h3>
+<ul>
+<li>Cloud infrastructure: ~$50-100/month for production</li>
+<li>Domain: ~$10-15/year</li>
+<li>Email service: Free tier available</li>
+</ul>
+<hr />
+<h2 id="1-postgresql-deployment">1. PostgreSQL Deployment</h2>
+<p>Choose ONE of the following PostgreSQL deployment options:</p>
+<h3 id="option-a-supabase-recommended-easy-free-tier-available">Option A: Supabase (Recommended - Easy, Free Tier Available)</h3>
+<p><strong>Pros</strong>: Free tier, managed backups, auto-scaling, built-in auth
+<strong>Cons</strong>: 500MB limit on free tier
+<strong>Cost</strong>: Free tier → $25/month Pro</p>
+<h4 id="setup-steps">Setup Steps:</h4>
+<ol>
+<li>
+<p><strong>Create Supabase Account</strong>
+   <div class="highlight"><pre><span></span><code><span class="c1"># Visit https://supabase.com</span>
+<span class="c1"># Click &quot;Start your project&quot;</span>
+<span class="c1"># Sign up with GitHub</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Create New Project</strong>
+   <div class="highlight"><pre><span></span><code>Project Name: decentralized-forum
+Database Password: [GENERATE STRONG PASSWORD - Save to password manager]
+Region: [Choose closest to your users]
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Get Connection Details</strong>
+   <div class="highlight"><pre><span></span><code>Go to Project Settings → Database
+
+Connection String (URI):
+postgresql://postgres:[YOUR-PASSWORD]@db.[PROJECT-REF].supabase.co:5432/postgres
+
+Connection Pooling (recommended):
+postgresql://postgres:[YOUR-PASSWORD]@db.[PROJECT-REF].supabase.co:6543/postgres?pgbouncer=true
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Save to Environment Variables</strong>
+   <div class="highlight"><pre><span></span><code><span class="c1"># Add to .env.production</span>
+<span class="nv">DATABASE_URL</span><span class="o">=</span><span class="s2">&quot;postgresql://postgres:[PASSWORD]@db.[PROJECT-REF].supabase.co:6543/postgres?pgbouncer=true&quot;</span>
+<span class="nv">DATABASE_POOL_SIZE</span><span class="o">=</span><span class="m">10</span>
+<span class="nv">DATABASE_MAX_OVERFLOW</span><span class="o">=</span><span class="m">20</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Enable Extensions</strong>
+   <div class="highlight"><pre><span></span><code><span class="c1">-- Run in Supabase SQL Editor</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="n">EXTENSION</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="ss">&quot;uuid-ossp&quot;</span><span class="p">;</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="n">EXTENSION</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="ss">&quot;pg_trgm&quot;</span><span class="p">;</span><span class="w">  </span><span class="c1">-- For full-text search</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="n">EXTENSION</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="ss">&quot;unaccent&quot;</span><span class="p">;</span><span class="w"> </span><span class="c1">-- For search normalization</span>
+</code></pre></div></p>
+</li>
+</ol>
+<hr />
+<h3 id="option-b-neon-recommended-serverless-free-tier">Option B: Neon (Recommended - Serverless, Free Tier)</h3>
+<p><strong>Pros</strong>: Serverless, instant branching, free tier
+<strong>Cons</strong>: 512MB limit on free tier
+<strong>Cost</strong>: Free tier → $19/month Pro</p>
+<h4 id="setup-steps_1">Setup Steps:</h4>
+<ol>
+<li>
+<p><strong>Create Neon Account</strong>
+   <div class="highlight"><pre><span></span><code><span class="c1"># Visit https://neon.tech</span>
+<span class="c1"># Sign up with GitHub</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Create Project</strong>
+   <div class="highlight"><pre><span></span><code>Project Name: decentralized-forum
+Region: [Choose closest to your users]
+PostgreSQL Version: 16
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Get Connection String</strong>
+   <div class="highlight"><pre><span></span><code>Dashboard → Connection Details
+
+Connection String:
+postgresql://[user]:[password]@[endpoint].neon.tech/[dbname]?sslmode=require
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Save to Environment</strong>
+   <div class="highlight"><pre><span></span><code><span class="c1"># .env.production</span>
+<span class="nv">DATABASE_URL</span><span class="o">=</span><span class="s2">&quot;postgresql://[user]:[password]@[endpoint].neon.tech/[dbname]?sslmode=require&quot;</span>
+</code></pre></div></p>
+</li>
+</ol>
+<hr />
+<h3 id="option-c-railway-recommended-all-in-one-platform">Option C: Railway (Recommended - All-in-One Platform)</h3>
+<p><strong>Pros</strong>: Simple deployment, PostgreSQL + Redis together, $5 trial credit
+<strong>Cons</strong>: No permanent free tier
+<strong>Cost</strong>: $5 trial → Pay as you go</p>
+<h4 id="setup-steps_2">Setup Steps:</h4>
+<ol>
+<li>
+<p><strong>Create Railway Account</strong>
+   <div class="highlight"><pre><span></span><code><span class="c1"># Visit https://railway.app</span>
+<span class="c1"># Sign up with GitHub</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Create New Project</strong>
+   <div class="highlight"><pre><span></span><code>Click &quot;New Project&quot;
+Select &quot;Provision PostgreSQL&quot;
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Get Connection Details</strong>
+   <div class="highlight"><pre><span></span><code>Dashboard → PostgreSQL → Connect
+
+DATABASE_URL will be auto-generated:
+postgresql://postgres:[password]@[host].railway.app:5432/railway
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Add Redis</strong>
+   <div class="highlight"><pre><span></span><code>Same project → &quot;New&quot; → &quot;Database&quot; → &quot;Add Redis&quot;
+
+REDIS_URL will be auto-generated:
+redis://default:[password]@[host].railway.app:6379
+</code></pre></div></p>
+</li>
+</ol>
+<hr />
+<h3 id="option-d-self-hosted-on-cloud-vm-advanced">Option D: Self-Hosted on Cloud VM (Advanced)</h3>
+<p><strong>Pros</strong>: Full control, cost-effective at scale
+<strong>Cons</strong>: Requires maintenance, backup management
+<strong>Cost</strong>: ~$20-40/month for VM</p>
+<h4 id="aws-ec2-setup">AWS EC2 Setup:</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># 1. Launch EC2 instance (t3.medium, 2 vCPU, 4GB RAM)</span>
+<span class="c1"># 2. SSH into instance</span>
+ssh<span class="w"> </span>-i<span class="w"> </span>your-key.pem<span class="w"> </span>ubuntu@ec2-xx-xx-xx-xx.compute.amazonaws.com
+
+<span class="c1"># 3. Install PostgreSQL 16</span>
+sudo<span class="w"> </span>apt<span class="w"> </span>update
+sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>postgresql-16<span class="w"> </span>postgresql-contrib-16
+
+<span class="c1"># 4. Configure PostgreSQL</span>
+sudo<span class="w"> </span>-u<span class="w"> </span>postgres<span class="w"> </span>psql
+CREATE<span class="w"> </span>DATABASE<span class="w"> </span>decentralized_forum<span class="p">;</span>
+CREATE<span class="w"> </span>USER<span class="w"> </span>forum_user<span class="w"> </span>WITH<span class="w"> </span>ENCRYPTED<span class="w"> </span>PASSWORD<span class="w"> </span><span class="s1">&#39;your_secure_password&#39;</span><span class="p">;</span>
+GRANT<span class="w"> </span>ALL<span class="w"> </span>PRIVILEGES<span class="w"> </span>ON<span class="w"> </span>DATABASE<span class="w"> </span>decentralized_forum<span class="w"> </span>TO<span class="w"> </span>forum_user<span class="p">;</span>
+<span class="se">\q</span>
+
+<span class="c1"># 5. Configure remote access</span>
+sudo<span class="w"> </span>nano<span class="w"> </span>/etc/postgresql/16/main/postgresql.conf
+<span class="c1"># Set: listen_addresses = &#39;*&#39;</span>
+
+sudo<span class="w"> </span>nano<span class="w"> </span>/etc/postgresql/16/main/pg_hba.conf
+<span class="c1"># Add: host all all 0.0.0.0/0 md5</span>
+
+sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>postgresql
+
+<span class="c1"># 6. Configure firewall</span>
+sudo<span class="w"> </span>ufw<span class="w"> </span>allow<span class="w"> </span><span class="m">5432</span>/tcp
+
+<span class="c1"># 7. Connection string</span>
+postgresql://forum_user:your_secure_password@ec2-xx-xx-xx-xx.compute.amazonaws.com:5432/decentralized_forum
+</code></pre></div>
+<hr />
+<h2 id="2-redis-deployment">2. Redis Deployment</h2>
+<p>Choose ONE of the following Redis deployment options:</p>
+<h3 id="option-a-upstash-recommended-serverless-free-tier">Option A: Upstash (Recommended - Serverless, Free Tier)</h3>
+<p><strong>Pros</strong>: Free tier (10k commands/day), serverless, global
+<strong>Cons</strong>: Free tier limits
+<strong>Cost</strong>: Free tier → $10/month Pro</p>
+<h4 id="setup-steps_3">Setup Steps:</h4>
+<ol>
+<li>
+<p><strong>Create Upstash Account</strong>
+   <div class="highlight"><pre><span></span><code><span class="c1"># Visit https://upstash.com</span>
+<span class="c1"># Sign up with GitHub</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Create Redis Database</strong>
+   <div class="highlight"><pre><span></span><code>Click &quot;Create Database&quot;
+Name: decentralized-forum-cache
+Region: [Choose closest to your users]
+Type: Regional (or Global for multi-region)
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Get Connection Details</strong>
+   <div class="highlight"><pre><span></span><code>Database → Details
+
+Redis URL:
+redis://default:[password]@[endpoint].upstash.io:6379
+
+Or REST API (serverless):
+https://[endpoint].upstash.io
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Save to Environment</strong>
+   <div class="highlight"><pre><span></span><code><span class="c1"># .env.production</span>
+<span class="nv">REDIS_URL</span><span class="o">=</span><span class="s2">&quot;redis://default:[password]@[endpoint].upstash.io:6379&quot;</span>
+</code></pre></div></p>
+</li>
+</ol>
+<hr />
+<h3 id="option-b-railway-if-using-for-postgresql-too">Option B: Railway (If using for PostgreSQL too)</h3>
+<p><strong>Pros</strong>: All-in-one with PostgreSQL
+<strong>Cons</strong>: No permanent free tier
+<strong>Cost</strong>: Included in Railway usage</p>
+<h4 id="setup-steps_4">Setup Steps:</h4>
+<ol>
+<li>
+<p><strong>Add Redis to Existing Project</strong>
+   <div class="highlight"><pre><span></span><code>Railway Dashboard → Your Project
+Click &quot;New&quot; → &quot;Database&quot; → &quot;Add Redis&quot;
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Get Connection String</strong>
+   <div class="highlight"><pre><span></span><code>Automatically provisioned:
+redis://default:[password]@redis.railway.internal:6379
+</code></pre></div></p>
+</li>
+</ol>
+<hr />
+<h3 id="option-c-redis-cloud-managed-by-redis-labs">Option C: Redis Cloud (Managed by Redis Labs)</h3>
+<p><strong>Pros</strong>: Official Redis hosting, free 30MB tier
+<strong>Cons</strong>: Small free tier
+<strong>Cost</strong>: Free tier → $7/month Basic</p>
+<h4 id="setup-steps_5">Setup Steps:</h4>
+<ol>
+<li>
+<p><strong>Create Account</strong>
+   <div class="highlight"><pre><span></span><code><span class="c1"># Visit https://redis.com/try-free/</span>
+<span class="c1"># Sign up</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Create Database</strong>
+   <div class="highlight"><pre><span></span><code>Click &quot;New Database&quot;
+Database Name: forum-cache
+Cloud Provider: AWS/GCP/Azure
+Region: [Choose closest]
+Memory: 30MB (free) or more
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Get Connection String</strong>
+   <div class="highlight"><pre><span></span><code>redis://default:[password]@redis-[id].c[xxx].cloud.redislabs.com:6379
+</code></pre></div></p>
+</li>
+</ol>
+<hr />
+<h2 id="3-application-deployment">3. Application Deployment</h2>
+<p>Choose ONE deployment platform:</p>
+<h3 id="option-a-railway-recommended-easiest">Option A: Railway (Recommended - Easiest)</h3>
+<h4 id="setup-steps_6">Setup Steps:</h4>
+<ol>
+<li>
+<p><strong>Connect GitHub Repository</strong>
+   <div class="highlight"><pre><span></span><code>Railway<span class="w"> </span>Dashboard<span class="w"> </span>→<span class="w"> </span>New<span class="w"> </span>Project
+→<span class="w"> </span><span class="s2">&quot;Deploy from GitHub repo&quot;</span>
+→<span class="w"> </span>Select<span class="w"> </span>your<span class="w"> </span>repository
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Configure Build Settings</strong>
+   <div class="highlight"><pre><span></span><code>Root Directory: /
+Build Command: docker build -t app .
+Start Command: uvicorn src.main:app --host 0.0.0.0 --port $PORT
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Add Environment Variables</strong>
+   <div class="highlight"><pre><span></span><code><span class="c1"># In Railway Dashboard → Variables</span>
+<span class="nv">APP_SECRET_KEY</span><span class="o">=[</span>generate<span class="w"> </span>with:<span class="w"> </span>openssl<span class="w"> </span>rand<span class="w"> </span>-hex<span class="w"> </span><span class="m">32</span><span class="o">]</span>
+<span class="nv">SECURITY_JWT_SECRET_KEY</span><span class="o">=[</span>generate<span class="w"> </span>with:<span class="w"> </span>openssl<span class="w"> </span>rand<span class="w"> </span>-hex<span class="w"> </span><span class="m">32</span><span class="o">]</span>
+<span class="nv">DATABASE_URL</span><span class="o">=</span><span class="si">${</span><span class="p">{Postgres.DATABASE_URL</span><span class="si">}</span><span class="o">}</span>
+<span class="nv">REDIS_URL</span><span class="o">=</span><span class="si">${</span><span class="p">{Redis.REDIS_URL</span><span class="si">}</span><span class="o">}</span>
+<span class="nv">ENVIRONMENT</span><span class="o">=</span>production
+<span class="nv">DEBUG</span><span class="o">=</span><span class="nb">false</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Deploy</strong>
+   <div class="highlight"><pre><span></span><code>Railway will auto-deploy on git push
+</code></pre></div></p>
+</li>
+</ol>
+<hr />
+<h3 id="option-b-docker-on-cloud-vm-aws-ec2-google-compute-azure-vm">Option B: Docker on Cloud VM (AWS EC2, Google Compute, Azure VM)</h3>
+<h4 id="aws-ec2-setup_1">AWS EC2 Setup:</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># 1. Launch EC2 instance (t3.medium or larger)</span>
+<span class="c1"># 2. SSH into instance</span>
+ssh<span class="w"> </span>-i<span class="w"> </span>your-key.pem<span class="w"> </span>ubuntu@ec2-xx-xx-xx-xx.compute.amazonaws.com
+
+<span class="c1"># 3. Install Docker</span>
+sudo<span class="w"> </span>apt<span class="w"> </span>update
+sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>docker.io<span class="w"> </span>docker-compose
+sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>docker
+sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>docker
+sudo<span class="w"> </span>usermod<span class="w"> </span>-aG<span class="w"> </span>docker<span class="w"> </span><span class="nv">$USER</span>
+
+<span class="c1"># 4. Clone repository</span>
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/yourusername/decentralized-forum.git
+<span class="nb">cd</span><span class="w"> </span>decentralized-forum
+
+<span class="c1"># 5. Create .env.production file</span>
+nano<span class="w"> </span>.env.production
+<span class="c1"># Add all environment variables (see Environment Configuration section)</span>
+
+<span class="c1"># 6. Build and run with Docker Compose</span>
+docker-compose<span class="w"> </span>-f<span class="w"> </span>docker-compose.prod.yml<span class="w"> </span>up<span class="w"> </span>-d
+
+<span class="c1"># 7. Check logs</span>
+docker-compose<span class="w"> </span>logs<span class="w"> </span>-f<span class="w"> </span>app
+
+<span class="c1"># 8. Configure Nginx reverse proxy (optional)</span>
+sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>nginx
+sudo<span class="w"> </span>nano<span class="w"> </span>/etc/nginx/sites-available/forum
+<span class="c1"># Add configuration (see Nginx section below)</span>
+</code></pre></div>
+<hr />
+<h3 id="option-c-kubernetes-advanced-for-production-scale">Option C: Kubernetes (Advanced - For Production Scale)</h3>
+<h4 id="prerequisites_1">Prerequisites:</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Install kubectl and helm</span>
+brew<span class="w"> </span>install<span class="w"> </span>kubectl<span class="w"> </span>helm
+
+<span class="c1"># Create cluster (example with GKE)</span>
+gcloud<span class="w"> </span>container<span class="w"> </span>clusters<span class="w"> </span>create<span class="w"> </span>forum-cluster<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--num-nodes<span class="o">=</span><span class="m">3</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--machine-type<span class="o">=</span>e2-medium<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--region<span class="o">=</span>us-central1
+</code></pre></div>
+<h4 id="deployment">Deployment:</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># 1. Create namespace</span>
+kubectl<span class="w"> </span>create<span class="w"> </span>namespace<span class="w"> </span>forum
+
+<span class="c1"># 2. Create secrets</span>
+kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="w"> </span>generic<span class="w"> </span>forum-secrets<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--from-literal<span class="o">=</span>app-secret-key<span class="o">=[</span>YOUR_KEY<span class="o">]</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--from-literal<span class="o">=</span>jwt-secret-key<span class="o">=[</span>YOUR_KEY<span class="o">]</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--from-literal<span class="o">=</span>database-url<span class="o">=[</span>DB_URL<span class="o">]</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--from-literal<span class="o">=</span>redis-url<span class="o">=[</span>REDIS_URL<span class="o">]</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-n<span class="w"> </span>forum
+
+<span class="c1"># 3. Apply Kubernetes manifests</span>
+kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>kubernetes/<span class="w"> </span>-n<span class="w"> </span>forum
+
+<span class="c1"># 4. Check deployment</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>forum
+kubectl<span class="w"> </span>get<span class="w"> </span>services<span class="w"> </span>-n<span class="w"> </span>forum
+
+<span class="c1"># 5. Get external IP</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>service<span class="w"> </span>forum-app<span class="w"> </span>-n<span class="w"> </span>forum
+</code></pre></div>
+<hr />
+<h2 id="4-monitoring-logging">4. Monitoring &amp; Logging</h2>
+<h3 id="option-a-grafana-cloud-free-tier-available">Option A: Grafana Cloud (Free Tier Available)</h3>
+<h4 id="setup-steps_7">Setup Steps:</h4>
+<ol>
+<li>
+<p><strong>Create Grafana Cloud Account</strong>
+   <div class="highlight"><pre><span></span><code><span class="c1"># Visit https://grafana.com/auth/sign-up/create-user</span>
+<span class="c1"># Sign up</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Get Prometheus Endpoint</strong>
+   <div class="highlight"><pre><span></span><code>Stack Details → Prometheus
+Remote Write Endpoint: https://prometheus-[xxx].grafana.net/api/prom/push
+Username: [your-user-id]
+Password: [API key]
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Configure Application to Send Metrics</strong>
+   <div class="highlight"><pre><span></span><code><span class="c1"># Add to src/main.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">prometheus_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_asgi_app</span><span class="p">,</span> <span class="n">Counter</span><span class="p">,</span> <span class="n">Histogram</span>
+
+<span class="c1"># Add Prometheus metrics endpoint</span>
+<span class="n">metrics_app</span> <span class="o">=</span> <span class="n">make_asgi_app</span><span class="p">()</span>
+<span class="n">app</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span><span class="s2">&quot;/metrics&quot;</span><span class="p">,</span> <span class="n">metrics_app</span><span class="p">)</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Install Grafana Agent</strong>
+   <div class="highlight"><pre><span></span><code><span class="c1"># On your application server</span>
+wget<span class="w"> </span>https://github.com/grafana/agent/releases/latest/download/agent-linux-amd64.zip
+unzip<span class="w"> </span>agent-linux-amd64.zip
+chmod<span class="w"> </span>+x<span class="w"> </span>agent-linux-amd64
+
+<span class="c1"># Configure agent</span>
+nano<span class="w"> </span>agent-config.yaml
+<span class="c1"># Add Prometheus scrape config pointing to your app</span>
+
+<span class="c1"># Run agent</span>
+./agent-linux-amd64<span class="w"> </span>-config.file<span class="o">=</span>agent-config.yaml
+</code></pre></div></p>
+</li>
+</ol>
+<hr />
+<h3 id="option-b-self-hosted-prometheus-grafana">Option B: Self-Hosted Prometheus + Grafana</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># docker-compose-monitoring.yml</span>
+version:<span class="w"> </span><span class="s1">&#39;3.8&#39;</span>
+
+services:
+<span class="w">  </span>prometheus:
+<span class="w">    </span>image:<span class="w"> </span>prom/prometheus:latest
+<span class="w">    </span>ports:
+<span class="w">      </span>-<span class="w"> </span><span class="s2">&quot;9090:9090&quot;</span>
+<span class="w">    </span>volumes:
+<span class="w">      </span>-<span class="w"> </span>./prometheus.yml:/etc/prometheus/prometheus.yml
+<span class="w">      </span>-<span class="w"> </span>prometheus_data:/prometheus
+<span class="w">    </span>command:
+<span class="w">      </span>-<span class="w"> </span><span class="s1">&#39;--config.file=/etc/prometheus/prometheus.yml&#39;</span>
+
+<span class="w">  </span>grafana:
+<span class="w">    </span>image:<span class="w"> </span>grafana/grafana:latest
+<span class="w">    </span>ports:
+<span class="w">      </span>-<span class="w"> </span><span class="s2">&quot;3000:3000&quot;</span>
+<span class="w">    </span>volumes:
+<span class="w">      </span>-<span class="w"> </span>grafana_data:/var/lib/grafana
+<span class="w">    </span>environment:
+<span class="w">      </span>-<span class="w"> </span><span class="nv">GF_SECURITY_ADMIN_PASSWORD</span><span class="o">=</span>admin
+
+volumes:
+<span class="w">  </span>prometheus_data:
+<span class="w">  </span>grafana_data:
+</code></pre></div>
+<hr />
+<h2 id="5-domain-ssl-setup">5. Domain &amp; SSL Setup</h2>
+<h3 id="step-1-purchase-domain">Step 1: Purchase Domain</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Recommended registrars:</span>
+<span class="c1"># - Namecheap: ~$10/year</span>
+<span class="c1"># - Google Domains: ~$12/year</span>
+<span class="c1"># - Cloudflare: ~$10/year (includes CDN)</span>
+</code></pre></div>
+<h3 id="step-2-configure-dns">Step 2: Configure DNS</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Add A record pointing to your server IP</span>
+Type:<span class="w"> </span>A
+Name:<span class="w"> </span>@
+Value:<span class="w"> </span><span class="o">[</span>Your<span class="w"> </span>server<span class="w"> </span>IP<span class="w"> </span>or<span class="w"> </span>load<span class="w"> </span>balancer<span class="w"> </span>IP<span class="o">]</span>
+TTL:<span class="w"> </span><span class="m">3600</span>
+
+<span class="c1"># Add www subdomain</span>
+Type:<span class="w"> </span>CNAME
+Name:<span class="w"> </span>www
+Value:<span class="w"> </span>yourdomain.com
+TTL:<span class="w"> </span><span class="m">3600</span>
+</code></pre></div>
+<h3 id="step-3-ssl-with-lets-encrypt-free">Step 3: SSL with Let's Encrypt (Free)</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Install Certbot</span>
+sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>certbot<span class="w"> </span>python3-certbot-nginx
+
+<span class="c1"># Get certificate</span>
+sudo<span class="w"> </span>certbot<span class="w"> </span>--nginx<span class="w"> </span>-d<span class="w"> </span>yourdomain.com<span class="w"> </span>-d<span class="w"> </span>www.yourdomain.com
+
+<span class="c1"># Auto-renewal (certbot sets this up automatically)</span>
+sudo<span class="w"> </span>certbot<span class="w"> </span>renew<span class="w"> </span>--dry-run
+</code></pre></div>
+<hr />
+<h2 id="6-environment-configuration">6. Environment Configuration</h2>
+<h3 id="complete-envproduction-template">Complete .env.production Template</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Application Settings</span>
+<span class="nv">APP_NAME</span><span class="o">=</span><span class="s2">&quot;Decentralized Autonomous Forum&quot;</span>
+<span class="nv">APP_SECRET_KEY</span><span class="o">=</span><span class="s2">&quot;[GENERATE: openssl rand -hex 32]&quot;</span>
+<span class="nv">ENVIRONMENT</span><span class="o">=</span><span class="s2">&quot;production&quot;</span>
+<span class="nv">DEBUG</span><span class="o">=</span><span class="s2">&quot;false&quot;</span>
+<span class="nv">ALLOWED_ORIGINS</span><span class="o">=</span><span class="s2">&quot;https://yourdomain.com,https://www.yourdomain.com&quot;</span>
+
+<span class="c1"># Database</span>
+<span class="nv">DATABASE_URL</span><span class="o">=</span><span class="s2">&quot;postgresql://user:pass@host:5432/dbname&quot;</span>
+<span class="nv">DATABASE_POOL_SIZE</span><span class="o">=</span><span class="s2">&quot;10&quot;</span>
+<span class="nv">DATABASE_MAX_OVERFLOW</span><span class="o">=</span><span class="s2">&quot;20&quot;</span>
+<span class="nv">DATABASE_ECHO</span><span class="o">=</span><span class="s2">&quot;false&quot;</span>
+
+<span class="c1"># Redis</span>
+<span class="nv">REDIS_URL</span><span class="o">=</span><span class="s2">&quot;redis://default:pass@host:6379&quot;</span>
+
+<span class="c1"># Security &amp; JWT</span>
+<span class="nv">SECURITY_JWT_SECRET_KEY</span><span class="o">=</span><span class="s2">&quot;[GENERATE: openssl rand -hex 32]&quot;</span>
+<span class="nv">SECURITY_JWT_ALGORITHM</span><span class="o">=</span><span class="s2">&quot;HS256&quot;</span>
+<span class="nv">SECURITY_JWT_EXPIRATION_HOURS</span><span class="o">=</span><span class="s2">&quot;24&quot;</span>
+<span class="nv">SECURITY_SESSION_EXPIRATION_HOURS</span><span class="o">=</span><span class="s2">&quot;168&quot;</span>
+<span class="nv">SECURITY_BCRYPT_ROUNDS</span><span class="o">=</span><span class="s2">&quot;12&quot;</span>
+
+<span class="c1"># OAuth2 Providers (configure in respective developer consoles)</span>
+<span class="c1"># Meta/Facebook</span>
+<span class="nv">OAUTH_META_CLIENT_ID</span><span class="o">=</span><span class="s2">&quot;your_meta_client_id&quot;</span>
+<span class="nv">OAUTH_META_CLIENT_SECRET</span><span class="o">=</span><span class="s2">&quot;your_meta_client_secret&quot;</span>
+<span class="nv">OAUTH_META_REDIRECT_URI</span><span class="o">=</span><span class="s2">&quot;https://yourdomain.com/api/v1/auth/oauth/meta/callback&quot;</span>
+
+<span class="c1"># Reddit</span>
+<span class="nv">OAUTH_REDDIT_CLIENT_ID</span><span class="o">=</span><span class="s2">&quot;your_reddit_client_id&quot;</span>
+<span class="nv">OAUTH_REDDIT_CLIENT_SECRET</span><span class="o">=</span><span class="s2">&quot;your_reddit_client_secret&quot;</span>
+<span class="nv">OAUTH_REDDIT_REDIRECT_URI</span><span class="o">=</span><span class="s2">&quot;https://yourdomain.com/api/v1/auth/oauth/reddit/callback&quot;</span>
+
+<span class="c1"># X/Twitter</span>
+<span class="nv">OAUTH_X_CLIENT_ID</span><span class="o">=</span><span class="s2">&quot;your_x_client_id&quot;</span>
+<span class="nv">OAUTH_X_CLIENT_SECRET</span><span class="o">=</span><span class="s2">&quot;your_x_client_secret&quot;</span>
+<span class="nv">OAUTH_X_REDIRECT_URI</span><span class="o">=</span><span class="s2">&quot;https://yourdomain.com/api/v1/auth/oauth/x/callback&quot;</span>
+
+<span class="c1"># Discord</span>
+<span class="nv">OAUTH_DISCORD_CLIENT_ID</span><span class="o">=</span><span class="s2">&quot;your_discord_client_id&quot;</span>
+<span class="nv">OAUTH_DISCORD_CLIENT_SECRET</span><span class="o">=</span><span class="s2">&quot;your_discord_client_secret&quot;</span>
+<span class="nv">OAUTH_DISCORD_REDIRECT_URI</span><span class="o">=</span><span class="s2">&quot;https://yourdomain.com/api/v1/auth/oauth/discord/callback&quot;</span>
+
+<span class="c1"># Telegram</span>
+<span class="nv">OAUTH_TELEGRAM_BOT_TOKEN</span><span class="o">=</span><span class="s2">&quot;your_telegram_bot_token&quot;</span>
+
+<span class="c1"># IPFS (Lighthouse)</span>
+<span class="nv">IPFS_API_KEY</span><span class="o">=</span><span class="s2">&quot;your_lighthouse_api_key&quot;</span>
+<span class="nv">IPFS_GATEWAY_URL</span><span class="o">=</span><span class="s2">&quot;https://gateway.lighthouse.storage&quot;</span>
+
+<span class="c1"># Blockchain (BNB Chain)</span>
+<span class="nv">BLOCKCHAIN_NETWORK</span><span class="o">=</span><span class="s2">&quot;binance_smart_chain&quot;</span>
+<span class="nv">BLOCKCHAIN_RPC_URL</span><span class="o">=</span><span class="s2">&quot;https://bsc-dataseed.binance.org/&quot;</span>
+<span class="nv">BLOCKCHAIN_CHAIN_ID</span><span class="o">=</span><span class="s2">&quot;56&quot;</span>
+
+<span class="c1"># PayPal</span>
+<span class="nv">PAYPAL_MODE</span><span class="o">=</span><span class="s2">&quot;live&quot;</span><span class="w">  </span><span class="c1"># or &quot;sandbox&quot; for testing</span>
+<span class="nv">PAYPAL_CLIENT_ID</span><span class="o">=</span><span class="s2">&quot;your_paypal_client_id&quot;</span>
+<span class="nv">PAYPAL_CLIENT_SECRET</span><span class="o">=</span><span class="s2">&quot;your_paypal_client_secret&quot;</span>
+
+<span class="c1"># Email (SendGrid example)</span>
+<span class="nv">EMAIL_PROVIDER</span><span class="o">=</span><span class="s2">&quot;sendgrid&quot;</span>
+<span class="nv">SENDGRID_API_KEY</span><span class="o">=</span><span class="s2">&quot;your_sendgrid_api_key&quot;</span>
+<span class="nv">EMAIL_FROM</span><span class="o">=</span><span class="s2">&quot;noreply@yourdomain.com&quot;</span>
+
+<span class="c1"># Monitoring</span>
+<span class="nv">SENTRY_DSN</span><span class="o">=</span><span class="s2">&quot;https://[key]@[org].ingest.sentry.io/[project]&quot;</span><span class="w">  </span><span class="c1"># Optional</span>
+
+<span class="c1"># Rate Limiting</span>
+<span class="nv">RATE_LIMIT_ENABLED</span><span class="o">=</span><span class="s2">&quot;true&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="7-post-deployment-verification">7. Post-Deployment Verification</h2>
+<h3 id="checklist">Checklist</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># 1. Health check</span>
+curl<span class="w"> </span>https://yourdomain.com/health
+<span class="c1"># Expected: {&quot;status&quot;: &quot;healthy&quot;}</span>
+
+<span class="c1"># 2. Database connectivity</span>
+curl<span class="w"> </span>https://yourdomain.com/api/v1/health/database
+<span class="c1"># Expected: {&quot;database&quot;: &quot;connected&quot;}</span>
+
+<span class="c1"># 3. Redis connectivity</span>
+curl<span class="w"> </span>https://yourdomain.com/api/v1/health/redis
+<span class="c1"># Expected: {&quot;redis&quot;: &quot;connected&quot;}</span>
+
+<span class="c1"># 4. API endpoints</span>
+curl<span class="w"> </span>https://yourdomain.com/api/v1/auth/register<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;email&quot;:&quot;test@example.com&quot;,&quot;username&quot;:&quot;testuser&quot;,&quot;password&quot;:&quot;TestPass123!&quot;}&#39;</span>
+
+<span class="c1"># 5. SSL certificate</span>
+curl<span class="w"> </span>-I<span class="w"> </span>https://yourdomain.com<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;strict-transport-security&quot;</span>
+<span class="c1"># Expected: strict-transport-security header present</span>
+
+<span class="c1"># 6. Security headers</span>
+curl<span class="w"> </span>-I<span class="w"> </span>https://yourdomain.com<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;(X-Frame-Options|X-Content-Type-Options|Content-Security-Policy)&quot;</span>
+
+<span class="c1"># 7. Rate limiting</span>
+<span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="o">{</span><span class="m">1</span>..6<span class="o">}</span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://yourdomain.com/api/v1/auth/register<span class="p">;</span><span class="w"> </span><span class="k">done</span>
+<span class="c1"># Expected: 6th request returns 429 Too Many Requests</span>
+</code></pre></div>
+<hr />
+<h2 id="8-deployment-scripts">8. Deployment Scripts</h2>
+<h3 id="deploysh-complete-deployment-script">deploy.sh (Complete Deployment Script)</h3>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<span class="nb">set</span><span class="w"> </span>-e
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;🚀 Starting deployment...&quot;</span>
+
+<span class="c1"># 1. Build Docker image</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;📦 Building Docker image...&quot;</span>
+docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>decentralized-forum:latest<span class="w"> </span>.
+
+<span class="c1"># 2. Tag for registry</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;🏷️  Tagging image...&quot;</span>
+docker<span class="w"> </span>tag<span class="w"> </span>decentralized-forum:latest<span class="w"> </span>registry.yourdomain.com/forum:latest
+
+<span class="c1"># 3. Push to registry</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;⬆️  Pushing to registry...&quot;</span>
+docker<span class="w"> </span>push<span class="w"> </span>registry.yourdomain.com/forum:latest
+
+<span class="c1"># 4. Update deployment</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;🔄 Updating deployment...&quot;</span>
+kubectl<span class="w"> </span><span class="nb">set</span><span class="w"> </span>image<span class="w"> </span>deployment/forum-app<span class="w"> </span><span class="nv">forum</span><span class="o">=</span>registry.yourdomain.com/forum:latest<span class="w"> </span>-n<span class="w"> </span>forum
+
+<span class="c1"># 5. Wait for rollout</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;⏳ Waiting for rollout...&quot;</span>
+kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deployment/forum-app<span class="w"> </span>-n<span class="w"> </span>forum
+
+<span class="c1"># 6. Run database migrations</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;🗄️  Running migrations...&quot;</span>
+kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>deployment/forum-app<span class="w"> </span>-n<span class="w"> </span>forum<span class="w"> </span>--<span class="w"> </span>alembic<span class="w"> </span>upgrade<span class="w"> </span>head
+
+<span class="c1"># 7. Verify deployment</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;✅ Verifying deployment...&quot;</span>
+curl<span class="w"> </span>-f<span class="w"> </span>https://yourdomain.com/health<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;❌ Health check failed&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span><span class="o">)</span>
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;✅ Deployment complete!&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="9-cost-estimation">9. Cost Estimation</h2>
+<h3 id="free-tier-setup-suitable-for-mvptesting">Free Tier Setup (Suitable for MVP/Testing)</h3>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Provider</th>
+<th>Free Tier</th>
+<th>Cost After</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PostgreSQL</td>
+<td>Supabase</td>
+<td>500MB</td>
+<td>$25/month</td>
+</tr>
+<tr>
+<td>Redis</td>
+<td>Upstash</td>
+<td>10k cmds/day</td>
+<td>$10/month</td>
+</tr>
+<tr>
+<td>Application</td>
+<td>Railway</td>
+<td>$5 credit</td>
+<td>Pay-as-go</td>
+</tr>
+<tr>
+<td>Monitoring</td>
+<td>Grafana Cloud</td>
+<td>10k series</td>
+<td>$49/month</td>
+</tr>
+<tr>
+<td>Domain</td>
+<td>Namecheap</td>
+<td>-</td>
+<td>$10/year</td>
+</tr>
+<tr>
+<td>SSL</td>
+<td>Let's Encrypt</td>
+<td>Free forever</td>
+<td>Free</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td></td>
+<td><strong>~$5 one-time</strong></td>
+<td><strong>~$45/month</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="production-setup-recommended-for-launch">Production Setup (Recommended for Launch)</h3>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Provider</th>
+<th>Tier</th>
+<th>Monthly Cost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PostgreSQL</td>
+<td>Supabase Pro</td>
+<td>8GB</td>
+<td>$25</td>
+</tr>
+<tr>
+<td>Redis</td>
+<td>Upstash Pro</td>
+<td>1GB</td>
+<td>$10</td>
+</tr>
+<tr>
+<td>Application</td>
+<td>AWS EC2</td>
+<td>t3.medium</td>
+<td>$30</td>
+</tr>
+<tr>
+<td>Load Balancer</td>
+<td>AWS ALB</td>
+<td>-</td>
+<td>$20</td>
+</tr>
+<tr>
+<td>CDN</td>
+<td>Cloudflare</td>
+<td>Pro</td>
+<td>$20</td>
+</tr>
+<tr>
+<td>Monitoring</td>
+<td>Grafana Cloud</td>
+<td>Pro</td>
+<td>$49</td>
+</tr>
+<tr>
+<td>Email</td>
+<td>SendGrid</td>
+<td>Essentials</td>
+<td>$20</td>
+</tr>
+<tr>
+<td>Domain</td>
+<td>Namecheap</td>
+<td>-</td>
+<td>$1</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td></td>
+<td></td>
+<td><strong>~$175/month</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="10-troubleshooting">10. Troubleshooting</h2>
+<h3 id="common-issues">Common Issues</h3>
+<h4 id="database-connection-failed">Database Connection Failed</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check database URL format</span>
+<span class="nb">echo</span><span class="w"> </span><span class="nv">$DATABASE_URL</span>
+<span class="c1"># Should be: postgresql://user:pass@host:port/db</span>
+
+<span class="c1"># Test connection</span>
+psql<span class="w"> </span><span class="nv">$DATABASE_URL</span>
+</code></pre></div>
+<h4 id="redis-connection-failed">Redis Connection Failed</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check Redis URL</span>
+<span class="nb">echo</span><span class="w"> </span><span class="nv">$REDIS_URL</span>
+<span class="c1"># Should be: redis://default:pass@host:port</span>
+
+<span class="c1"># Test connection</span>
+redis-cli<span class="w"> </span>-u<span class="w"> </span><span class="nv">$REDIS_URL</span><span class="w"> </span>ping
+<span class="c1"># Expected: PONG</span>
+</code></pre></div>
+<h4 id="application-wont-start">Application Won't Start</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check logs</span>
+docker<span class="w"> </span>logs<span class="w"> </span><span class="o">[</span>container-id<span class="o">]</span>
+<span class="c1"># or</span>
+kubectl<span class="w"> </span>logs<span class="w"> </span>deployment/forum-app<span class="w"> </span>-n<span class="w"> </span>forum
+
+<span class="c1"># Common issues:</span>
+<span class="c1"># - Missing environment variables</span>
+<span class="c1"># - Database migrations not run</span>
+<span class="c1"># - Port conflicts</span>
+</code></pre></div>
+<hr />
+<h2 id="11-next-steps-after-deployment">11. Next Steps After Deployment</h2>
+<ol>
+<li>✅ Run database migrations: <code>alembic upgrade head</code></li>
+<li>✅ Seed initial data (user levels, point economy)</li>
+<li>✅ Configure OAuth2 apps (Meta, Reddit, X, Discord, Telegram)</li>
+<li>✅ Set up monitoring dashboards</li>
+<li>✅ Configure alerts (uptime, errors, performance)</li>
+<li>✅ Enable backups (database, Redis)</li>
+<li>✅ Set up CI/CD (auto-deploy on git push)</li>
+<li>✅ Load testing (ensure 1000+ concurrent users)</li>
+<li>✅ Security audit (penetration testing)</li>
+<li>✅ Launch! 🚀</li>
+</ol>
+<hr />
+<p><strong>Deployment Guide Complete</strong>
+<strong>Last Updated</strong>: 2025-10-24
+<strong>Questions?</strong> Check the troubleshooting section or project documentation.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "search.suggest", "content.code.copy"], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+    
+  </body>
+</html>

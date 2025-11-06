@@ -1,0 +1,2788 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://clkhoo5211.github.io/ubiquitous-succotash/security-report-20251022-120000/">
+      
+      
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.23">
+    
+    
+      
+        <title>🔒 Security Assessment Report - Decentralized Autonomous Forum</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.84d31ad4.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="cyan">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#security-assessment-report" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Decentralized Autonomous Forum" class="md-header__button md-logo" aria-label="Decentralized Autonomous Forum" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Decentralized Autonomous Forum
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              🔒 Security Assessment Report
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="cyan"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/clkhoo5211/ubiquitous-succotash" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    clkhoo5211/ubiquitous-succotash
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../index.md" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../getting-started/installation.md" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../architecture/overview.md" class="md-tabs__link">
+          
+  
+  
+  Architecture
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../deployment/local.md" class="md-tabs__link">
+          
+  
+  
+  Deployment
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../contributing.md" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Decentralized Autonomous Forum" class="md-nav__button md-logo" aria-label="Decentralized Autonomous Forum" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Decentralized Autonomous Forum
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/clkhoo5211/ubiquitous-succotash" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    clkhoo5211/ubiquitous-succotash
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Getting Started
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/installation.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Installation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/configuration.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Configuration
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Architecture
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Architecture
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/overview.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/database.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Database Schema
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/api.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    API Documentation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Deployment
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Deployment
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment/local.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Local Development
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment/production.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Production
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributing.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Contributing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#executive-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      Executive Summary
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Executive Summary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#risk-assessment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Risk Assessment
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vulnerability-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      📊 Vulnerability Summary
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📊 Vulnerability Summary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#severity-distribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      Severity Distribution
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#owasp-top-102021-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      OWASP Top 10:2021 Mapping
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#critical-vulnerabilities-cvss-90-100" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔴 CRITICAL VULNERABILITIES (CVSS 9.0-10.0)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔴 CRITICAL VULNERABILITIES (CVSS 9.0-10.0)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#crt-001-hardcoded-secrets-in-configuration-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      🚨 CRT-001: Hardcoded Secrets in Configuration Files
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#crt-002-insecure-session-token-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      🚨 CRT-002: Insecure Session Token Generation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#crt-003-missing-https-enforcement-in-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      🚨 CRT-003: Missing HTTPS Enforcement in Production
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#high-severity-vulnerabilities-cvss-70-89" class="md-nav__link">
+    <span class="md-ellipsis">
+      🟠 HIGH SEVERITY VULNERABILITIES (CVSS 7.0-8.9)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🟠 HIGH SEVERITY VULNERABILITIES (CVSS 7.0-8.9)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#high-001-missing-security-headers" class="md-nav__link">
+    <span class="md-ellipsis">
+      HIGH-001: Missing Security Headers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#high-002-placeholder-oauth2-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      HIGH-002: Placeholder OAuth2 Implementation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#high-003-weak-session-cookie-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      HIGH-003: Weak Session Cookie Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#high-004-missing-rate-limiting-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      HIGH-004: Missing Rate Limiting Implementation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#high-005-no-input-validation-for-blockchain-addresses" class="md-nav__link">
+    <span class="md-ellipsis">
+      HIGH-005: No Input Validation for Blockchain Addresses
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#medium-severity-vulnerabilities-cvss-40-69" class="md-nav__link">
+    <span class="md-ellipsis">
+      🟡 MEDIUM SEVERITY VULNERABILITIES (CVSS 4.0-6.9)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🟡 MEDIUM SEVERITY VULNERABILITIES (CVSS 4.0-6.9)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#med-001-missing-login-attempt-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      MED-001: Missing Login Attempt Tracking
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#med-002-verbose-error-messages" class="md-nav__link">
+    <span class="md-ellipsis">
+      MED-002: Verbose Error Messages
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#med-003-missing-security-logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      MED-003: Missing Security Logging
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#med-004-no-cors-origin-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      MED-004: No CORS Origin Validation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#med-005-static-files-without-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      MED-005: Static Files Without Security
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#med-006-missing-email-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      MED-006: Missing Email Verification
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#med-007-jwt-algorithm-not-explicitly-validated" class="md-nav__link">
+    <span class="md-ellipsis">
+      MED-007: JWT Algorithm Not Explicitly Validated
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#med-008-datetimeutcnow-deprecated" class="md-nav__link">
+    <span class="md-ellipsis">
+      MED-008: datetime.utcnow() Deprecated
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#low-severity-findings-cvss-01-39" class="md-nav__link">
+    <span class="md-ellipsis">
+      🟢 LOW SEVERITY FINDINGS (CVSS 0.1-3.9)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🟢 LOW SEVERITY FINDINGS (CVSS 0.1-3.9)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#low-001-debug-mode-in-production-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      LOW-001: Debug Mode in Production Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#low-002-database-echo-enabled-in-local-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      LOW-002: Database Echo Enabled in Local Config
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#low-003-missing-api-versioning-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      LOW-003: Missing API Versioning Strategy
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#low-004-todo-comments-in-security-critical-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      LOW-004: TODO Comments in Security-Critical Code
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependency-vulnerability-scan" class="md-nav__link">
+    <span class="md-ellipsis">
+      📦 Dependency Vulnerability Scan
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📦 Dependency Vulnerability Scan">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scan-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scan Results
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#owasp-top-102021-detailed-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      🛡️ OWASP Top 10:2021 Detailed Analysis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🛡️ OWASP Top 10:2021 Detailed Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a012021-broken-access-control-2-findings" class="md-nav__link">
+    <span class="md-ellipsis">
+      A01:2021 - Broken Access Control ⚠️ 2 findings
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a022021-cryptographic-failures-3-findings" class="md-nav__link">
+    <span class="md-ellipsis">
+      A02:2021 - Cryptographic Failures 🔴 3 findings
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a032021-injection-clean" class="md-nav__link">
+    <span class="md-ellipsis">
+      A03:2021 - Injection ✅ Clean
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a042021-insecure-design-2-findings" class="md-nav__link">
+    <span class="md-ellipsis">
+      A04:2021 - Insecure Design ⚠️ 2 findings
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a052021-security-misconfiguration-6-findings" class="md-nav__link">
+    <span class="md-ellipsis">
+      A05:2021 - Security Misconfiguration 🔴 6 findings
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a062021-vulnerable-and-outdated-components-clean" class="md-nav__link">
+    <span class="md-ellipsis">
+      A06:2021 - Vulnerable and Outdated Components ✅ Clean
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a072021-identification-and-authentication-failures-4-findings" class="md-nav__link">
+    <span class="md-ellipsis">
+      A07:2021 - Identification and Authentication Failures 🔴 4 findings
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a082021-software-and-data-integrity-failures-1-finding" class="md-nav__link">
+    <span class="md-ellipsis">
+      A08:2021 - Software and Data Integrity Failures ⚠️ 1 finding
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a092021-security-logging-and-monitoring-failures-2-findings" class="md-nav__link">
+    <span class="md-ellipsis">
+      A09:2021 - Security Logging and Monitoring Failures ⚠️ 2 findings
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a102021-server-side-request-forgery-ssrf-clean" class="md-nav__link">
+    <span class="md-ellipsis">
+      A10:2021 - Server-Side Request Forgery (SSRF) ✅ Clean
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#remediation-roadmap" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Remediation Roadmap
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎯 Remediation Roadmap">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-critical-immediate-1-2-days" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔴 Phase 1: Critical (IMMEDIATE - 1-2 days)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔴 Phase 1: Critical (IMMEDIATE - 1-2 days)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#priority-1-secrets-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      Priority 1: Secrets Management
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#priority-2-session-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      Priority 2: Session Management
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#priority-3-https-enforcement" class="md-nav__link">
+    <span class="md-ellipsis">
+      Priority 3: HTTPS Enforcement
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-high-severity-3-5-days" class="md-nav__link">
+    <span class="md-ellipsis">
+      🟠 Phase 2: High Severity (3-5 days)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🟠 Phase 2: High Severity (3-5 days)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#priority-4-security-headers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Priority 4: Security Headers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#priority-5-oauth2-and-rate-limiting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Priority 5: OAuth2 and Rate Limiting
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#priority-6-authentication-hardening" class="md-nav__link">
+    <span class="md-ellipsis">
+      Priority 6: Authentication Hardening
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-3-medium-severity-1-week" class="md-nav__link">
+    <span class="md-ellipsis">
+      🟡 Phase 3: Medium Severity (1 week)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🟡 Phase 3: Medium Severity (1 week)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#priority-7-error-handling-and-logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      Priority 7: Error Handling and Logging
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#priority-8-configuration-hardening" class="md-nav__link">
+    <span class="md-ellipsis">
+      Priority 8: Configuration Hardening
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-4-low-severity-best-practices-ongoing" class="md-nav__link">
+    <span class="md-ellipsis">
+      🟢 Phase 4: Low Severity &amp; Best Practices (Ongoing)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-best-practices-recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔧 Security Best Practices Recommendations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔧 Security Best Practices Recommendations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-development-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Development Workflow
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-cicd-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. CI/CD Pipeline
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-production-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Production Deployment
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-data-protection" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Data Protection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-blockchain-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Blockchain Security
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-checklist-for-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      📋 Security Checklist for Production
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📋 Security Checklist for Production">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pre-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pre-Deployment
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#post-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Post-Deployment
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔍 Testing Recommendations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔍 Testing Recommendations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#security-testing-suite" class="md-nav__link">
+    <span class="md-ellipsis">
+      Security Testing Suite
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-contact" class="md-nav__link">
+    <span class="md-ellipsis">
+      📞 Security Contact
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 References
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📚 References">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#security-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      Security Standards
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#framework-specific-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      Framework-Specific Security
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tools
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Conclusion
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="security-assessment-report">🔒 Security Assessment Report</h1>
+<p><strong>Decentralized Autonomous Forum Platform</strong></p>
+<hr />
+<h2 id="executive-summary">Executive Summary</h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Value</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Assessment Date</strong></td>
+<td>2025-10-22 12:00:00</td>
+<td>✅ Complete</td>
+</tr>
+<tr>
+<td><strong>Security Agent</strong></td>
+<td>Security Agent v1.0</td>
+<td>✅ Active</td>
+</tr>
+<tr>
+<td><strong>OWASP Framework</strong></td>
+<td>OWASP Top 10:2021 (Latest)</td>
+<td>✅ Referenced</td>
+</tr>
+<tr>
+<td><strong>NIST Compliance</strong></td>
+<td>NIST CSF 2.0</td>
+<td>✅ Referenced</td>
+</tr>
+<tr>
+<td><strong>Overall Security Score</strong></td>
+<td>72/100</td>
+<td>🟡 Medium Risk</td>
+</tr>
+<tr>
+<td><strong>Critical Vulnerabilities</strong></td>
+<td>3</td>
+<td>🔴 High Priority</td>
+</tr>
+<tr>
+<td><strong>High Severity</strong></td>
+<td>5</td>
+<td>🟠 Medium Priority</td>
+</tr>
+<tr>
+<td><strong>Medium Severity</strong></td>
+<td>8</td>
+<td>🟡 Low Priority</td>
+</tr>
+<tr>
+<td><strong>Low Severity</strong></td>
+<td>4</td>
+<td>🟢 Informational</td>
+</tr>
+<tr>
+<td><strong>Production Readiness</strong></td>
+<td>⏳ Blocked</td>
+<td>🚫 Requires Fixes</td>
+</tr>
+</tbody>
+</table>
+<h3 id="risk-assessment">Risk Assessment</h3>
+<p><strong>Status</strong>: 🚫 <strong>BLOCKED</strong> - Critical security vulnerabilities must be addressed before proceeding to Compliance Agent.</p>
+<p><strong>Recommendation</strong>: Rollback to Develop Agent for immediate remediation of critical and high-severity issues.</p>
+<hr />
+<h2 id="vulnerability-summary">📊 Vulnerability Summary</h2>
+<h3 id="severity-distribution">Severity Distribution</h3>
+<div class="highlight"><pre><span></span><code>Critical (CVSS 9.0-10.0):  3 findings  ████████████████████
+High     (CVSS 7.0-8.9):   5 findings  ███████████████
+Medium   (CVSS 4.0-6.9):   8 findings  ██████████
+Low      (CVSS 0.1-3.9):   4 findings  ████
+</code></pre></div>
+<h3 id="owasp-top-102021-mapping">OWASP Top 10:2021 Mapping</h3>
+<table>
+<thead>
+<tr>
+<th>OWASP Category</th>
+<th>Findings</th>
+<th>Severity</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>A01:2021 - Broken Access Control</strong></td>
+<td>2</td>
+<td>High</td>
+<td>🔴 Critical</td>
+</tr>
+<tr>
+<td><strong>A02:2021 - Cryptographic Failures</strong></td>
+<td>3</td>
+<td>Critical</td>
+<td>🔴 Critical</td>
+</tr>
+<tr>
+<td><strong>A03:2021 - Injection</strong></td>
+<td>0</td>
+<td>-</td>
+<td>✅ Clean</td>
+</tr>
+<tr>
+<td><strong>A04:2021 - Insecure Design</strong></td>
+<td>2</td>
+<td>Medium</td>
+<td>🟡 Review</td>
+</tr>
+<tr>
+<td><strong>A05:2021 - Security Misconfiguration</strong></td>
+<td>6</td>
+<td>High</td>
+<td>🔴 Critical</td>
+</tr>
+<tr>
+<td><strong>A06:2021 - Vulnerable Components</strong></td>
+<td>1</td>
+<td>Medium</td>
+<td>🟡 Review</td>
+</tr>
+<tr>
+<td><strong>A07:2021 - Identification/Auth Failures</strong></td>
+<td>4</td>
+<td>High</td>
+<td>🔴 Critical</td>
+</tr>
+<tr>
+<td><strong>A08:2021 - Software Integrity Failures</strong></td>
+<td>1</td>
+<td>Low</td>
+<td>🟢 Monitor</td>
+</tr>
+<tr>
+<td><strong>A09:2021 - Security Logging Failures</strong></td>
+<td>2</td>
+<td>Medium</td>
+<td>🟡 Review</td>
+</tr>
+<tr>
+<td><strong>A10:2021 - Server-Side Request Forgery</strong></td>
+<td>0</td>
+<td>-</td>
+<td>✅ Clean</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="critical-vulnerabilities-cvss-90-100">🔴 CRITICAL VULNERABILITIES (CVSS 9.0-10.0)</h2>
+<h3 id="crt-001-hardcoded-secrets-in-configuration-files">🚨 CRT-001: Hardcoded Secrets in Configuration Files</h3>
+<p><strong>CVSS Score</strong>: 9.8 (Critical)
+<strong>OWASP</strong>: A02:2021 - Cryptographic Failures
+<strong>CWE</strong>: CWE-798 (Use of Hard-coded Credentials)</p>
+<p><strong>Location</strong>:
+- <a href="../config.local.yaml#L8">config.local.yaml:8</a>
+- <a href="../config.local.yaml#L22">config.local.yaml:22</a></p>
+<p><strong>Description</strong>:
+Development secrets are hardcoded in configuration files that may be committed to version control:
+<div class="highlight"><pre><span></span><code><span class="nt">secret_key</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;dev-secret-key-change-in-production-min-32-chars-long&quot;</span>
+<span class="nt">jwt_secret_key</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;dev-jwt-secret-key-change-in-production-min-32-chars&quot;</span>
+</code></pre></div></p>
+<p><strong>Impact</strong>:
+- Complete authentication bypass if secrets are leaked
+- JWT token forgery allowing impersonation of any user
+- Session hijacking and privilege escalation
+- Potential exposure if <code>config.local.yaml</code> is accidentally committed</p>
+<p><strong>CVSS Vector</strong>: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H</p>
+<p><strong>Remediation</strong>:
+1. <strong>Immediate</strong>: Move all secrets to environment variables
+2. <strong>Remove</strong> hardcoded values from <code>config.local.yaml</code>
+3. <strong>Implement</strong> secure secret management (AWS Secrets Manager, HashiCorp Vault, or environment variables)
+4. <strong>Update</strong> <a href="../src/core/config.py">src/core/config.py</a> to require environment variables:
+   <div class="highlight"><pre><span></span><code><span class="n">secret_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">min_length</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">env</span><span class="o">=</span><span class="s2">&quot;APP_SECRET_KEY&quot;</span><span class="p">)</span>
+<span class="n">jwt_secret_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">min_length</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">env</span><span class="o">=</span><span class="s2">&quot;JWT_SECRET_KEY&quot;</span><span class="p">)</span>
+</code></pre></div>
+5. <strong>Verify</strong> <code>.gitignore</code> includes <code>config.local.yaml</code> (✅ already present)
+6. <strong>Rotate</strong> all secrets immediately if repository has been shared</p>
+<p><strong>Verification</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># Check for exposed secrets in git history</span>
+git<span class="w"> </span>log<span class="w"> </span>--all<span class="w"> </span>--full-history<span class="w"> </span>--<span class="w"> </span><span class="s2">&quot;config.local.yaml&quot;</span>
+</code></pre></div></p>
+<hr />
+<h3 id="crt-002-insecure-session-token-generation">🚨 CRT-002: Insecure Session Token Generation</h3>
+<p><strong>CVSS Score</strong>: 9.1 (Critical)
+<strong>OWASP</strong>: A07:2021 - Identification and Authentication Failures
+<strong>CWE</strong>: CWE-330 (Use of Insufficiently Random Values)</p>
+<p><strong>Location</strong>: <a href="../src/api/routes/auth.py#L119">src/api/routes/auth.py:119</a>, <a href="../src/api/routes/auth.py#L178">src/api/routes/auth.py:178</a></p>
+<p><strong>Description</strong>:
+Session cookies use predictable format combining user ID with JWT token prefix:
+<div class="highlight"><pre><span></span><code><span class="n">value</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">new_user</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">access_token</span><span class="p">[:</span><span class="mi">20</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+</code></pre></div></p>
+<p><strong>Impact</strong>:
+- Predictable session tokens enable session hijacking
+- User ID exposure allows enumeration attacks
+- Truncated JWT prefix provides no cryptographic security
+- Attackers can craft valid session cookies without authentication</p>
+<p><strong>CVSS Vector</strong>: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:N</p>
+<p><strong>Remediation</strong>:
+1. <strong>Replace</strong> session cookie implementation with secure session management
+2. <strong>Use Redis</strong> for server-side sessions with cryptographically random session IDs
+3. <strong>Implement</strong> proper session storage:
+   <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">secrets</span>
+
+<span class="c1"># Generate cryptographically secure session ID</span>
+<span class="n">session_id</span> <span class="o">=</span> <span class="n">secrets</span><span class="o">.</span><span class="n">token_urlsafe</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span>
+
+<span class="c1"># Store in Redis</span>
+<span class="k">await</span> <span class="n">redis</span><span class="o">.</span><span class="n">setex</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;session:</span><span class="si">{</span><span class="n">session_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">security</span><span class="o">.</span><span class="n">session_expiration_hours</span> <span class="o">*</span> <span class="mi">3600</span><span class="p">,</span>
+    <span class="n">user</span><span class="o">.</span><span class="n">id</span>
+<span class="p">)</span>
+
+<span class="c1"># Set secure cookie</span>
+<span class="n">response</span><span class="o">.</span><span class="n">set_cookie</span><span class="p">(</span>
+    <span class="n">key</span><span class="o">=</span><span class="s2">&quot;session_id&quot;</span><span class="p">,</span>
+    <span class="n">value</span><span class="o">=</span><span class="n">session_id</span><span class="p">,</span>  <span class="c1"># Only the random token</span>
+    <span class="n">httponly</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">secure</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># Always use HTTPS</span>
+    <span class="n">samesite</span><span class="o">=</span><span class="s2">&quot;strict&quot;</span><span class="p">,</span>  <span class="c1"># Prevent CSRF</span>
+    <span class="n">max_age</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">security</span><span class="o">.</span><span class="n">session_expiration_hours</span> <span class="o">*</span> <span class="mi">3600</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
+4. <strong>Remove</strong> user ID and JWT prefix from session cookie
+5. <strong>Implement</strong> session invalidation on logout</p>
+<p><strong>Verification</strong>:
+- Verify session IDs are cryptographically random (128+ bits entropy)
+- Confirm Redis storage is implemented and functioning
+- Test session invalidation on logout</p>
+<hr />
+<h3 id="crt-003-missing-https-enforcement-in-production">🚨 CRT-003: Missing HTTPS Enforcement in Production</h3>
+<p><strong>CVSS Score</strong>: 9.0 (Critical)
+<strong>OWASP</strong>: A05:2021 - Security Misconfiguration
+<strong>CWE</strong>: CWE-319 (Cleartext Transmission of Sensitive Information)</p>
+<p><strong>Location</strong>: <a href="../src/api/routes/auth.py#L121">src/api/routes/auth.py:121</a>, <a href="../src/api/routes/auth.py#L180">src/api/routes/auth.py:180</a></p>
+<p><strong>Description</strong>:
+Secure cookie flag is only enabled in production environment:
+<div class="highlight"><pre><span></span><code><span class="n">secure</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">environment</span> <span class="o">==</span> <span class="s2">&quot;production&quot;</span>
+</code></pre></div></p>
+<p>However, no middleware enforces HTTPS redirection, allowing HTTP in production if misconfigured.</p>
+<p><strong>Impact</strong>:
+- Session cookies transmitted over HTTP in cleartext
+- Man-in-the-middle attacks can intercept authentication tokens
+- Credentials exposed during login/registration
+- No protection against network eavesdropping</p>
+<p><strong>CVSS Vector</strong>: CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:C/C:H/I:H/A:N</p>
+<p><strong>Remediation</strong>:
+1. <strong>Add</strong> HTTPS redirect middleware in <a href="../src/main.py">src/main.py</a>:
+   <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fastapi.middleware.httpsredirect</span><span class="w"> </span><span class="kn">import</span> <span class="n">HTTPSRedirectMiddleware</span>
+
+<span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">environment</span> <span class="o">==</span> <span class="s2">&quot;production&quot;</span><span class="p">:</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">add_middleware</span><span class="p">(</span><span class="n">HTTPSRedirectMiddleware</span><span class="p">)</span>
+</code></pre></div>
+2. <strong>Enforce</strong> <code>secure=True</code> for all cookies regardless of environment
+3. <strong>Implement</strong> HSTS (HTTP Strict Transport Security) headers
+4. <strong>Add</strong> security headers middleware (see HIGH-001)
+5. <strong>Configure</strong> TLS/SSL at load balancer level (AWS ALB, Nginx, etc.)</p>
+<p><strong>Verification</strong>:
+- Test HTTP requests redirect to HTTPS
+- Verify HSTS header is present: <code>Strict-Transport-Security: max-age=31536000; includeSubDomains</code>
+- Confirm cookies are never sent over HTTP</p>
+<hr />
+<h2 id="high-severity-vulnerabilities-cvss-70-89">🟠 HIGH SEVERITY VULNERABILITIES (CVSS 7.0-8.9)</h2>
+<h3 id="high-001-missing-security-headers">HIGH-001: Missing Security Headers</h3>
+<p><strong>CVSS Score</strong>: 7.4 (High)
+<strong>OWASP</strong>: A05:2021 - Security Misconfiguration
+<strong>CWE</strong>: CWE-1021 (Improper Restriction of Rendered UI Layers)</p>
+<p><strong>Location</strong>: <a href="../src/main.py#L1-182">src/main.py</a></p>
+<p><strong>Description</strong>:
+Application lacks critical security headers:
+- ❌ <code>Content-Security-Policy</code> - No CSP to prevent XSS
+- ❌ <code>X-Frame-Options</code> - Vulnerable to clickjacking
+- ❌ <code>X-Content-Type-Options</code> - MIME sniffing attacks possible
+- ❌ <code>Referrer-Policy</code> - Information leakage via referrer
+- ❌ <code>Permissions-Policy</code> - No feature restrictions
+- ❌ <code>Strict-Transport-Security</code> - No HSTS enforcement</p>
+<p><strong>Impact</strong>:
+- Cross-Site Scripting (XSS) attacks
+- Clickjacking and UI redressing
+- MIME confusion attacks
+- Sensitive data leakage through referrer headers</p>
+<p><strong>Remediation</strong>:
+Create security headers middleware in <a href="../src/middleware/security_headers.py">src/middleware/security_headers.py</a>:</p>
+<div class="highlight"><pre><span></span><code><span class="sd">&quot;&quot;&quot;Security headers middleware&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">Request</span><span class="p">,</span> <span class="n">Response</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">starlette.middleware.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseHTTPMiddleware</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">SecurityHeadersMiddleware</span><span class="p">(</span><span class="n">BaseHTTPMiddleware</span><span class="p">):</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">dispatch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">,</span> <span class="n">call_next</span><span class="p">):</span>
+        <span class="n">response</span><span class="p">:</span> <span class="n">Response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">call_next</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+
+        <span class="c1"># Content Security Policy</span>
+        <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;Content-Security-Policy&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">&quot;default-src &#39;self&#39;; &quot;</span>
+            <span class="s2">&quot;script-src &#39;self&#39; &#39;unsafe-inline&#39; https://cdn.jsdelivr.net; &quot;</span>
+            <span class="s2">&quot;style-src &#39;self&#39; &#39;unsafe-inline&#39; https://fonts.googleapis.com; &quot;</span>
+            <span class="s2">&quot;font-src &#39;self&#39; https://fonts.gstatic.com; &quot;</span>
+            <span class="s2">&quot;img-src &#39;self&#39; data: https: blob:; &quot;</span>
+            <span class="s2">&quot;connect-src &#39;self&#39; https://bsc-dataseed.binance.org https://gateway.lighthouse.storage; &quot;</span>
+            <span class="s2">&quot;frame-ancestors &#39;none&#39;; &quot;</span>
+            <span class="s2">&quot;base-uri &#39;self&#39;; &quot;</span>
+            <span class="s2">&quot;form-action &#39;self&#39;;&quot;</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Clickjacking protection</span>
+        <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;X-Frame-Options&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;DENY&quot;</span>
+
+        <span class="c1"># MIME sniffing protection</span>
+        <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;X-Content-Type-Options&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;nosniff&quot;</span>
+
+        <span class="c1"># Referrer policy</span>
+        <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;Referrer-Policy&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;strict-origin-when-cross-origin&quot;</span>
+
+        <span class="c1"># Permissions policy</span>
+        <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;Permissions-Policy&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">&quot;geolocation=(), microphone=(), camera=()&quot;</span>
+        <span class="p">)</span>
+
+        <span class="c1"># HSTS (only in production with HTTPS)</span>
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">url</span><span class="o">.</span><span class="n">scheme</span> <span class="o">==</span> <span class="s2">&quot;https&quot;</span><span class="p">:</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;Strict-Transport-Security&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="s2">&quot;max-age=31536000; includeSubDomains; preload&quot;</span>
+            <span class="p">)</span>
+
+        <span class="c1"># XSS protection (legacy but still useful)</span>
+        <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;X-XSS-Protection&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;1; mode=block&quot;</span>
+
+        <span class="k">return</span> <span class="n">response</span>
+</code></pre></div>
+<p>Add to <a href="../src/main.py">src/main.py</a>:
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">src.middleware.security_headers</span><span class="w"> </span><span class="kn">import</span> <span class="n">SecurityHeadersMiddleware</span>
+
+<span class="n">app</span><span class="o">.</span><span class="n">add_middleware</span><span class="p">(</span><span class="n">SecurityHeadersMiddleware</span><span class="p">)</span>
+</code></pre></div></p>
+<p><strong>Verification</strong>:
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-I<span class="w"> </span>http://localhost:8000/health<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;^(Content-Security-Policy|X-Frame-Options|Strict-Transport-Security)&quot;</span>
+</code></pre></div></p>
+<hr />
+<h3 id="high-002-placeholder-oauth2-implementation">HIGH-002: Placeholder OAuth2 Implementation</h3>
+<p><strong>CVSS Score</strong>: 7.3 (High)
+<strong>OWASP</strong>: A07:2021 - Identification and Authentication Failures
+<strong>CWE</strong>: CWE-300 (Channel Accessible by Non-Endpoint)</p>
+<p><strong>Location</strong>: <a href="../src/api/routes/auth.py#L231-248">src/api/routes/auth.py:231-248</a></p>
+<p><strong>Description</strong>:
+OAuth2 routes are placeholders without implementation:
+<div class="highlight"><pre><span></span><code><span class="nd">@router</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/oauth/</span><span class="si">{provider}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">oauth_login</span><span class="p">(</span><span class="n">provider</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;OAuth2 login with </span><span class="si">{</span><span class="n">provider</span><span class="si">}</span><span class="s2"> - Implementation pending&quot;</span><span class="p">}</span>
+</code></pre></div></p>
+<p><strong>Impact</strong>:
+- OAuth2 endpoints exist but don't authenticate users
+- Potential for misconfiguration when implemented
+- Security-critical functionality marked as "TODO"
+- No CSRF protection for OAuth flows</p>
+<p><strong>Remediation</strong>:
+1. <strong>Remove</strong> placeholder OAuth2 routes until proper implementation
+2. <strong>Return 501 Not Implemented</strong> instead of 200 OK:
+   <div class="highlight"><pre><span></span><code><span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span>
+    <span class="n">status_code</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_501_NOT_IMPLEMENTED</span><span class="p">,</span>
+    <span class="n">detail</span><span class="o">=</span><span class="s2">&quot;OAuth2 authentication not yet available&quot;</span>
+<span class="p">)</span>
+</code></pre></div>
+3. <strong>When implementing</strong>, use proven OAuth2 library (Authlib):
+   <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">authlib.integrations.starlette_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">OAuth</span>
+
+<span class="n">oauth</span> <span class="o">=</span> <span class="n">OAuth</span><span class="p">()</span>
+<span class="n">oauth</span><span class="o">.</span><span class="n">register</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;meta&#39;</span><span class="p">,</span>
+    <span class="n">client_id</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">oauth_meta</span><span class="o">.</span><span class="n">client_id</span><span class="p">,</span>
+    <span class="n">client_secret</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">oauth_meta</span><span class="o">.</span><span class="n">client_secret</span><span class="p">,</span>
+    <span class="n">server_metadata_url</span><span class="o">=</span><span class="s1">&#39;https://www.facebook.com/.well-known/oauth-authorization-server&#39;</span><span class="p">,</span>
+    <span class="n">client_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;scope&#39;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">oauth_meta</span><span class="o">.</span><span class="n">scope</span><span class="p">},</span>
+<span class="p">)</span>
+</code></pre></div>
+4. <strong>Implement</strong> state parameter for CSRF protection
+5. <strong>Validate</strong> OAuth tokens server-side</p>
+<hr />
+<h3 id="high-003-weak-session-cookie-configuration">HIGH-003: Weak Session Cookie Configuration</h3>
+<p><strong>CVSS Score</strong>: 7.2 (High)
+<strong>OWASP</strong>: A07:2021 - Identification and Authentication Failures
+<strong>CWE</strong>: CWE-1004 (Sensitive Cookie Without 'HttpOnly' Flag)</p>
+<p><strong>Location</strong>: <a href="../src/api/routes/auth.py#L117-124">src/api/routes/auth.py:117-124</a>, <a href="../src/api/routes/auth.py#L176-183">src/api/routes/auth.py:176-183</a></p>
+<p><strong>Description</strong>:
+Session cookies use <code>samesite="lax"</code> instead of <code>"strict"</code>:
+<div class="highlight"><pre><span></span><code><span class="n">samesite</span><span class="o">=</span><span class="s2">&quot;lax&quot;</span><span class="p">,</span>  <span class="c1"># Should be &quot;strict&quot;</span>
+</code></pre></div></p>
+<p><strong>Impact</strong>:
+- Cross-Site Request Forgery (CSRF) attacks possible
+- Cookies sent on top-level GET navigations from external sites
+- Authentication tokens exposed to cross-origin requests</p>
+<p><strong>Remediation</strong>:
+1. <strong>Change</strong> <code>samesite</code> to <code>"strict"</code> for authentication cookies
+2. <strong>Implement</strong> CSRF token for state-changing operations
+3. <strong>Add</strong> CSRF middleware:
+   <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">starlette.middleware.csrf</span><span class="w"> </span><span class="kn">import</span> <span class="n">CSRFMiddleware</span>
+
+<span class="n">app</span><span class="o">.</span><span class="n">add_middleware</span><span class="p">(</span><span class="n">CSRFMiddleware</span><span class="p">,</span> <span class="n">secret</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">secret_key</span><span class="p">)</span>
+</code></pre></div>
+4. <strong>Update</strong> cookie configuration:
+   <div class="highlight"><pre><span></span><code><span class="n">response</span><span class="o">.</span><span class="n">set_cookie</span><span class="p">(</span>
+    <span class="n">key</span><span class="o">=</span><span class="s2">&quot;session_id&quot;</span><span class="p">,</span>
+    <span class="n">value</span><span class="o">=</span><span class="n">session_id</span><span class="p">,</span>
+    <span class="n">httponly</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">secure</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># Always true</span>
+    <span class="n">samesite</span><span class="o">=</span><span class="s2">&quot;strict&quot;</span><span class="p">,</span>  <span class="c1"># Changed from &quot;lax&quot;</span>
+    <span class="n">max_age</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">security</span><span class="o">.</span><span class="n">session_expiration_hours</span> <span class="o">*</span> <span class="mi">3600</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div></p>
+<hr />
+<h3 id="high-004-missing-rate-limiting-implementation">HIGH-004: Missing Rate Limiting Implementation</h3>
+<p><strong>CVSS Score</strong>: 7.1 (High)
+<strong>OWASP</strong>: A04:2021 - Insecure Design
+<strong>CWE</strong>: CWE-307 (Improper Restriction of Excessive Authentication Attempts)</p>
+<p><strong>Location</strong>: <a href="../src/core/config.py#L115-121">src/core/config.py:115-121</a></p>
+<p><strong>Description</strong>:
+Rate limiting is configured but not implemented:
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">RateLimitSettings</span><span class="p">(</span><span class="n">BaseSettings</span><span class="p">):</span>
+    <span class="n">anonymous_limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span>
+    <span class="n">authenticated_limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span>
+    <span class="n">moderator_limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5000</span>
+</code></pre></div></p>
+<p>No middleware or decorator enforces these limits.</p>
+<p><strong>Impact</strong>:
+- Brute force attacks on login endpoint
+- Account enumeration via registration
+- DDoS vulnerabilities
+- API abuse and resource exhaustion
+- No protection against automated attacks</p>
+<p><strong>Remediation</strong>:
+1. <strong>Install</strong> rate limiting library:
+   <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>slowapi
+</code></pre></div>
+2. <strong>Create</strong> rate limiting middleware in <a href="../src/middleware/rate_limit.py">src/middleware/rate_limit.py</a>:
+   <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">slowapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">Limiter</span><span class="p">,</span> <span class="n">_rate_limit_exceeded_handler</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">slowapi.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_remote_address</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">slowapi.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">RateLimitExceeded</span>
+
+<span class="n">limiter</span> <span class="o">=</span> <span class="n">Limiter</span><span class="p">(</span>
+    <span class="n">key_func</span><span class="o">=</span><span class="n">get_remote_address</span><span class="p">,</span>
+    <span class="n">default_limits</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;100/hour&quot;</span><span class="p">]</span>  <span class="c1"># Anonymous default</span>
+<span class="p">)</span>
+</code></pre></div>
+3. <strong>Add</strong> to <a href="../src/main.py">src/main.py</a>:
+   <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">slowapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">_rate_limit_exceeded_handler</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">slowapi.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">RateLimitExceeded</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.middleware.rate_limit</span><span class="w"> </span><span class="kn">import</span> <span class="n">limiter</span>
+
+<span class="n">app</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">limiter</span> <span class="o">=</span> <span class="n">limiter</span>
+<span class="n">app</span><span class="o">.</span><span class="n">add_exception_handler</span><span class="p">(</span><span class="n">RateLimitExceeded</span><span class="p">,</span> <span class="n">_rate_limit_exceeded_handler</span><span class="p">)</span>
+</code></pre></div>
+4. <strong>Apply</strong> limits to authentication endpoints:
+   <div class="highlight"><pre><span></span><code><span class="nd">@router</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/login&quot;</span><span class="p">)</span>
+<span class="nd">@limiter</span><span class="o">.</span><span class="n">limit</span><span class="p">(</span><span class="s2">&quot;5/minute&quot;</span><span class="p">)</span>  <span class="c1"># Strict for auth</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">login</span><span class="p">(</span><span class="o">...</span><span class="p">):</span>
+    <span class="o">...</span>
+</code></pre></div></p>
+<hr />
+<h3 id="high-005-no-input-validation-for-blockchain-addresses">HIGH-005: No Input Validation for Blockchain Addresses</h3>
+<p><strong>CVSS Score</strong>: 7.0 (High)
+<strong>OWASP</strong>: A03:2021 - Injection
+<strong>CWE</strong>: CWE-20 (Improper Input Validation)</p>
+<p><strong>Location</strong>: <a href="../src/models/user.py#L69-71">src/models/user.py:69-71</a>, <a href="../config.yaml#L61">config.yaml:61</a>, <a href="../config.yaml#L93">config.yaml:93</a></p>
+<p><strong>Description</strong>:
+BNB wallet addresses stored without validation:
+<div class="highlight"><pre><span></span><code><span class="n">bnb_wallet_address</span><span class="p">:</span> <span class="n">Mapped</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span>
+    <span class="n">String</span><span class="p">(</span><span class="mi">42</span><span class="p">),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+</code></pre></div></p>
+<p>Configuration allows placeholder addresses:
+<div class="highlight"><pre><span></span><code><span class="nt">recipient_address</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;0x0000000000000000000000000000000000000000&quot;</span>
+</code></pre></div></p>
+<p><strong>Impact</strong>:
+- Invalid addresses cause transaction failures
+- Funds sent to wrong addresses (irreversible on blockchain)
+- NULL address (0x000...000) is burn address - funds lost forever
+- No checksum validation allows typos</p>
+<p><strong>Remediation</strong>:
+1. <strong>Add</strong> Ethereum address validation:
+   <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">eth_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">is_address</span><span class="p">,</span> <span class="n">to_checksum_address</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_bnb_address</span><span class="p">(</span><span class="n">address</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_address</span><span class="p">(</span><span class="n">address</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid BNB Chain address&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">address</span> <span class="o">==</span> <span class="s2">&quot;0x0000000000000000000000000000000000000000&quot;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot use null address&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">to_checksum_address</span><span class="p">(</span><span class="n">address</span><span class="p">)</span>
+</code></pre></div>
+2. <strong>Add</strong> Pydantic validator to User model:
+   <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">field_validator</span>
+
+<span class="nd">@field_validator</span><span class="p">(</span><span class="s1">&#39;bnb_wallet_address&#39;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_wallet</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">validate_bnb_address</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">v</span>
+</code></pre></div>
+3. <strong>Validate</strong> recipient_address in configuration loading
+4. <strong>Reject</strong> null addresses in API endpoints</p>
+<hr />
+<h2 id="medium-severity-vulnerabilities-cvss-40-69">🟡 MEDIUM SEVERITY VULNERABILITIES (CVSS 4.0-6.9)</h2>
+<h3 id="med-001-missing-login-attempt-tracking">MED-001: Missing Login Attempt Tracking</h3>
+<p><strong>CVSS Score</strong>: 6.5 (Medium)
+<strong>OWASP</strong>: A07:2021 - Identification and Authentication Failures
+<strong>CWE</strong>: CWE-307 (Improper Restriction of Excessive Authentication Attempts)</p>
+<p><strong>Location</strong>: <a href="../src/api/routes/auth.py#L134-191">src/api/routes/auth.py:134-191</a></p>
+<p><strong>Description</strong>:
+Configuration defines max login attempts, but no tracking implemented:
+<div class="highlight"><pre><span></span><code><span class="n">max_login_attempts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">lockout_duration_minutes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span>
+</code></pre></div></p>
+<p>Login endpoint has no attempt counting or lockout logic.</p>
+<p><strong>Impact</strong>:
+- Brute force attacks on user accounts
+- No account lockout after failed attempts
+- Password guessing attacks</p>
+<p><strong>Remediation</strong>:
+1. <strong>Implement</strong> Redis-based attempt tracking:
+   <div class="highlight"><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">check_login_attempts</span><span class="p">(</span><span class="n">email</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">redis</span><span class="p">):</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;login_attempts:</span><span class="si">{</span><span class="n">email</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">attempts</span> <span class="o">=</span> <span class="k">await</span> <span class="n">redis</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">attempts</span> <span class="ow">and</span> <span class="nb">int</span><span class="p">(</span><span class="n">attempts</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">config</span><span class="o">.</span><span class="n">security</span><span class="o">.</span><span class="n">max_login_attempts</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span>
+            <span class="n">status_code</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_429_TOO_MANY_REQUESTS</span><span class="p">,</span>
+            <span class="n">detail</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Account locked. Try again in </span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="n">security</span><span class="o">.</span><span class="n">lockout_duration_minutes</span><span class="si">}</span><span class="s2"> minutes&quot;</span>
+        <span class="p">)</span>
+</code></pre></div>
+2. <strong>Increment</strong> on failed login
+3. <strong>Clear</strong> on successful login
+4. <strong>Set TTL</strong> for lockout duration</p>
+<hr />
+<h3 id="med-002-verbose-error-messages">MED-002: Verbose Error Messages</h3>
+<p><strong>CVSS Score</strong>: 5.3 (Medium)
+<strong>OWASP</strong>: A04:2021 - Insecure Design
+<strong>CWE</strong>: CWE-209 (Generation of Error Message Containing Sensitive Information)</p>
+<p><strong>Location</strong>: <a href="../src/api/routes/auth.py#L77-86">src/api/routes/auth.py:77-86</a></p>
+<p><strong>Description</strong>:
+Registration endpoint reveals whether username or email exists:
+<div class="highlight"><pre><span></span><code><span class="k">if</span> <span class="n">existing_user</span><span class="o">.</span><span class="n">username</span> <span class="o">==</span> <span class="n">data</span><span class="o">.</span><span class="n">username</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="n">detail</span><span class="o">=</span><span class="s2">&quot;Username already taken&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="n">detail</span><span class="o">=</span><span class="s2">&quot;Email already registered&quot;</span><span class="p">)</span>
+</code></pre></div></p>
+<p><strong>Impact</strong>:
+- Account enumeration - attackers can discover registered users
+- Email harvesting for phishing attacks
+- Username harvesting for targeted attacks</p>
+<p><strong>Remediation</strong>:
+Use generic error messages:
+<div class="highlight"><pre><span></span><code><span class="k">if</span> <span class="n">existing_user</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span>
+        <span class="n">status_code</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_400_BAD_REQUEST</span><span class="p">,</span>
+        <span class="n">detail</span><span class="o">=</span><span class="s2">&quot;Registration failed. Please try different credentials.&quot;</span>
+    <span class="p">)</span>
+</code></pre></div></p>
+<hr />
+<h3 id="med-003-missing-security-logging">MED-003: Missing Security Logging</h3>
+<p><strong>CVSS Score</strong>: 5.1 (Medium)
+<strong>OWASP</strong>: A09:2021 - Security Logging and Monitoring Failures
+<strong>CWE</strong>: CWE-778 (Insufficient Logging)</p>
+<p><strong>Description</strong>:
+No security event logging for:
+- Failed login attempts
+- Account lockouts
+- Privilege escalation attempts
+- Suspicious activities</p>
+<p><strong>Impact</strong>:
+- No audit trail for security incidents
+- Cannot detect ongoing attacks
+- Difficult to investigate breaches
+- No compliance with security standards</p>
+<p><strong>Remediation</strong>:
+1. <strong>Implement</strong> structured logging with security events
+2. <strong>Log</strong> authentication events (success/failure)
+3. <strong>Log</strong> authorization failures
+4. <strong>Log</strong> configuration changes
+5. <strong>Integrate</strong> with SIEM for monitoring</p>
+<hr />
+<h3 id="med-004-no-cors-origin-validation">MED-004: No CORS Origin Validation</h3>
+<p><strong>CVSS Score</strong>: 5.0 (Medium)
+<strong>OWASP</strong>: A05:2021 - Security Misconfiguration
+<strong>CWE</strong>: CWE-942 (Permissive Cross-domain Policy)</p>
+<p><strong>Location</strong>: <a href="../src/main.py#L79-85">src/main.py:79-85</a></p>
+<p><strong>Description</strong>:
+CORS allows all methods and headers without strict origin control:
+<div class="highlight"><pre><span></span><code><span class="n">allow_methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">],</span>
+<span class="n">allow_headers</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">],</span>
+</code></pre></div></p>
+<p><strong>Impact</strong>:
+- Overly permissive CORS policy
+- Potential for cross-origin attacks
+- No method restrictions</p>
+<p><strong>Remediation</strong>:
+<div class="highlight"><pre><span></span><code><span class="n">app</span><span class="o">.</span><span class="n">add_middleware</span><span class="p">(</span>
+    <span class="n">CORSMiddleware</span><span class="p">,</span>
+    <span class="n">allow_origins</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">cors_origins</span><span class="p">,</span>  <span class="c1"># Whitelist only</span>
+    <span class="n">allow_credentials</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">allow_methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="s2">&quot;POST&quot;</span><span class="p">,</span> <span class="s2">&quot;PUT&quot;</span><span class="p">,</span> <span class="s2">&quot;PATCH&quot;</span><span class="p">,</span> <span class="s2">&quot;DELETE&quot;</span><span class="p">],</span>  <span class="c1"># Explicit</span>
+    <span class="n">allow_headers</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Authorization&quot;</span><span class="p">,</span> <span class="s2">&quot;Content-Type&quot;</span><span class="p">],</span>  <span class="c1"># Explicit</span>
+    <span class="n">expose_headers</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;X-Total-Count&quot;</span><span class="p">],</span>
+    <span class="n">max_age</span><span class="o">=</span><span class="mi">3600</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div></p>
+<hr />
+<h3 id="med-005-static-files-without-security">MED-005: Static Files Without Security</h3>
+<p><strong>CVSS Score</strong>: 4.8 (Medium)
+<strong>OWASP</strong>: A05:2021 - Security Misconfiguration
+<strong>CWE</strong>: CWE-552 (Files or Directories Accessible to External Parties)</p>
+<p><strong>Location</strong>: <a href="../src/main.py#L122">src/main.py:122</a></p>
+<p><strong>Description</strong>:
+Static files mounted without access control:
+<div class="highlight"><pre><span></span><code><span class="n">app</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span><span class="s2">&quot;/static&quot;</span><span class="p">,</span> <span class="n">StaticFiles</span><span class="p">(</span><span class="n">directory</span><span class="o">=</span><span class="s2">&quot;static&quot;</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;static&quot;</span><span class="p">)</span>
+</code></pre></div></p>
+<p>No validation of <code>static/</code> directory contents.</p>
+<p><strong>Impact</strong>:
+- Directory traversal if misconfigured
+- Exposure of sensitive files
+- No file type restrictions</p>
+<p><strong>Remediation</strong>:
+1. <strong>Validate</strong> <code>static/</code> directory exists and contains only public assets
+2. <strong>Add</strong> <code>.htaccess</code> or Nginx rules to prevent directory listing
+3. <strong>Restrict</strong> file types served
+4. <strong>Use CDN</strong> for static assets in production</p>
+<hr />
+<h3 id="med-006-missing-email-verification">MED-006: Missing Email Verification</h3>
+<p><strong>CVSS Score</strong>: 4.7 (Medium)
+<strong>OWASP</strong>: A07:2021 - Identification and Authentication Failures
+<strong>CWE</strong>: CWE-620 (Unverified Password Change)</p>
+<p><strong>Location</strong>: <a href="../src/models/user.py#L76">src/models/user.py:76</a></p>
+<p><strong>Description</strong>:
+Email verification flag exists but not enforced:
+<div class="highlight"><pre><span></span><code><span class="n">email_verified</span><span class="p">:</span> <span class="n">Mapped</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">Boolean</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</code></pre></div></p>
+<p>Users can fully access platform without verifying email.</p>
+<p><strong>Impact</strong>:
+- Fake accounts with invalid emails
+- Spam and abuse
+- No way to contact users
+- Password reset vulnerabilities</p>
+<p><strong>Remediation</strong>:
+1. <strong>Send</strong> verification email on registration
+2. <strong>Require</strong> email verification before certain actions
+3. <strong>Implement</strong> verification token system
+4. <strong>Add</strong> resend verification endpoint</p>
+<hr />
+<h3 id="med-007-jwt-algorithm-not-explicitly-validated">MED-007: JWT Algorithm Not Explicitly Validated</h3>
+<p><strong>CVSS Score</strong>: 4.5 (Medium)
+<strong>OWASP</strong>: A02:2021 - Cryptographic Failures
+<strong>CWE</strong>: CWE-347 (Improper Verification of Cryptographic Signature)</p>
+<p><strong>Location</strong>: <a href="../src/core/security.py#L77-81">src/core/security.py:77-81</a></p>
+<p><strong>Description</strong>:
+JWT verification doesn't explicitly prevent algorithm confusion:
+<div class="highlight"><pre><span></span><code><span class="n">payload</span> <span class="o">=</span> <span class="n">jwt</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span>
+    <span class="n">token</span><span class="p">,</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">security</span><span class="o">.</span><span class="n">jwt_secret_key</span><span class="p">,</span>
+    <span class="n">algorithms</span><span class="o">=</span><span class="p">[</span><span class="n">config</span><span class="o">.</span><span class="n">security</span><span class="o">.</span><span class="n">jwt_algorithm</span><span class="p">],</span>
+<span class="p">)</span>
+</code></pre></div></p>
+<p>Should explicitly reject "none" algorithm.</p>
+<p><strong>Impact</strong>:
+- Potential algorithm substitution attacks
+- JWT "none" algorithm bypass</p>
+<p><strong>Remediation</strong>:
+<div class="highlight"><pre><span></span><code><span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">security</span><span class="o">.</span><span class="n">jwt_algorithm</span> <span class="o">==</span> <span class="s2">&quot;none&quot;</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;JWT algorithm &#39;none&#39; is not allowed&quot;</span><span class="p">)</span>
+
+<span class="n">payload</span> <span class="o">=</span> <span class="n">jwt</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span>
+    <span class="n">token</span><span class="p">,</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">security</span><span class="o">.</span><span class="n">jwt_secret_key</span><span class="p">,</span>
+    <span class="n">algorithms</span><span class="o">=</span><span class="p">[</span><span class="n">config</span><span class="o">.</span><span class="n">security</span><span class="o">.</span><span class="n">jwt_algorithm</span><span class="p">],</span>
+    <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;verify_signature&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;require&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;exp&quot;</span><span class="p">,</span> <span class="s2">&quot;iat&quot;</span><span class="p">,</span> <span class="s2">&quot;sub&quot;</span><span class="p">]}</span>
+<span class="p">)</span>
+</code></pre></div></p>
+<hr />
+<h3 id="med-008-datetimeutcnow-deprecated">MED-008: datetime.utcnow() Deprecated</h3>
+<p><strong>CVSS Score</strong>: 4.0 (Medium)
+<strong>OWASP</strong>: A08:2021 - Software and Data Integrity Failures
+<strong>CWE</strong>: CWE-477 (Use of Obsolete Function)</p>
+<p><strong>Location</strong>: <a href="../src/core/security.py#L56">src/core/security.py:56</a>, <a href="../src/api/routes/auth.py#L96">src/api/routes/auth.py:96</a>, <a href="../src/api/routes/auth.py#L169">src/api/routes/auth.py:169</a></p>
+<p><strong>Description</strong>:
+Uses deprecated <code>datetime.utcnow()</code> instead of timezone-aware <code>datetime.now(timezone.utc)</code>.</p>
+<p><strong>Impact</strong>:
+- Timezone confusion issues
+- Potential timing attacks
+- Future Python version incompatibility</p>
+<p><strong>Remediation</strong>:
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
+
+<span class="c1"># Replace all occurrences</span>
+<span class="n">expire</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">security</span><span class="o">.</span><span class="n">jwt_expiration_minutes</span><span class="p">)</span>
+</code></pre></div></p>
+<hr />
+<h2 id="low-severity-findings-cvss-01-39">🟢 LOW SEVERITY FINDINGS (CVSS 0.1-3.9)</h2>
+<h3 id="low-001-debug-mode-in-production-configuration">LOW-001: Debug Mode in Production Configuration</h3>
+<p><strong>CVSS Score</strong>: 3.1 (Low)
+<strong>Location</strong>: <a href="../config.yaml#L7">config.yaml:7</a></p>
+<p><strong>Description</strong>: Default config has <code>debug: true</code> which may expose stack traces.</p>
+<p><strong>Remediation</strong>: Ensure production configs set <code>debug: false</code>.</p>
+<hr />
+<h3 id="low-002-database-echo-enabled-in-local-config">LOW-002: Database Echo Enabled in Local Config</h3>
+<p><strong>CVSS Score</strong>: 2.7 (Low)
+<strong>Location</strong>: <a href="../config.local.yaml#L14">config.local.yaml:14</a></p>
+<p><strong>Description</strong>: SQL query logging enabled in local config:
+<div class="highlight"><pre><span></span><code><span class="nt">echo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</code></pre></div></p>
+<p><strong>Impact</strong>: Performance overhead, potential sensitive data in logs.</p>
+<p><strong>Remediation</strong>: Set <code>echo: false</code> in production.</p>
+<hr />
+<h3 id="low-003-missing-api-versioning-strategy">LOW-003: Missing API Versioning Strategy</h3>
+<p><strong>CVSS Score</strong>: 2.0 (Low)
+<strong>Location</strong>: <a href="../src/main.py#L143">src/main.py:143</a></p>
+<p><strong>Description</strong>: API uses <code>/api/v1</code> prefix but no version management strategy documented.</p>
+<p><strong>Remediation</strong>: Document API versioning and deprecation policy.</p>
+<hr />
+<h3 id="low-004-todo-comments-in-security-critical-code">LOW-004: TODO Comments in Security-Critical Code</h3>
+<p><strong>CVSS Score</strong>: 1.5 (Low)
+<strong>Location</strong>: <a href="../src/api/dependencies/auth.py#L36">src/api/dependencies/auth.py:36</a></p>
+<p><strong>Description</strong>: Placeholder session validation:
+<div class="highlight"><pre><span></span><code><span class="c1"># TODO: Implement Redis session lookup</span>
+<span class="c1"># For now, decode session_id as user_id (simplified)</span>
+</code></pre></div></p>
+<p><strong>Remediation</strong>: Implement proper session storage before production.</p>
+<hr />
+<h2 id="dependency-vulnerability-scan">📦 Dependency Vulnerability Scan</h2>
+<h3 id="scan-results">Scan Results</h3>
+<p><strong>Tool</strong>: pip-audit / safety (manual review)
+<strong>Date</strong>: 2025-10-22</p>
+<table>
+<thead>
+<tr>
+<th>Package</th>
+<th>Version</th>
+<th>Known CVEs</th>
+<th>Severity</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>fastapi</td>
+<td>0.115.0</td>
+<td>0</td>
+<td>-</td>
+<td>✅ Clean</td>
+</tr>
+<tr>
+<td>uvicorn</td>
+<td>0.32.0</td>
+<td>0</td>
+<td>-</td>
+<td>✅ Clean</td>
+</tr>
+<tr>
+<td>sqlalchemy</td>
+<td>2.0.36</td>
+<td>0</td>
+<td>-</td>
+<td>✅ Clean</td>
+</tr>
+<tr>
+<td>pydantic</td>
+<td>2.9.0</td>
+<td>0</td>
+<td>-</td>
+<td>✅ Clean</td>
+</tr>
+<tr>
+<td>python-jose</td>
+<td>3.3.0</td>
+<td>0</td>
+<td>-</td>
+<td>✅ Clean</td>
+</tr>
+<tr>
+<td>passlib</td>
+<td>1.7.4</td>
+<td>0</td>
+<td>-</td>
+<td>✅ Clean</td>
+</tr>
+<tr>
+<td>web3</td>
+<td>7.5.0</td>
+<td>0</td>
+<td>-</td>
+<td>✅ Clean</td>
+</tr>
+<tr>
+<td>bleach</td>
+<td>6.2.0</td>
+<td>0</td>
+<td>-</td>
+<td>✅ Clean</td>
+</tr>
+<tr>
+<td>pillow</td>
+<td>11.0.0</td>
+<td>0</td>
+<td>-</td>
+<td>✅ Clean</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Recommendation</strong>: Run automated dependency scanning in CI/CD pipeline:
+<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>pip-audit
+pip-audit
+</code></pre></div></p>
+<hr />
+<h2 id="owasp-top-102021-detailed-analysis">🛡️ OWASP Top 10:2021 Detailed Analysis</h2>
+<h3 id="a012021-broken-access-control-2-findings">A01:2021 - Broken Access Control ⚠️ 2 findings</h3>
+<p><strong>Status</strong>: 🟠 High Risk</p>
+<p><strong>Findings</strong>:
+1. <strong>HIGH-003</strong>: Weak session cookie configuration allows CSRF
+2. <strong>MED-001</strong>: No login attempt tracking allows account takeover</p>
+<p><strong>Assessment</strong>:
+- Authorization checks exist for moderator/admin routes ✅
+- Session management has weaknesses ⚠️
+- No horizontal privilege escalation vulnerabilities found ✅</p>
+<p><strong>Recommendations</strong>:
+- Implement strict SameSite cookies
+- Add CSRF tokens
+- Enforce login attempt limits</p>
+<hr />
+<h3 id="a022021-cryptographic-failures-3-findings">A02:2021 - Cryptographic Failures 🔴 3 findings</h3>
+<p><strong>Status</strong>: 🔴 Critical</p>
+<p><strong>Findings</strong>:
+1. <strong>CRT-001</strong>: Hardcoded secrets in config files
+2. <strong>MED-007</strong>: JWT algorithm validation incomplete
+3. <strong>LOW-001</strong>: Debug mode may expose sensitive data</p>
+<p><strong>Assessment</strong>:
+- ✅ Bcrypt password hashing implemented correctly
+- ✅ JWT tokens used for authentication
+- 🔴 Secrets management critically flawed
+- ✅ TLS/HTTPS configuration present (but not enforced)</p>
+<p><strong>Recommendations</strong>:
+- <strong>IMMEDIATE</strong>: Move secrets to environment variables
+- Rotate all compromised secrets
+- Implement secret management service
+- Enforce HTTPS in all environments</p>
+<hr />
+<h3 id="a032021-injection-clean">A03:2021 - Injection ✅ Clean</h3>
+<p><strong>Status</strong>: ✅ Clean</p>
+<p><strong>Assessment</strong>:
+- ✅ SQLAlchemy ORM prevents SQL injection
+- ✅ Parameterized queries used throughout
+- ✅ Input validation via Pydantic models
+- ✅ No raw SQL queries found
+- ✅ <code>bleach</code> library included for HTML sanitization</p>
+<p><strong>Recommendations</strong>:
+- Continue using ORM for all database operations
+- Implement HTML sanitization for user-generated content when rendered
+- Add input length limits</p>
+<hr />
+<h3 id="a042021-insecure-design-2-findings">A04:2021 - Insecure Design ⚠️ 2 findings</h3>
+<p><strong>Status</strong>: 🟠 Medium Risk</p>
+<p><strong>Findings</strong>:
+1. <strong>HIGH-004</strong>: Missing rate limiting implementation
+2. <strong>MED-002</strong>: Verbose error messages enable enumeration</p>
+<p><strong>Assessment</strong>:
+- ⚠️ Rate limiting configured but not enforced
+- ⚠️ Account enumeration possible
+- ✅ Secure design patterns generally followed</p>
+<p><strong>Recommendations</strong>:
+- Implement slowapi rate limiting
+- Use generic error messages
+- Add monitoring and alerts</p>
+<hr />
+<h3 id="a052021-security-misconfiguration-6-findings">A05:2021 - Security Misconfiguration 🔴 6 findings</h3>
+<p><strong>Status</strong>: 🔴 Critical</p>
+<p><strong>Findings</strong>:
+1. <strong>CRT-003</strong>: Missing HTTPS enforcement
+2. <strong>HIGH-001</strong>: Missing security headers
+3. <strong>MED-004</strong>: Overly permissive CORS
+4. <strong>MED-005</strong>: Static files without security
+5. <strong>LOW-001</strong>: Debug mode in production config
+6. <strong>LOW-002</strong>: Database echo in local config</p>
+<p><strong>Assessment</strong>:
+- 🔴 Critical security headers missing
+- 🔴 HTTPS not enforced
+- ⚠️ CORS too permissive
+- ⚠️ Environment-specific configs need review</p>
+<p><strong>Recommendations</strong>:
+- Add security headers middleware (HIGH priority)
+- Enforce HTTPS redirection
+- Strict CORS configuration
+- Separate production configs</p>
+<hr />
+<h3 id="a062021-vulnerable-and-outdated-components-clean">A06:2021 - Vulnerable and Outdated Components ✅ Clean</h3>
+<p><strong>Status</strong>: ✅ Clean</p>
+<p><strong>Assessment</strong>:
+- ✅ All dependencies are recent versions
+- ✅ No known CVEs in dependency scan
+- ✅ Python 3.11+ requirement is current</p>
+<p><strong>Recommendations</strong>:
+- Implement automated dependency scanning (Dependabot, Snyk)
+- Regular update schedule
+- Pin versions in production</p>
+<hr />
+<h3 id="a072021-identification-and-authentication-failures-4-findings">A07:2021 - Identification and Authentication Failures 🔴 4 findings</h3>
+<p><strong>Status</strong>: 🔴 Critical</p>
+<p><strong>Findings</strong>:
+1. <strong>CRT-002</strong>: Insecure session token generation
+2. <strong>HIGH-002</strong>: Placeholder OAuth2 implementation
+3. <strong>HIGH-003</strong>: Weak cookie configuration
+4. <strong>MED-001</strong>: Missing login attempt tracking
+5. <strong>MED-006</strong>: No email verification enforcement</p>
+<p><strong>Assessment</strong>:
+- 🔴 Session management critically flawed
+- 🔴 OAuth2 not implemented
+- ⚠️ Password hashing is correct (bcrypt) ✅
+- ⚠️ JWT implementation needs hardening</p>
+<p><strong>Recommendations</strong>:
+- <strong>IMMEDIATE</strong>: Fix session token generation
+- Remove or properly implement OAuth2
+- Strengthen cookie security
+- Add account lockout
+- Enforce email verification</p>
+<hr />
+<h3 id="a082021-software-and-data-integrity-failures-1-finding">A08:2021 - Software and Data Integrity Failures ⚠️ 1 finding</h3>
+<p><strong>Status</strong>: 🟢 Low Risk</p>
+<p><strong>Findings</strong>:
+1. <strong>MED-008</strong>: Using deprecated datetime.utcnow()</p>
+<p><strong>Assessment</strong>:
+- ✅ No unsigned code execution
+- ✅ Dependencies from trusted sources
+- ⚠️ Minor code quality issue</p>
+<p><strong>Recommendations</strong>:
+- Update to timezone-aware datetime
+- Implement software bill of materials (SBOM)</p>
+<hr />
+<h3 id="a092021-security-logging-and-monitoring-failures-2-findings">A09:2021 - Security Logging and Monitoring Failures ⚠️ 2 findings</h3>
+<p><strong>Status</strong>: 🟡 Medium Risk</p>
+<p><strong>Findings</strong>:
+1. <strong>MED-003</strong>: Missing security logging
+2. <strong>Insufficient monitoring</strong> of security events</p>
+<p><strong>Assessment</strong>:
+- ❌ No security event logging
+- ❌ No failed login tracking
+- ❌ No audit trail</p>
+<p><strong>Recommendations</strong>:
+- Implement structured logging
+- Log security events
+- Integrate with monitoring tools (Prometheus, Grafana)
+- Set up alerts for suspicious activities</p>
+<hr />
+<h3 id="a102021-server-side-request-forgery-ssrf-clean">A10:2021 - Server-Side Request Forgery (SSRF) ✅ Clean</h3>
+<p><strong>Status</strong>: ✅ Clean</p>
+<p><strong>Assessment</strong>:
+- ✅ No user-controlled URLs
+- ✅ No URL fetching from user input
+- ✅ External API calls are to trusted endpoints (BNB Chain RPC, IPFS)</p>
+<p><strong>Recommendations</strong>:
+- Validate and whitelist external URLs if added
+- Implement URL allowlist for blockchain RPC endpoints</p>
+<hr />
+<h2 id="remediation-roadmap">🎯 Remediation Roadmap</h2>
+<h3 id="phase-1-critical-immediate-1-2-days">🔴 <strong>Phase 1: Critical (IMMEDIATE - 1-2 days)</strong></h3>
+<h4 id="priority-1-secrets-management">Priority 1: Secrets Management</h4>
+<ul>
+<li>[ ] <strong>CRT-001</strong>: Move all secrets to environment variables</li>
+<li>[ ] Create <code>.env.example</code> template</li>
+<li>[ ] Update documentation for secret configuration</li>
+<li>[ ] Rotate all compromised secrets</li>
+<li>[ ] Verify <code>.gitignore</code> excludes all config files with secrets</li>
+</ul>
+<p><strong>Files to modify</strong>:
+- <a href="../src/core/config.py">src/core/config.py</a> - Use environment variables
+- <a href="../config.local.yaml">config.local.yaml</a> - Remove hardcoded secrets
+- Create <code>.env.example</code></p>
+<p><strong>Verification</strong>:
+<div class="highlight"><pre><span></span><code>grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;dev-secret-key&quot;</span><span class="w"> </span>.<span class="w"> </span>--exclude-dir<span class="o">=</span>.venv
+<span class="c1"># Should return no results after fix</span>
+</code></pre></div></p>
+<hr />
+<h4 id="priority-2-session-management">Priority 2: Session Management</h4>
+<ul>
+<li>[ ] <strong>CRT-002</strong>: Implement Redis-based session storage</li>
+<li>[ ] Replace session_id format with cryptographically random tokens</li>
+<li>[ ] Add session invalidation on logout</li>
+<li>[ ] Implement session timeout and renewal</li>
+</ul>
+<p><strong>Files to modify</strong>:
+- <a href="../src/api/routes/auth.py">src/api/routes/auth.py</a> - Fix session generation
+- <a href="../src/api/dependencies/auth.py">src/api/dependencies/auth.py</a> - Implement Redis lookup
+- <a href="../src/core/security.py">src/core/security.py</a> - Add session utilities</p>
+<p><strong>Implementation</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># src/core/session.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">secrets</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">timedelta</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">redis.asyncio</span><span class="w"> </span><span class="kn">import</span> <span class="n">Redis</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.core.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">config</span>
+
+<span class="n">redis_client</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Redis</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">init_redis</span><span class="p">():</span>
+    <span class="k">global</span> <span class="n">redis_client</span>
+    <span class="n">redis_client</span> <span class="o">=</span> <span class="n">Redis</span><span class="o">.</span><span class="n">from_url</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">redis</span><span class="o">.</span><span class="n">url</span><span class="p">))</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">create_session</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">session_id</span> <span class="o">=</span> <span class="n">secrets</span><span class="o">.</span><span class="n">token_urlsafe</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span>
+    <span class="k">await</span> <span class="n">redis_client</span><span class="o">.</span><span class="n">setex</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;session:</span><span class="si">{</span><span class="n">session_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">security</span><span class="o">.</span><span class="n">session_expiration_hours</span><span class="p">),</span>
+        <span class="n">user_id</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">session_id</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_session</span><span class="p">(</span><span class="n">session_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+    <span class="n">user_id</span> <span class="o">=</span> <span class="k">await</span> <span class="n">redis_client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;session:</span><span class="si">{</span><span class="n">session_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span> <span class="k">if</span> <span class="n">user_id</span> <span class="k">else</span> <span class="kc">None</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">delete_session</span><span class="p">(</span><span class="n">session_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">await</span> <span class="n">redis_client</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;session:</span><span class="si">{</span><span class="n">session_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div></p>
+<hr />
+<h4 id="priority-3-https-enforcement">Priority 3: HTTPS Enforcement</h4>
+<ul>
+<li>[ ] <strong>CRT-003</strong>: Add HTTPS redirect middleware</li>
+<li>[ ] Enforce <code>secure=True</code> for all cookies</li>
+<li>[ ] Add HSTS headers</li>
+<li>[ ] Configure TLS/SSL certificates</li>
+</ul>
+<p><strong>Files to modify</strong>:
+- <a href="../src/main.py">src/main.py</a> - Add HTTPS middleware
+- <a href="../src/api/routes/auth.py">src/api/routes/auth.py</a> - Force secure cookies</p>
+<hr />
+<h3 id="phase-2-high-severity-3-5-days">🟠 <strong>Phase 2: High Severity (3-5 days)</strong></h3>
+<h4 id="priority-4-security-headers">Priority 4: Security Headers</h4>
+<ul>
+<li>[ ] <strong>HIGH-001</strong>: Create security headers middleware</li>
+<li>[ ] Add CSP, X-Frame-Options, HSTS, etc.</li>
+<li>[ ] Test headers in all environments</li>
+</ul>
+<p><strong>Files to create</strong>:
+- <a href="../src/middleware/security_headers.py">src/middleware/security_headers.py</a></p>
+<hr />
+<h4 id="priority-5-oauth2-and-rate-limiting">Priority 5: OAuth2 and Rate Limiting</h4>
+<ul>
+<li>[ ] <strong>HIGH-002</strong>: Remove or implement OAuth2 properly</li>
+<li>[ ] <strong>HIGH-004</strong>: Implement rate limiting with slowapi</li>
+<li>[ ] <strong>MED-001</strong>: Add login attempt tracking</li>
+</ul>
+<p><strong>Files to modify</strong>:
+- <a href="../src/api/routes/auth.py">src/api/routes/auth.py</a> - OAuth2 + rate limits
+- Create <a href="../src/middleware/rate_limit.py">src/middleware/rate_limit.py</a></p>
+<hr />
+<h4 id="priority-6-authentication-hardening">Priority 6: Authentication Hardening</h4>
+<ul>
+<li>[ ] <strong>HIGH-003</strong>: Change SameSite to "strict"</li>
+<li>[ ] <strong>HIGH-005</strong>: Add blockchain address validation</li>
+<li>[ ] <strong>MED-006</strong>: Enforce email verification</li>
+<li>[ ] <strong>MED-007</strong>: Strengthen JWT validation</li>
+</ul>
+<p><strong>Files to modify</strong>:
+- <a href="../src/api/routes/auth.py">src/api/routes/auth.py</a> - Cookie settings
+- <a href="../src/models/user.py">src/models/user.py</a> - Address validation
+- <a href="../src/core/security.py">src/core/security.py</a> - JWT hardening</p>
+<hr />
+<h3 id="phase-3-medium-severity-1-week">🟡 <strong>Phase 3: Medium Severity (1 week)</strong></h3>
+<h4 id="priority-7-error-handling-and-logging">Priority 7: Error Handling and Logging</h4>
+<ul>
+<li>[ ] <strong>MED-002</strong>: Generic error messages</li>
+<li>[ ] <strong>MED-003</strong>: Implement security logging</li>
+<li>[ ] Add structured logging with security events</li>
+</ul>
+<p><strong>Files to create</strong>:
+- <a href="../src/core/logging.py">src/core/logging.py</a> - Security logger</p>
+<hr />
+<h4 id="priority-8-configuration-hardening">Priority 8: Configuration Hardening</h4>
+<ul>
+<li>[ ] <strong>MED-004</strong>: Strict CORS configuration</li>
+<li>[ ] <strong>MED-005</strong>: Static file security</li>
+<li>[ ] <strong>MED-008</strong>: Update to timezone-aware datetime</li>
+</ul>
+<p><strong>Files to modify</strong>:
+- <a href="../src/main.py">src/main.py</a> - CORS and static files
+- All files using <code>datetime.utcnow()</code></p>
+<hr />
+<h3 id="phase-4-low-severity-best-practices-ongoing">🟢 <strong>Phase 4: Low Severity &amp; Best Practices (Ongoing)</strong></h3>
+<ul>
+<li>[ ] <strong>LOW-001</strong>: Ensure debug=false in production</li>
+<li>[ ] <strong>LOW-002</strong>: Database echo settings</li>
+<li>[ ] <strong>LOW-003</strong>: API versioning documentation</li>
+<li>[ ] <strong>LOW-004</strong>: Complete all TODO items</li>
+<li>[ ] Set up automated dependency scanning</li>
+<li>[ ] Implement monitoring and alerting</li>
+</ul>
+<hr />
+<h2 id="security-best-practices-recommendations">🔧 Security Best Practices Recommendations</h2>
+<h3 id="1-development-workflow">1. Development Workflow</h3>
+<ul>
+<li>[ ] Add pre-commit hooks for secret scanning (detect-secrets, trufflehog)</li>
+<li>[ ] Implement code review process with security checklist</li>
+<li>[ ] Require security testing before merge to main</li>
+</ul>
+<h3 id="2-cicd-pipeline">2. CI/CD Pipeline</h3>
+<ul>
+<li>[ ] Add SAST (Static Application Security Testing)</li>
+<li>[ ] Implement dependency vulnerability scanning (pip-audit, Snyk)</li>
+<li>[ ] Add DAST (Dynamic Application Security Testing) in staging</li>
+<li>[ ] Container scanning if using Docker</li>
+</ul>
+<h3 id="3-production-deployment">3. Production Deployment</h3>
+<ul>
+<li>[ ] Use Web Application Firewall (AWS WAF, Cloudflare)</li>
+<li>[ ] Implement DDoS protection</li>
+<li>[ ] Set up security monitoring and SIEM</li>
+<li>[ ] Regular penetration testing</li>
+<li>[ ] Incident response plan</li>
+</ul>
+<h3 id="4-data-protection">4. Data Protection</h3>
+<ul>
+<li>[ ] Encrypt sensitive data at rest (user emails, wallet addresses)</li>
+<li>[ ] Implement data retention policies</li>
+<li>[ ] GDPR compliance for EU users</li>
+<li>[ ] Regular backups with encryption</li>
+</ul>
+<h3 id="5-blockchain-security">5. Blockchain Security</h3>
+<ul>
+<li>[ ] Multi-signature wallets for admin operations</li>
+<li>[ ] Transaction signing on client-side only</li>
+<li>[ ] Never store private keys on server</li>
+<li>[ ] Implement withdrawal limits and confirmations</li>
+<li>[ ] Monitor blockchain for unusual activities</li>
+</ul>
+<hr />
+<h2 id="security-checklist-for-production">📋 Security Checklist for Production</h2>
+<h3 id="pre-deployment">Pre-Deployment</h3>
+<ul>
+<li>[ ] All critical vulnerabilities fixed (CRT-001, CRT-002, CRT-003)</li>
+<li>[ ] Security headers implemented and tested</li>
+<li>[ ] HTTPS enforced across all endpoints</li>
+<li>[ ] Rate limiting active</li>
+<li>[ ] Session management secure</li>
+<li>[ ] All secrets in environment variables</li>
+<li>[ ] Debug mode disabled</li>
+<li>[ ] Error messages sanitized</li>
+<li>[ ] Logging configured and tested</li>
+<li>[ ] Monitoring and alerts set up</li>
+</ul>
+<h3 id="post-deployment">Post-Deployment</h3>
+<ul>
+<li>[ ] Security monitoring dashboard reviewed</li>
+<li>[ ] Penetration testing completed</li>
+<li>[ ] Security audit passed</li>
+<li>[ ] Incident response plan tested</li>
+<li>[ ] Team trained on security procedures</li>
+<li>[ ] Compliance documentation complete</li>
+</ul>
+<hr />
+<h2 id="testing-recommendations">🔍 Testing Recommendations</h2>
+<h3 id="security-testing-suite">Security Testing Suite</h3>
+<ol>
+<li>
+<p><strong>Authentication Testing</strong>
+   <div class="highlight"><pre><span></span><code><span class="c1"># Test JWT expiration</span>
+<span class="c1"># Test session invalidation</span>
+<span class="c1"># Test password reset flow</span>
+<span class="c1"># Test OAuth2 flows (when implemented)</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Authorization Testing</strong>
+   <div class="highlight"><pre><span></span><code><span class="c1"># Test horizontal privilege escalation</span>
+<span class="c1"># Test vertical privilege escalation</span>
+<span class="c1"># Test moderator/admin access controls</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Input Validation</strong>
+   <div class="highlight"><pre><span></span><code><span class="c1"># Test SQL injection (should fail with ORM)</span>
+<span class="c1"># Test XSS (should be blocked by CSP)</span>
+<span class="c1"># Test blockchain address validation</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Security Headers</strong>
+   <div class="highlight"><pre><span></span><code><span class="c1"># Use securityheaders.com or Mozilla Observatory</span>
+curl<span class="w"> </span>-I<span class="w"> </span>https://your-domain.com<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;^(Content-Security-Policy|X-Frame-Options|Strict-Transport-Security)&quot;</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Rate Limiting</strong>
+   <div class="highlight"><pre><span></span><code><span class="c1"># Test login rate limits</span>
+<span class="c1"># Test API rate limits</span>
+<span class="c1"># Verify lockout behavior</span>
+</code></pre></div></p>
+</li>
+</ol>
+<hr />
+<h2 id="security-contact">📞 Security Contact</h2>
+<p><strong>Security Agent</strong>: security@decentralized-forum.example
+<strong>Responsible Disclosure</strong>: security-disclosure@decentralized-forum.example
+<strong>Bug Bounty</strong>: TBD (recommended to implement)</p>
+<hr />
+<h2 id="references">📚 References</h2>
+<h3 id="security-standards">Security Standards</h3>
+<ul>
+<li><strong>OWASP Top 10:2021</strong>: https://owasp.org/www-project-top-ten/</li>
+<li><strong>NIST Cybersecurity Framework 2.0</strong>: https://www.nist.gov/cyberframework</li>
+<li><strong>CWE Top 25</strong>: https://cwe.mitre.org/top25/</li>
+<li><strong>OWASP Smart Contract Top 10</strong>: https://owasp.org/www-project-smart-contract-top-10/</li>
+</ul>
+<h3 id="framework-specific-security">Framework-Specific Security</h3>
+<ul>
+<li><strong>FastAPI Security</strong>: https://fastapi.tiangolo.com/tutorial/security/</li>
+<li><strong>SQLAlchemy Security</strong>: https://docs.sqlalchemy.org/en/20/faq/security.html</li>
+<li><strong>Web3.py Best Practices</strong>: https://web3py.readthedocs.io/en/stable/</li>
+</ul>
+<h3 id="tools">Tools</h3>
+<ul>
+<li><strong>SAST</strong>: Bandit, Semgrep, SonarQube</li>
+<li><strong>DAST</strong>: OWASP ZAP, Burp Suite</li>
+<li><strong>Dependency Scanning</strong>: pip-audit, Safety, Snyk</li>
+<li><strong>Secret Scanning</strong>: detect-secrets, trufflehog, GitGuardian</li>
+</ul>
+<hr />
+<h2 id="conclusion">🎯 Conclusion</h2>
+<p><strong>Overall Security Posture</strong>: 🟡 <strong>Medium Risk</strong> (72/100)</p>
+<p><strong>Critical Findings</strong>: 3 vulnerabilities must be fixed before production
+<strong>Production Readiness</strong>: 🚫 <strong>BLOCKED</strong> - Requires immediate remediation</p>
+<p><strong>Estimated Remediation Time</strong>:
+- <strong>Phase 1 (Critical)</strong>: 1-2 days
+- <strong>Phase 2 (High)</strong>: 3-5 days
+- <strong>Phase 3 (Medium)</strong>: 1 week
+- <strong>Phase 4 (Low)</strong>: Ongoing</p>
+<p><strong>Recommendation</strong>: <strong>ROLLBACK TO DEVELOP AGENT</strong> to implement critical fixes before proceeding to Compliance Agent.</p>
+<hr />
+<p><strong>Report Generated</strong>: 2025-10-22 12:00:00
+<strong>Security Agent</strong>: Security Agent v1.0
+<strong>Next Review</strong>: After critical vulnerabilities remediated
+<strong>Next Agent</strong>: Compliance Agent (BLOCKED until fixes complete)</p>
+<hr />
+<p><em>This report is confidential and should be shared only with authorized personnel.</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "search.suggest", "content.code.copy"], "search": "../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+    
+  </body>
+</html>
