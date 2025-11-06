@@ -9,7 +9,8 @@ application:
 
 database:
   # Supabase PostgreSQL or Neon serverless
-  url: "postgresql+asyncpg://user:password@host:port/dbname"
+  # Default to localhost for development (override with DATABASE_URL env var)
+  url: "postgresql+asyncpg://postgres:postgres@localhost:5432/decentralized_forum"
   pool_size: 10
   max_overflow: 20
   echo: false  # Set to true for SQL query logging
