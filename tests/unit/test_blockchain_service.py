@@ -178,7 +178,7 @@ class TestWalletBalance:
     @pytest.mark.asyncio
     async def test_get_user_wallet_info(self, blockchain_service, mock_db_session, mock_user):
         """Test getting comprehensive wallet info for user"""
-        mock_user.wallet_address = "0x742d35cc6634c0532925a3b844bc9e7595f0beb0"
+        mock_user.bnb_wallet_address = "0x742d35cc6634c0532925a3b844bc9e7595f0beb0"
         mock_user.points = 50000
 
         with patch.object(blockchain_service, "get_wallet_balance") as mock_get_balance:
@@ -187,7 +187,7 @@ class TestWalletBalance:
             result = await blockchain_service.get_user_wallet_info(mock_db_session, mock_user)
 
             assert isinstance(result, WalletBalanceResponse)
-            assert result.wallet_address == mock_user.wallet_address
+            assert result.wallet_address == mock_user.bnb_wallet_address
             assert result.bnb_balance == Decimal("5.0")
             assert result.platform_points == 50000
             assert result.conversion_rate == Decimal("1000")
