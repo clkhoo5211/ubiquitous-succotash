@@ -1,0 +1,41 @@
+site_name: Decentralized Autonomous Forum
+site_url: https://clkhoo5211.github.io/ubiquitous-succotash/
+repo_url: https://github.com/clkhoo5211/ubiquitous-succotash
+repo_name: clkhoo5211/ubiquitous-succotash
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: teal
+      accent: cyan
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - search.suggest
+    - content.code.copy
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Installation: getting-started/installation.md
+      - Configuration: getting-started/configuration.md
+  - Architecture:
+      - Overview: architecture/overview.md
+      - Database Schema: architecture/database.md
+      - API Documentation: architecture/api.md
+  - Deployment:
+      - Local Development: deployment/local.md
+      - Production: deployment/production.md
+  - Contributing: contributing.md
+
+markdown_extensions:
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.tabbed
+  - admonition
+  - tables
+
+plugins:
+  - search
