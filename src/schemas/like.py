@@ -2,7 +2,7 @@
 
 from datetime import datetime
 from typing import Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 # Request schemas
@@ -21,8 +21,7 @@ class LikeUserResponse(BaseModel):
     display_name: Optional[str]
     avatar_url: Optional[str]
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class LikeResponse(BaseModel):
@@ -35,8 +34,7 @@ class LikeResponse(BaseModel):
     created_at: datetime
     user: LikeUserResponse
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class LikeListResponse(BaseModel):

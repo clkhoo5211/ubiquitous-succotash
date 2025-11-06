@@ -2,7 +2,7 @@
 
 from datetime import datetime
 from typing import Optional, List
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator, ConfigDict
 from enum import Enum
 
 
@@ -30,13 +30,15 @@ class PostCreate(PostBase):
 
     tag_ids: Optional[List[int]] = Field(default=[], description="List of tag IDs to attach")
 
-    @validator("title")
+    @field_validator("title")
+    @classmethod
     def title_not_empty(cls, v):
         if not v.strip():
             raise ValueError("Title cannot be empty")
         return v.strip()
 
-    @validator("body")
+    @field_validator("body")
+    @classmethod
     def body_not_empty(cls, v):
         if not v.strip():
             raise ValueError("Body cannot be empty")
@@ -50,13 +52,15 @@ class PostUpdate(BaseModel):
     body: Optional[str] = Field(None, min_length=10, max_length=50000)
     channel_id: Optional[int] = None
 
-    @validator("title")
+    @field_validator("title")
+    @classmethod
     def title_not_empty(cls, v):
         if v is not None and not v.strip():
             raise ValueError("Title cannot be empty")
         return v.strip() if v else v
 
-    @validator("body")
+    @field_validator("body")
+    @classmethod
     def body_not_empty(cls, v):
         if v is not None and not v.strip():
             raise ValueError("Body cannot be empty")
@@ -81,8 +85,7 @@ class PostAuthorResponse(BaseModel):
     avatar_url: Optional[str]
     level: str
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class PostChannelResponse(BaseModel):
@@ -92,8 +95,7 @@ class PostChannelResponse(BaseModel):
     name: str
     slug: str
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class PostTagResponse(BaseModel):
@@ -103,8 +105,7 @@ class PostTagResponse(BaseModel):
     name: str
     slug: str
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class PostResponse(BaseModel):
@@ -127,8 +128,7 @@ class PostResponse(BaseModel):
     last_activity_at: datetime
     tags: List[PostTagResponse] = []
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class PostListResponse(BaseModel):
@@ -146,8 +146,7 @@ class PostDetailResponse(PostResponse):
 
     user_has_liked: Optional[bool] = False  # Whether current user liked this post
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 # Filter/Query schemas

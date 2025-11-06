@@ -1,6 +1,6 @@
 """Authentication API schemas"""
 
-from pydantic import BaseModel, EmailStr, Field, validator
+from pydantic import BaseModel, EmailStr, Field, field_validator
 
 
 class UserRegister(BaseModel):
@@ -11,13 +11,15 @@ class UserRegister(BaseModel):
     password: str = Field(..., min_length=8, max_length=100)
     display_name: str = Field(None, max_length=100)
 
-    @validator("username")
+    @field_validator("username")
+    @classmethod
     def username_alphanumeric(cls, v):
         if not v.replace("_", "").replace("-", "").isalnum():
             raise ValueError("Username must be alphanumeric (can include _ and -)")
         return v
 
-    @validator("password")
+    @field_validator("password")
+    @classmethod
     def password_strength(cls, v):
         if len(v) < 8:
             raise ValueError("Password must be at least 8 characters")

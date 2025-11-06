@@ -2,7 +2,7 @@
 
 from datetime import datetime
 from typing import Optional, List
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator, ConfigDict
 from enum import Enum
 
 
@@ -27,7 +27,8 @@ class CommentBase(BaseModel):
 class CommentCreate(CommentBase):
     """Schema for creating a new comment"""
 
-    @validator("body")
+    @field_validator("body")
+    @classmethod
     def body_not_empty(cls, v):
         if not v.strip():
             raise ValueError("Comment body cannot be empty")
@@ -39,7 +40,8 @@ class CommentUpdate(BaseModel):
 
     body: str = Field(..., min_length=1, max_length=10000)
 
-    @validator("body")
+    @field_validator("body")
+    @classmethod
     def body_not_empty(cls, v):
         if not v.strip():
             raise ValueError("Comment body cannot be empty")
@@ -62,8 +64,7 @@ class CommentAuthorResponse(BaseModel):
     avatar_url: Optional[str]
     level: str
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class CommentResponse(BaseModel):
@@ -82,8 +83,7 @@ class CommentResponse(BaseModel):
     replies_count: int = 0  # Number of direct replies
     user_has_liked: Optional[bool] = False  # Whether current user liked this comment
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class CommentWithRepliesResponse(CommentResponse):
@@ -91,8 +91,7 @@ class CommentWithRepliesResponse(CommentResponse):
 
     replies: List["CommentWithRepliesResponse"] = []
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 # Enable forward references for recursive model

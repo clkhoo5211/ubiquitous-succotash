@@ -2,7 +2,7 @@
 
 from datetime import datetime
 from typing import Optional
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator, ConfigDict
 
 
 class ChannelBase(BaseModel):
@@ -17,7 +17,8 @@ class ChannelBase(BaseModel):
 class ChannelCreate(ChannelBase):
     """Schema for creating a channel"""
 
-    @validator("name")
+    @field_validator("name")
+    @classmethod
     def name_valid(cls, v):
         if not v.strip():
             raise ValueError("Channel name cannot be empty")
@@ -49,8 +50,7 @@ class ChannelResponse(BaseModel):
     created_at: datetime
     updated_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class ChannelListResponse(BaseModel):

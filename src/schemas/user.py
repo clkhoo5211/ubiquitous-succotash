@@ -2,7 +2,7 @@
 
 from datetime import datetime
 from typing import Optional
-from pydantic import BaseModel, EmailStr, Field, validator
+from pydantic import BaseModel, EmailStr, Field, field_validator, ConfigDict
 from enum import Enum
 
 
@@ -27,13 +27,15 @@ class UserBase(BaseModel):
     avatar_url: Optional[str] = Field(None, max_length=500)
     bnb_wallet_address: Optional[str] = Field(None, max_length=42)
 
-    @validator("username")
+    @field_validator("username")
+    @classmethod
     def username_alphanumeric(cls, v):
         if v and not v.replace("_", "").replace("-", "").isalnum():
             raise ValueError("Username must be alphanumeric (can include _ and -)")
         return v
 
-    @validator("bnb_wallet_address")
+    @field_validator("bnb_wallet_address")
+    @classmethod
     def validate_bnb_address(cls, v):
         # Allow None/empty for disconnect, but validate if value provided
         if v and v != "" and (not v.startswith("0x") or len(v) != 42):
@@ -51,7 +53,8 @@ class UserCreate(UserBase):
     password: str = Field(..., min_length=8, max_length=100)
     display_name: Optional[str] = Field(None, max_length=100)
 
-    @validator("password")
+    @field_validator("password")
+    @classmethod
     def password_strength(cls, v):
         if len(v) < 8:
             raise ValueError("Password must be at least 8 characters")
@@ -72,7 +75,8 @@ class UserUpdate(BaseModel):
     avatar_url: Optional[str] = Field(None, max_length=500)
     bnb_wallet_address: Optional[str] = Field(default=None, max_length=42)
 
-    @validator("bnb_wallet_address")
+    @field_validator("bnb_wallet_address")
+    @classmethod
     def validate_bnb_address(cls, v):
         # Allow None/empty for disconnect, but validate if value provided
         if v and v != "" and (not v.startswith("0x") or len(v) != 42):
@@ -91,7 +95,8 @@ class UserPasswordChange(BaseModel):
     current_password: str = Field(..., min_length=8, max_length=100)
     new_password: str = Field(..., min_length=8, max_length=100)
 
-    @validator("new_password")
+    @field_validator("new_password")
+    @classmethod
     def password_strength(cls, v):
         if len(v) < 8:
             raise ValueError("Password must be at least 8 characters")
@@ -125,8 +130,7 @@ class UserResponse(BaseModel):
     created_at: datetime
     is_active: bool
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class UserDetailResponse(UserResponse):
@@ -138,8 +142,7 @@ class UserDetailResponse(UserResponse):
     last_login_at: Optional[datetime]
     updated_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class UserListResponse(BaseModel):
@@ -168,5 +171,4 @@ class UserStatsResponse(BaseModel):
     posts_this_month: int
     comments_this_month: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
