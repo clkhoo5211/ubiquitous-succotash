@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import yaml
-from pydantic import Field, RedisDsn
+from pydantic import Field, PostgresDsn, RedisDsn
 from pydantic_settings import BaseSettings
 
 
@@ -34,9 +34,7 @@ class DatabaseSettings(BaseSettings):
 
     model_config = {"env_prefix": "DATABASE_"}
 
-    url: str = Field(
-        description="PostgreSQL database URL (supports postgresql:// and postgresql+asyncpg://)"
-    )
+    url: PostgresDsn
     pool_size: int = Field(default=10)
     max_overflow: int = Field(default=20)
     echo: bool = Field(default=False)

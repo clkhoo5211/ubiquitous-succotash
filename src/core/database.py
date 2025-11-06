@@ -28,18 +28,9 @@ class Base(DeclarativeBase):
 
 
 # Create async engine
-def get_database_url() -> str:
-    """Get database URL, ensuring it uses asyncpg driver"""
-    url = str(config.database.url)
-    # Convert postgresql:// to postgresql+asyncpg:// if needed
-    if url.startswith("postgresql://") and not url.startswith("postgresql+asyncpg://"):
-        url = url.replace("postgresql://", "postgresql+asyncpg://", 1)
-    return url
-
-
 if config.app.environment == "production":
     engine: AsyncEngine = create_async_engine(
-        get_database_url(),
+        str(config.database.url),
         echo=config.database.echo,
         pool_size=config.database.pool_size,
         max_overflow=config.database.max_overflow,
@@ -49,7 +40,7 @@ if config.app.environment == "production":
 else:
     # Development: Use NullPool (no pooling, direct connections)
     engine: AsyncEngine = create_async_engine(
-        get_database_url(),
+        str(config.database.url),
         echo=config.database.echo,
         poolclass=NullPool,
         future=True,

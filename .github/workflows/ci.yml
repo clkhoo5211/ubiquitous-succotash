@@ -87,7 +87,7 @@ jobs:
         run: |
           pytest tests/ --cov=src --cov-report=xml --cov-report=term-missing -v
         env:
-          DATABASE_URL: postgresql://forum_test:test_password@localhost:5432/forum_test
+          DATABASE_URL: postgresql+asyncpg://forum_test:test_password@localhost:5432/forum_test
           REDIS_URL: redis://localhost:6379/0
           PYTHONPATH: ${{ github.workspace }}
           APP_SECRET_KEY: test_secret_key_for_ci_minimum_32_chars_long
