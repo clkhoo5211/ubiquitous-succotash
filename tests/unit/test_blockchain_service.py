@@ -4,13 +4,12 @@ Tests blockchain operations with mocked Web3 and database calls.
 """
 
 from decimal import Decimal
-from unittest.mock import AsyncMock, MagicMock, PropertyMock, patch
+from unittest.mock import AsyncMock, PropertyMock, patch
 
 import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.core.exceptions import BlockchainError, InsufficientPointsError
-from src.models.user import User
 from src.schemas.blockchain import (
     TransactionStatusResponse,
     WalletBalanceResponse,
