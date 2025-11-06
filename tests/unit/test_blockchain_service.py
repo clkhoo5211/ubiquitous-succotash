@@ -123,7 +123,7 @@ class TestWalletConnection:
             assert isinstance(result, WalletConnectResponse)
             assert result.success is True
             assert result.wallet_address == wallet_connect_request.wallet_address
-            assert mock_user.wallet_address == wallet_connect_request.wallet_address
+            assert mock_user.bnb_wallet_address == wallet_connect_request.wallet_address
             mock_db_session.commit.assert_called_once()
 
     @pytest.mark.asyncio

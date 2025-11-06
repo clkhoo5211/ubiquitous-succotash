@@ -8,7 +8,7 @@ from unittest.mock import AsyncMock, patch
 async def test_user_registration(async_client):
     """Test user registration endpoint"""
     # Mock Redis to avoid connection errors
-    with patch("src.core.redis.redis_client") as mock_redis:
+    with patch("src.core.session.redis_client") as mock_redis:
         mock_redis.setex = AsyncMock()
 
         response = await async_client.post(
@@ -29,7 +29,7 @@ async def test_user_registration(async_client):
 async def test_user_login(async_client):
     """Test user login endpoint"""
     # Mock Redis to avoid connection errors
-    with patch("src.core.redis.redis_client") as mock_redis:
+    with patch("src.core.session.redis_client") as mock_redis:
         mock_redis.setex = AsyncMock()
         mock_redis.get = AsyncMock(return_value=None)
 
