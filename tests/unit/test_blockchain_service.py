@@ -37,6 +37,7 @@ def mock_user():
             self.username = "testuser"
             self.points = 50000
             self.wallet_address = None
+            self.bnb_wallet_address = None  # Blockchain service expects this
 
     return MockUser()
 
