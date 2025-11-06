@@ -30,10 +30,13 @@ def blockchain_service():
 def mock_user():
     """Create mock user for testing"""
     user = MagicMock(spec=User)
-    user.id = 1
-    user.username = "testuser"
-    user.points = 50000
-    user.wallet_address = None
+    # Configure attributes to return actual values, not MagicMocks
+    user.configure_mock(
+        id=1,
+        username="testuser",
+        points=50000,
+        wallet_address=None
+    )
     return user
 
 
