@@ -3,21 +3,21 @@
   "builds": [
     {
       "src": "src/main.py",
-      "use": "@vercel/python"
+      "use": "@vercel/python",
+      "config": {
+        "maxLambdaSize": "15mb"
+      }
     }
   ],
   "routes": [
     {
+      "src": "/static/(.*)",
+      "dest": "/static/$1"
+    },
+    {
       "src": "/(.*)",
       "dest": "src/main.py"
     }
-  ],
-  "env": {
-    "APP_SECRET_KEY": "@app_secret_key",
-    "SECURITY_JWT_SECRET_KEY": "@jwt_secret_key",
-    "DATABASE_URL": "@database_url",
-    "REDIS_URL": "@redis_url",
-    "IPFS_API_KEY": "@ipfs_api_key"
-  }
+  ]
 }
 
