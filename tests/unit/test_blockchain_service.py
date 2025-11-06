@@ -31,12 +31,7 @@ def mock_user():
     """Create mock user for testing"""
     user = MagicMock(spec=User)
     # Configure attributes to return actual values, not MagicMocks
-    user.configure_mock(
-        id=1,
-        username="testuser",
-        points=50000,
-        wallet_address=None
-    )
+    user.configure_mock(id=1, username="testuser", points=50000, wallet_address=None)
     return user
 
 
