@@ -71,3 +71,4 @@ htmlcov/
 
 # uv specific
 uv.lock
+.vercel

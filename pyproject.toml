@@ -3,7 +3,7 @@ name = "decentralized-forum"
 version = "0.1.0"
 description = "A decentralized autonomous forum with gamification and blockchain rewards"
 authors = [{name = "Forum Creator"}]
-requires-python = ">=3.11"
+requires-python = ">=3.9,<3.12"
 dependencies = [
     "fastapi>=0.115.0",
     "uvicorn[standard]>=0.32.0",
@@ -30,6 +30,7 @@ dependencies = [
     "redis>=5.2.0",
     "celery>=5.4.0",
     "slowapi>=0.1.9",
+    "mangum>=0.17.0",
 ]
 
 [project.optional-dependencies]
