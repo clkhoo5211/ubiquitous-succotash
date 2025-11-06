@@ -115,7 +115,7 @@ class UserLevelSettings(BaseSettings):
 class SecuritySettings(BaseSettings):
     """Security configuration"""
 
-    model_config = {"env_prefix": "SECURITY_"}
+    model_config = {"env_prefix": "SECURITY_", "extra": "allow"}
 
     jwt_secret_key: str = Field(
         min_length=32, description="Must be set via SECURITY_JWT_SECRET_KEY environment variable"
