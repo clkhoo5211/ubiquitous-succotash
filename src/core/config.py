@@ -69,6 +69,8 @@ class TelegramSettings(BaseSettings):
 class PaymentSettings(BaseSettings):
     """Payment and blockchain configuration"""
 
+    model_config = {"extra": "allow"}
+
     method: str = "crypto"
     recipient_address: str
     supported_tokens: Dict[str, Any] = {}
