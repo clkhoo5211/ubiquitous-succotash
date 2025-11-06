@@ -29,9 +29,14 @@ def blockchain_service():
 @pytest.fixture
 def mock_user():
     """Create mock user for testing"""
+    from unittest.mock import PropertyMock
+
     user = MagicMock(spec=User)
-    # Configure attributes to return actual values, not MagicMocks
-    user.configure_mock(id=1, username="testuser", points=50000, wallet_address=None)
+    # Use PropertyMock to ensure attributes return actual values
+    type(user).id = PropertyMock(return_value=1)
+    type(user).username = PropertyMock(return_value="testuser")
+    type(user).points = PropertyMock(return_value=50000)
+    type(user).wallet_address = PropertyMock(return_value=None)
     return user
 
 
